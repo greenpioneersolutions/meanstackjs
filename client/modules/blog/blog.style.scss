@@ -1,0 +1,16 @@
+/* 
+	Styles here should be specific to this module. It will be aggregated and compiled when the environment starts up.
+	example code below
+	-----------------------------
+*/
+@import 'global-variables.styles.scss';
+
+.blog-main{
+	max-width: 70rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.blog-post-meta{
+	color:$gray-light;
+}

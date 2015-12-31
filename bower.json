@@ -1,0 +1,39 @@
+{
+  "name": "meanstackjs",
+  "description": "meanstackjs",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "angular-mocks": "^1.4.7"
+  },
+  "dependencies": {
+    "angular": "^1.4.7",
+    "angular-sanitize": "^1.4.7",
+    "angular-cookies": "^1.4.7",
+    "angular-animate": "^1.4.7",
+    "angular-resource": "^1.4.7",
+    "angular-material": "~1.0.1",
+    "angular-mocks": "^1.4.7",
+    "angular-moment": "^0.10.3",
+    "angular-ui-router": "^0.2.15",
+    "angular-bootstrap": "^0.14.3",
+    "bootstrap-sass": "~3.3.6",
+    "font-awesome": "^4.3.0",
+    "foundation": "~5.5.3",
+    "lodash": "~3.10.1",
+    "jquery": "^2.1.4",
+    "moment": "^2.10.3",
+    "Materialize": "materialize#~0.97.3",
+    "toastr": "^2.1.1",
+    "ng-file-upload ": "10.1.8"
+  },
+  "resolutions": {
+    "angular": "1.4.7"
+  }
+}

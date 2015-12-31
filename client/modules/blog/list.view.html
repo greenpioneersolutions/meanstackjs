@@ -1,0 +1,30 @@
+<div class="container" ng-init="vm.list()">
+  <div class="row">
+      <div class="col-sm-12 blog-header text-center">
+        <h1 class="blog-title">MeanStackJS Blog</h1>
+        <p class="lead blog-description">Using the official example template of creating a blog with Bootstrap.</p>
+      </div>
+  </div> 
+  <div class="row">
+    <div class="center-block blog-main ">
+      <h1 ng-show="!vm.blogs">No Blog Post <a href="/create">Create One Now</a></h1>
+      
+      <div class="blog-post" ng-repeat="(key, value) in vm.blogs | orderBy:'-date'">
+        <a href="/blog/view/{{value._id}}"><h2 class="blog-post-title">{{value.title}}</h2></a>
+        <span ng-show="vm.UserFactory.loggedin">
+          <a href="/blog/edit/{{value._id}}"><i class="fa fa-pencil-square-o"></i></a>
+          <a ng-click="vm.delete(value._id)"><i class="fa fa-trash"></i></a>
+        </span>
+        
+        <p class="blog-post-meta">
+          by {{value.user}} - {{value.created |date:'medium'}}
+        </p>
+        
+        <p>{{value.content}}</p>
+      </div><!-- /.blog-post -->
+
+    </div><!-- /.blog-main -->
+
+  </div>
+    
+</div>

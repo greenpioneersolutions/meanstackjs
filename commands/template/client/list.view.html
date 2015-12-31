@@ -1,0 +1,30 @@
+<div class="container" ng-init="vm.list()">
+  <div class="row">
+      <div class="col-sm-12 __name__-header text-center">
+        <h1 class="__name__-title">MeanStackJS __name__</h1>
+        <p class="lead __name__-description">Using the official example template of creating a __name__ with Bootstrap.</p>
+      </div>
+  </div> 
+  <div class="row">
+    <div class="center-block __name__-main ">
+      <h1 ng-show="!vm.__name__s">No __name__ Data Points <a href="/create">Create One Now</a></h1>
+      
+      <div class="__name__-post" ng-repeat="(key, value) in vm.__name__s | orderBy:'-date'">
+        <a href="/__name__/view/{{value._id}}"><h2 class="__name__-post-title">{{value.title}}</h2></a>
+        <span ng-show="vm.UserFactory.loggedin">
+          <a href="/__name__/edit/{{value._id}}"><i class="fa fa-pencil-square-o"></i></a>
+          <a ng-click="vm.delete(value._id)"><i class="fa fa-trash"></i></a>
+        </span>
+        
+        <p class="__name__-post-meta">
+          on {{value.created |date:'medium'}}
+        </p>
+        
+        <p>{{value.content}}</p>
+      </div><!-- /.__name__-post -->
+
+    </div><!-- /.__name__-main -->
+
+  </div>
+    
+</div>

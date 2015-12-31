@@ -1,0 +1,17 @@
+/* Footer Styling */
+
+footer{
+	margin-bottom:25px;
+
+	a:hover, a:focus{
+		text-decoration: none;
+	}
+
+	i{
+		margin-right: 15px;
+		
+		&:before{
+			font-size:20px;
+		}
+	}
+}

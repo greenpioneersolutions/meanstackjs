@@ -1,0 +1,67 @@
+<header class="navbar navbar-inverse navbar-fixed-top" ng-controller="HeaderController as vm">
+    <nav>
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-contents" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/"><img src="images/logo/icon.png" alt="Mean Stack JS" height="25px" ></a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-contents">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Examples <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li><a href="/blog/list">List Blog</a></li>
+                        <li><a href="/blog/create">Create Blog</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">More Coming Soon</a></li>
+                      </ul>
+                    </li>
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">All Routes <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li ng-show="value.url !== '^'" ng-repeat="(key, value) in vm.routes"><a href="{{value.url}}">{{value.url}}</a></li>
+                      </ul>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav nav auth-link navbar-right">
+                    <li ng-show="!vm.UserFactory.loggedin">
+                        <a href='/signin'>
+                            Sign In
+                        </a>
+                    </li>
+                    <li ng-show="!vm.UserFactory.loggedin">
+                        <a href='/signup'>
+                            Sign Up
+                        </a>
+                    </li>
+
+                    <li uib-dropdown  ng-show="vm.UserFactory.user.profile.name">
+                        <a id="simple-dropdown" uib-dropdown-toggle>
+                            {{vm.UserFactory.user.profile.name}}<span class="caret"></span>
+                        </a>
+                        <ul class="uib-dropdown-menu" aria-labelledby="simple-dropdown">
+                            <li>
+                                <a href='/account'>
+                                    Your Account
+                                </a>
+                            </li>
+                            <li>
+                                <a href='#' ng-click='vm.logout()'>
+                                    Sign Out
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div><!-- /navbar-collapse -->
+        </div><!--/container  -->
+    </nav>
+</header>
+
