@@ -16,12 +16,12 @@
   },
   "scripts": {
     "test": "npm run mocha && npm run karma && npm run standard",
-    "mocha": "./node_modules/mocha/bin/mocha ./tests/server.test.js && ./node_modules/mocha/bin/mocha ./server/modules/**/*.spec.js  ",
-    "karma": "./node_modules/karma/bin/karma start ./tests/karma.test.js",
-    "standard": "node ./node_modules/standard/bin/cmd.js",
-    "postinstall": "./node_modules/bower/bin/bower install ||bower install",
-    "start":" ./node_modules/nodemon/bin/nodemon.js server.js",
-    "cli": "node ./commands/cli.js"
+    "mocha": "node_modules/mocha/bin/mocha tests/server.test.js && node_modules/mocha/bin/mocha server/modules/**/*.spec.js  ",
+    "karma": "node_modules/karma/bin/karma start tests/karma.test.js",
+    "standard": "node node_modules/standard/bin/cmd.js",
+    "postinstall": "node_modules/bower/bin/bower install ||bower install",
+    "start": " node_modules/nodemon/bin/nodemon.js server.js",
+    "cli": "node commands/cli.js"
   },
   "repository": {
     "type": "git",
@@ -96,6 +96,7 @@
     "blessed": "^0.1.81",
     "bower": "^1.7.1",
     "chai": "^3.4.1",
+    "inquirer": "^0.11.2",
     "karma": "^0.13.16",
     "karma-chrome-launcher": "^0.2.2",
     "karma-jasmine": "^0.3.6",
