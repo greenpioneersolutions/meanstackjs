@@ -15,7 +15,7 @@ var blogSchema = mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.ObjectId,
-    ref: 'user'
+    ref: 'User'
   }
 })
 
