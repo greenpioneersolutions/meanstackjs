@@ -119,7 +119,7 @@ app.use(function (req, res, next) {
 /**
  * Dynamic Query Builder
  */
-app.use(build.query())
+app.use(build.query({mongoose: mongoose}))
 /**
  * Manual Routes - returns file structure for the front end
  */

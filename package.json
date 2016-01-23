@@ -1,8 +1,8 @@
 {
   "name": "meanstackjs",
-  "version": "0.1.0",
-  "description": "Custom Mean Stack",
-  "main": "index.js",
+  "version": "0.1.1",
+  "description": "We are building in this framework to make your life as a designer or developer easier. We believe in making this framework usable for User Experience Designers, Quality Assurance Engineers, Software Engineers, Frontend & Backend Developers & Full Stack Engineers...",
+  "main": "server.js",
   "standard": {
     "globals": [
       "angular",
@@ -16,11 +16,11 @@
   },
   "scripts": {
     "test": "npm run mocha && npm run karma && npm run standard",
-    "mocha": "node_modules/mocha/bin/mocha tests/server.test.js && node_modules/mocha/bin/mocha server/modules/**/*.spec.js  ",
-    "karma": "node_modules/karma/bin/karma start tests/karma.test.js",
-    "standard": "node node_modules/standard/bin/cmd.js",
-    "postinstall": "node_modules/bower/bin/bower install ||bower install",
-    "start": " node_modules/nodemon/bin/nodemon.js server.js",
+    "mocha": "node node_modules/mocha/bin/mocha tests/server.test.js && node_modules/mocha/bin/mocha server/modules/**/*.spec.js  ",
+    "karma": "node node_modules/karma/bin/karma start tests/karma.test.js || karma start tests/karma.test.js ",
+    "standard": "node node_modules/standard/bin/cmd.js || standard",
+    "postinstall": "node node_modules/bower/bin/bower install || bower install",
+    "start": " node node_modules/nodemon/bin/nodemon.js server.js || nodemon.js server.js",
     "cli": "node commands/cli.js"
   },
   "repository": {

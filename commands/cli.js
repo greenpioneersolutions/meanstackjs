@@ -301,19 +301,63 @@ function buildBack (data, cb) {
   })
 }
 
+function moreSchemaQuestioning (cb) {
+  inquirer.prompt(schemaQuestions, function (answers) {
+    schemaOutput.push(answers)
+    if (answers.askAgain) {
+      moreSchemaQuestioning(cb)
+    } else {
+      var schema = {}
+      var modelFile = multiline(function () { /*
+var mongoose = require('mongoose')
+var __name__Schema = mongoose.Schema({
+  */
+      })
+
+      _.forEach(schemaOutput, function (n, k) {
+        n.default = n.default || '""'
+        schema[_.camelCase(n.field)] = {
+          field: _.camelCase(n.field),
+          type: n.type,
+          default: n.default,
+          string: _.camelCase(n.field) + ':{type:' + n.type + ',default:' + n.default + '}'
+        }
+        if (schemaOutput.length === k + 1) {
+          modelFile += '\n' + _.camelCase(n.field) + ':{ \n type:' + n.type + ', \n default:' + n.default + '\n} \n'
+        } else {
+          modelFile += '\n' + _.camelCase(n.field) + ':{ \n type:' + n.type + ', \n default:' + n.default + '\n},'
+        }
+      })
+      modelFile += multiline(function () { /*
+})
+var __Name__ = mongoose.model('__Name__', __name__Schema)
+module.exports = {
+  __Name__: __Name__
+}
+  */
+      })
+      cb({
+        modelFile: modelFile,
+        schema: schema,
+        created: true
+      })
+      schemaOutput = []
+    }
+  })
+}
 function buildSchema (cb) {
   inquirer.prompt(schemaPreQuestion, function (answers) {
     if (answers.askAgain) {
       inquirer.prompt(schemaQuestions, function (answers) {
         schemaOutput.push(answers)
         if (answers.askAgain) {
-          buildSchema(cb)
+          moreSchemaQuestioning(cb)
         } else {
           var schema = {}
           var modelFile = multiline(function () { /*
 var mongoose = require('mongoose')
 var __name__Schema = mongoose.Schema({
-	*/
+  */
           })
 
           _.forEach(schemaOutput, function (n, k) {
@@ -336,7 +380,7 @@ var __Name__ = mongoose.model('__Name__', __name__Schema)
 module.exports = {
   __Name__: __Name__
 }
-	*/
+  */
           })
           cb({
             modelFile: modelFile,
