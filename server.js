@@ -117,9 +117,10 @@ app.use(function (req, res, next) {
 })
 
 /**
- * Dynamic Query Builder
+ * Dynamic Query Builder & Response Function
  */
-app.use(build.query({mongoose: mongoose}))
+app.use(build.queryMiddleware({mongoose: mongoose}))
+app.use(build.responseMiddleware({mongoose: mongoose}))
 /**
  * Manual Routes - returns file structure for the front end
  */
