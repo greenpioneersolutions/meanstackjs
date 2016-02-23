@@ -323,12 +323,16 @@ if (environment === 'development') {
 }
 
 /**
- * Socketio Realtime
+ * Socket.IO - Plan to move to a file later
  */
-// var server = require('http').createServer(app)
-// var io = require('socket.io')(server)
-// io.on('connection', function(){ /* … */ })
-// server.listen(3000)
+var socketServer = require('http').createServer(app)
+var io = require('socket.io')(socketServer)
+io.on('connection', function (socket) {
+  socket.on('message', function (msg) {
+    io.emit('message', msg)
+  })
+})
+socketServer.listen(8282)
 /**
  * Swagger
  */

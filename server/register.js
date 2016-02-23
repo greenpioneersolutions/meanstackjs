@@ -187,7 +187,7 @@ function all (setup) {
   // RENDER THE GLOBAL STYLE
   var globalContents = fs.readFileSync(__dirname + '/../client/styles/global.style.scss', 'utf8')
   var result = sass.renderSync({
-    includePaths: [path.join(__dirname, '../client/modules'), path.join(__dirname, '../client/styles'), path.join(__dirname, '../client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(__dirname, '../client/bower_components/Materialize/sass'), path.join(__dirname, '../client/bower_components/foundation/scss')],
+    includePaths: [path.join(__dirname, '../client/modules'), path.join(__dirname, '../client/styles'), path.join(__dirname, '../client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(__dirname, '../client/bower_components/Materialize/sass'), path.join(__dirname, '../client/bower_components/foundation/scss'), path.join(__dirname, '../client/bower_components/font-awesome/scss')],
     data: globalContents
   })
   fs.writeFileSync(__dirname + '/../client/styles/compiled/global.style.css', result.css)
@@ -299,10 +299,11 @@ function all (setup) {
     }
   } else if (process.env.NODE_ENV === 'production') {
     var uglifiedcss = uglifycss.processFiles(
-      frontendFilesAggregate.css,
-      { maxLineLen: 500 }
+      frontendFilesAggregate.css, {
+        maxLineLen: 500
+      }
     )
-    fs.writeFile(path.join(__dirname, '../client/styles/compiled/concat.min.css'), uglifiedcss.code, function (err) {
+    fs.writeFile(path.join(__dirname, '../client/styles/compiled/concat.min.css'), uglifiedcss, function (err) {
       if (err) {
         console.log(err)
       } else {
@@ -310,7 +311,9 @@ function all (setup) {
       }
     })
 
-    var uglifiedjs = uglify.minify(frontendFilesAggregate.js)
+    var uglifiedjs = uglify.minify(frontendFilesAggregate.js, {
+      mangle: false
+    })
     fs.writeFile(path.join(__dirname, '../client/scripts/compiled/concat.min.js'), uglifiedjs.code, function (err) {
       if (err) {
         console.log(err)

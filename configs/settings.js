@@ -45,6 +45,7 @@ var baseLine = {
   // OR USE INTERNAL FILES - '/bower_components/jquery/dist/jquery.js'
   assets: {
     js: [
+      '/bower_components/socket.io-client/socket.io.js',
       '/bower_components/ng-file-upload/ng-file-upload-all.js',
       '/bower_components/angular-mocks/angular-mocks.js',
       '/bower_components/angular-cookies/angular-cookies.js',
@@ -63,8 +64,8 @@ var baseLine = {
     ],
     css: [
       '/styles/compiled/global.style.css',
-      '/bower_components/toastr/toastr.css',
-      '/bower_components/font-awesome/css/font-awesome.min.css'
+      '/bower_components/toastr/toastr.css'
+    // '/bower_components/font-awesome/css/font-awesome.min.css'
     ]
   },
   buildreq: {
