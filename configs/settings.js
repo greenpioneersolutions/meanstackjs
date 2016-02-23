@@ -64,8 +64,8 @@ var baseLine = {
     ],
     css: [
       '/styles/compiled/global.style.css',
-      '/bower_components/toastr/toastr.css',
-      '/bower_components/font-awesome/css/font-awesome.min.css'
+      '/bower_components/toastr/toastr.css'
+    // '/bower_components/font-awesome/css/font-awesome.min.css'
     ]
   },
   buildreq: {
