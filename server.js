@@ -24,6 +24,7 @@ var mongoose = require('mongoose')
 var passport = require('passport')
 var expressValidator = require('express-validator')
 var environment = 'development'
+var status = require('express-system-status')
 if (process.env.NODE_ENV === 'test') {
   environment = 'test'
 } else if (process.env.NODE_ENV === 'production') {
@@ -182,6 +183,23 @@ app.use(express.static(path.join(__dirname, 'client/'), {
 // app.use(express.static(path.join(__dirname, 'client/uploads'), { maxAge: 31557600000 }))
 
 /**
+ * Make A System Status Endpoint
+ * http://localhost:3000/api/v1/status/
+ */
+app.use('/api/v1/status', 
+  status({
+    app: app,
+    config: settings,
+    auth: true,
+    user: 'admin',
+    pass: 'pass',
+    extra: {
+      environment:environment
+    },
+    mongoose:mongoose //Now Supporting Mongoose
+  })
+)
+/**
  * Primary Failover routes.
  */
 app.get('/api/*', function (req, res) {
@@ -235,6 +253,7 @@ app.get('/*', function (req, res) {
  * Error Handler.
  */
 app.use(errorHandler())
+
 /**
  * Livereload
  */
