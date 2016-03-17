@@ -14,7 +14,7 @@ will be happy to accept your Pull Requests as long as those adhere to some basic
 ### Creating an Issue
 
 Before you create a new Issue:
-* Check the [Issues](https://github.com/GreenPioneer/meanstackjs/issues) on Github to ensure one doesn't already exist.
+* Check the [Issues](https://github.com/greenpioneersolutions/meanstackjs/issues) on Github to ensure one doesn't already exist.
 * Place use one of these topics in the beginning of your issue title- Contrib, Hotfix, Error, Help or Feature.
 * Clearly describe the issue, including the steps to reproduce the issue.
 * If it's a new feature, enhancement, or restructure, Explain your reasoning on why you think it should be added, as well as a particular use case.

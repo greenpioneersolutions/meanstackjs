@@ -25,9 +25,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GreenPioneer/meanstackjs.git"
+    "url": "git+https://github.com/greenpioneersolutions/meanstackjs.git"
   },
-  "homepage": "https://github.com/GreenPioneer/meanstackjs#readme",
+  "homepage": "https://github.com/greenpioneersolutions/meanstackjs#readme",
   "keywords": [
     "Mean",
     "Mean Stack",
@@ -42,10 +42,10 @@
     "Nodejs"
   ],
   "author": "Green Pioneer <info@greenpioneersolutions.com>",
-  "contributors": "https://github.com/GreenPioneer/meanstackjs/graphs/contributors",
+  "contributors": "https://github.com/greenpioneersolutions/meanstackjs/graphs/contributors",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/GreenPioneer/meanstackjs/issues"
+    "url": "https://github.com/greenpioneersolutions/meanstackjs/issues"
   },
   "dependencies": {
     "async": "^1.5.0",

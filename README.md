@@ -1,5 +1,5 @@
 [![dependencies](https://david-dm.org/greenpioneer/meanstackjs.svg)](https://david-dm.org/greenpioneer/meanstackjs)
-[![npm-issues](https://img.shields.io/github/issues/GreenPioneer/meanstackjs.svg)](https://github.com/GreenPioneer/meanstackjs/issues)
+[![npm-issues](https://img.shields.io/github/issues/greenpioneersolutions/meanstackjs.svg)](https://github.com/greenpioneersolutions/meanstackjs/issues)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![meanstackjs Logo](http://meanstackjs.com/images/logo/header3x.png)](http://meanstackjs.com/)
 -----------------
@@ -68,7 +68,7 @@ The easiest way to get started is to clone the repository:
 
 ```bash
 # Get the latest snapshot
-git clone https://github.com/GreenPioneer/meanstackjs.git
+git clone https://github.com/greenpioneersolutions/meanstackjs.git
 
 # Change directory
 cd meanstackjs
@@ -303,7 +303,7 @@ will be happy to accept your Pull Requests as long as those adhere to some basic
 ### Creating an Issue
 
 Before you create a new Issue:
-* Check the [Issues](https://github.com/GreenPioneer/meanstackjs/issues) on Github to ensure one doesn't already exist.
+* Check the [Issues](https://github.com/greenpioneersolutions/meanstackjs/issues) on Github to ensure one doesn't already exist.
 * Place use one of these topics in the beginning of your issue title- Contrib, Hotfix, Error, Help or Feature.
 * Clearly describe the issue, including the steps to reproduce the issue.
 * If it's a new feature, enhancement, or restructure, Explain your reasoning on why you think it should be added, as well as a particular use case.
