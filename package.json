@@ -68,6 +68,7 @@
     "express-flash": "^0.0.2",
     "express-session": "^1.12.1",
     "express-validator": "^2.18.0",
+    "jsonwebtoken": "^5.7.0",
     "less": "^2.5.3",
     "livereload": "^0.4.0",
     "lob": "^3.6.0",
