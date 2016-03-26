@@ -13,7 +13,6 @@
     vm.blog = {}
     vm.UserFactory = UserFactory
     activate()
-
     vm.create = function () {
       var blog = new BlogFactory(vm.blog)
       blog.user = vm.UserFactory.user
