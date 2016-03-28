@@ -161,20 +161,24 @@ app.use(express.static(path.join(__dirname, 'client/'), {
 /**
  * Make A System Status Endpoint
  * http://localhost:3000/api/v1/status/
+ * Only use is development currently because this module is not production ready
  */
-app.use('/api/v1/status', 
-  status({
-    app: app,
-    config: settings,
-    auth: true,
-    user: 'admin',
-    pass: 'pass',
-    extra: {
-      environment:environment
-    },
-    mongoose:mongoose //Now Supporting Mongoose
-  })
-)
+if (environment === 'development') {
+  app.use('/api/v1/status', //middleware.verify  if you want the api to be behind token based
+    status({
+      app: app,
+      config: settings,
+      auth: true,
+      user: 'admin',
+      pass: 'pass',
+      extra: {
+        environment:environment
+      },
+      mongoose:mongoose //Now Supporting Mongoose
+    })
+  )
+}
+
 /**
  * Primary Failover routes.
  */
