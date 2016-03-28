@@ -5,6 +5,9 @@ var nodemailer = require('nodemailer')
 var passport = require('passport')
 var mongoose = require('mongoose')
 var User = mongoose.model('User')
+var settings = require('../../../configs/settings.js')
+
+
 var secrets = {
   host: 'smtp.mandrillapp.com', // Gmail, SMTP
   port: '587',
@@ -13,23 +16,104 @@ var secrets = {
     pass: 'E1K950_ydLR4mHw12a0ldA'
   }
 }
+
+var jwt = require('jsonwebtoken')     
+// res.cookie('token', token);
+
 /**
- * GET /login
- * Login page.
+ * POST /authenticate
+ * Authenticate Token.
  */
-exports.getLogin = function (req, res) {
-  if (req.user) {
-    return res.status(200).send({
-      user: req.user,
-      authenticated: true
+exports.postAuthenticate = function (req, res,next) {
+  var redirect = req.body.redirect || false
+  req.assert('email', 'Email is not valid').isEmail()
+  req.assert('password', 'Password cannot be blank').notEmpty()
+  var errors = req.validationErrors()
+  if (errors) {
+    return res.status(401).send({
+      success: false,
+      authenticated: false,
+      msg: errors[0].msg,
+      redirect:redirect
+    })
+  }else{
+    User.findOne({
+      email: req.body.email
+    }, function(err, user) {
+      if (err) throw err;
+      if (!user) {
+        res.send({
+          success: false,
+          authenticated: false,
+          msg: 'Authentication failed. User not found.',
+          redirect:'/signin'
+        });
+      } else {
+        user.comparePassword(req.body.password, function(err, isMatch) {
+          if (isMatch && !err) {
+            req.logIn(user, function (err) {
+              if (err) {
+                return next(err)
+              }
+              delete user['password']
+              var token = jwt.sign({
+                profile:user.profile,
+                roles:user.roles,
+                gravatar:user.gravatar,
+                email:user.email,
+                _id:user._id
+              }, settings.jwt.secret,settings.jwt.options)//good for two hours
+              res.cookie('token', token);
+              res.json({
+                success: true,
+                authenticated: true,
+                token: 'JWT ' + token,
+                redirect:redirect
+              })
+            })
+          } else {
+            res.send({
+              success: false,
+              authenticated: false,
+              msg: 'Authentication failed. Wrong password.',
+              redirect:'/signin'
+            });
+          }
+        })
+      }
     })
   }
-  res.status(200).send({
-    user: {},
-    authenticated: false
-  })
 }
-// redirect: req.session.returnTo
+
+/**
+ * GET /authenticate
+ * Check Autherization of a user & return token.
+ */
+exports.getAuthenticate = function (req, res) {
+  var redirect = req.body.redirect || false
+  if (req.user) {
+    var token = jwt.sign({
+            profile:req.user.profile,
+            roles:req.user.roles,
+            gravatar:req.user.gravatar,
+            email:req.user.email,
+            _id:req.user._id
+          }, settings.jwt.secret,settings.jwt.options)
+    return res.status(200).send({
+      user:  token,
+      success: true,
+      authenticated: true,
+      redirect:redirect
+    })
+  }else{
+    res.status(200).send({
+      user: {},
+      success: false,
+      authenticated: false,
+      redirect:'/signin'
+    })
+  }
+}
 /**
  * POST /login
  * Sign in using email and password.
@@ -55,13 +139,20 @@ exports.postLogin = function (req, res, next) {
       if (err) {
         return next(err)
       }
-      // req.flash('success', { msg: 'Success! You are logged in.' })
-      // res.status(200).send(req.session.returnTo || false)
-      delete user.password
-      return res.status(200).send({
+      delete user['password']
+      var token = jwt.sign({
+        profile:user.profile,
+        roles:user.roles,
+        gravatar:user.gravatar,
+        email:user.email,
+        _id:user._id
+      }, settings.jwt.secret,settings.jwt.options)//good for two hours
+      res.cookie('token', token);
+      res.json({
+        success: true,
         authenticated: true,
-        user: user,
-        redirect: redirect
+        user: 'JWT ' + token,
+        redirect:redirect
       })
     })
   })(req, res, next)
@@ -127,9 +218,20 @@ exports.postSignup = function (req, res, next) {
         if (err) {
           return next(err)
         }
-        res.status(200).send({
-          user: user,
-          redirect: redirect
+        delete user['password']
+        var token = jwt.sign({
+          profile:user.profile,
+          roles:user.roles,
+          gravatar:user.gravatar,
+          email:user.email,
+          _id:user._id
+        }, settings.jwt.secret,settings.jwt.options)//good for two hours
+        res.cookie('token', token);
+        res.json({
+          success: true,
+          authenticated: true, 
+          user: 'JWT ' + token,
+          redirect:redirect
         })
       })
     })
@@ -315,6 +417,7 @@ exports.postReset = function (req, res, next) {
       delete user.password
       var redirect = req.body.redirect || '/'
       res.status(200).send({
+        success: true,
         authenticated: true,
         user: user,
         redirect: redirect
