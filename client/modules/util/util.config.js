@@ -4,10 +4,15 @@
   var util = angular.module('app.util')
   util.config(interceptors)
 
-  interceptors.$inject = ['$httpProvider']
+  interceptors.$inject = ['$httpProvider','jwtInterceptorProvider']
   /* @ngInject */
-  function interceptors ($httpProvider) {
-    // $httpProvider.interceptors.push('httpInterceptor')
-    // $httpProvider.interceptors.push('noCacheInterceptor')
+  function interceptors ($httpProvider,jwtInterceptorProvider) {
+    jwtInterceptorProvider.tokenGetter = function() {
+      return localStorage.getItem('JWT');
+    };
+
+    $httpProvider.interceptors.push('jwtInterceptor');
+    $httpProvider.interceptors.push('httpInterceptor')
+    $httpProvider.interceptors.push('noCacheInterceptor')
   }
 })()

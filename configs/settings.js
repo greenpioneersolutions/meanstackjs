@@ -7,7 +7,14 @@ var baseLine = {
   root: rootPath,
   hostname: process.env.HOST || process.env.HOSTNAME,
   templateEngine: 'swig',
-  // The secret should be set to a non-guessable string that
+  // JWT Object https://github.com/auth0/node-jsonwebtoken
+  jwt: {
+    // is used to compute a JWT SIGN
+     secret: 'MEANSTACKJS',
+     options:{
+      expiresIn: 60 * 120 //60 seconds * 120  = 2 hours 
+     }
+  },
   // is used to compute a session hash
   sessionSecret: 'MEANSTACKJS',
   // The name of the MongoDB collection to store sessions in
@@ -45,6 +52,7 @@ var baseLine = {
   // OR USE INTERNAL FILES - '/bower_components/jquery/dist/jquery.js'
   assets: {
     js: [
+      '/bower_components/angular-jwt/dist/angular-jwt.js',
       '/bower_components/socket.io-client/socket.io.js',
       '/bower_components/ng-file-upload/ng-file-upload-all.js',
       '/bower_components/angular-mocks/angular-mocks.js',
@@ -58,7 +66,7 @@ var baseLine = {
       '/bower_components/moment/moment.js',
       '/bower_components/lodash/lodash.js',
       '/bower_components/toastr/toastr.js',
-      '/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js',
+      '/bower_components/bootstrap-sass/assets/javascripts/bootstrap.js',
       '/bower_components/angular/angular.js',
       '/bower_components/jquery/dist/jquery.js'
     ],

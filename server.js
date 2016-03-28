@@ -129,33 +129,9 @@ var fileStructure = Register.all(settings)
 /**
  * Middleware to use throughout the backend
  */
-var User = mongoose.model('User')
-app.locals.findUser = function (id, cb) {
-  User.findOne({
-    _id: id
-  }, function (err, user) {
-    if (err || !user) return cb(null)
-    cb(user)
-  })
-}
-app.locals.requiresLogin = function (req, res, next) {
-  if (!req.isAuthenticated()) {
-    return res.status(401).send({
-      msg: 'User is not authorized'
-    })
-  }
-  app.locals.findUser(req.user._id, function (user) {
-    if (!user) return res.status(401).send({msg: 'User is not authorized'})
-    req.user = user
-    next()
-  })
-}
-app.locals.isMongoId = function (req, res, next) {
-  if ((_.size(req.params) === 1) && (!mongoose.Types.ObjectId.isValid(_.values(req.params)[0]))) {
-    return res.status(500).send('Parameter passed is not a valid Mongo ObjectId')
-  }
-  next()
-}
+
+var middleware = require('./server/middleware.js')
+
 /**
  * Dynamic Routes / Manually enabling them . You can change it back to automatic in the settings
  * build.routing(app, mongoose) - if reverting back to automatic
@@ -164,7 +140,7 @@ build.routing({
   mongoose: mongoose,
   remove: ['user'],
   middleware: {
-    auth: [app.locals.requiresLogin]
+    auth: [middleware.verify, middleware.isAuthenticated]
   }
 }, function (error, data) {
   if (error) console.log(error)
