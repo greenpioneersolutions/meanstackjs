@@ -10,7 +10,7 @@
 
   logger.$inject = ['$log', 'toastr']
   exception.$inject = []
-  httpInterceptor.$inject = ['$q', '$location']
+  httpInterceptor.$inject = ['$q', '$location','logger']
   noCacheInterceptor.$inject = []
   /* @ngInject */
   function logger ($log, toastr) {
@@ -72,23 +72,30 @@
   }
 
   /* @ngInject */
-  function httpInterceptor ($q, $location) {
+  function httpInterceptor ($q, $location, logger) {
     return {
-      // 'response': function (response) {
-      //   if (response.status === 402) {
-      //     $location.path('/login')
-      //     return $q.reject(response)
-      //   }
-      //   return response || $q.when(response)
-      // },
+      'response': function (response) {
+        if (response.status === 402 || response.status === 401 ) {
+          if (response.data.msg){
+            logger.error(response.data.msg,response,'Error')
+          }
+          $location.path('/signin')
+          return $q.reject(response)
+        }
+        
+        return response || $q.when(response)
+      },
 
-      // 'responseError': function (rejection) {
-      //   if (rejection.status === 402) {
-      //     $location.url('/login')
-      //     return $q.reject(rejection)
-      //   }
-      //   return $q.reject(rejection)
-      // }
+      'responseError': function (rejection) {
+        if (rejection.status === 402  || rejection.status === 401 ) {
+          if (rejection.data.msg){
+            logger.error(rejection.data.msg,rejection,'Error')
+          }
+          $location.url('/signin')
+          return $q.reject(rejection)
+        }
+        return $q.reject(rejection)
+      }
 
     }
   }
@@ -96,20 +103,13 @@
   function noCacheInterceptor () {
     return {
       request: function (config) {
-        // console.log(config.method)
-        // var n = config.url.search(/template|modal|myModal|myCloseModal|myEmailModal/i)
-        // // console.log("search", n + ":"+ config.url)
-        // if (n == -1) {
-        //   if (config.method == 'GET') {
-        //     var separator = config.url.indexOf('?') === -1 ? '?' : '&'
-        //     config.url = config.url + separator + 'noCache=' + new Date().getTime()
-        //   }
-        // // console.log(config.method)
-        // // console.log(config.url)
-        // } else {
-        //   // console.log("console noCache")
-        // }
-
+        var n = config.url.search(/template|modal|Modal/i)
+        if (n == -1) {
+          if (config.method == 'GET') {
+            var separator = config.url.indexOf('?') === -1 ? '?' : '&'
+            config.url = config.url + separator + 'noCache=' + new Date().getTime()
+          }
+        }
         return config
       }
     }

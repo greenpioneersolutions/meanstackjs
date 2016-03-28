@@ -32,7 +32,8 @@
     "Materialize": "materialize#~0.97.3",
     "toastr": "^2.1.1",
     "ng-file-upload ": "10.1.8",
-    "socket.io-client": "~1.4.5"
+    "socket.io-client": "~1.4.5",
+    "angular-jwt": "^0.0.9"
   },
   "resolutions": {
     "angular": "1.4.7"

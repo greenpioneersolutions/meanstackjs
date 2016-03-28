@@ -14,6 +14,7 @@ We are building in this framework to make your life as a designer or developer e
 - Uses JS Standard & John Papa Angular Style
 - UI framework agnostic - Use Boostrap , Materialize or Foundation
 - Supports CSS, SCSS & LESS
+- JWT for api auth
 - Simple Project Structure
 - Supports Clustering
 - Supports Environments: Development, Test & Production
@@ -95,6 +96,12 @@ Documentation
 -----------------
 
 Coming Soon - Until this is documented please take a look a the code we have provide 
+
+* Middleware - more docs to come soon but for the mean time if you wish to auth your routes then do this
+```javascript
+var middleware = require('./server/middleware.js')
+app.get('/verifyRoute' , middleware.verify, middleware.isAuthenticated , something.do)
+```
 
 Theming Styling
 -----------------
