@@ -81,9 +81,9 @@ userSchema.methods.comparePassword = function (candidatePassword, cb) {
     cb(null, isMatch)
   })
 }
-
 userSchema.set('toObject', {
-  virtuals: true
+  virtuals: true,
+  getters: true
 })
 userSchema.set('toJSON', {
   virtuals: true

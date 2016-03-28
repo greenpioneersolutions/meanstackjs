@@ -6,7 +6,7 @@
     .factory('UserFactory', UserFactory)
     .factory('MeanSocket', MeanSocket)
 
-  UserFactory.$inject = ['$rootScope', '$http', '$location', '$stateParams', '$cookies', '$q', '$timeout', 'logger']
+  UserFactory.$inject = ['$rootScope', '$http', '$location', '$stateParams', '$cookies', '$q', '$timeout', 'logger','jwtHelper']
   MeanSocket.$inject = ['$rootScope', '$http']
 
   function MeanSocket ($rootScope, $http) {
@@ -50,9 +50,32 @@
     }
   }
   /* @ngInject */
-  function UserFactory ($rootScope, $http, $location, $stateParams, $cookies, $q, $timeout, logger) {
+  function UserFactory ($rootScope, $http, $location, $stateParams, $cookies, $q, $timeout, logger,jwtHelper) {
     var self
     var UserFactory = new UserClass()
+
+    function getToken(token){
+      return jwtHelper.decodeToken(token)
+    }
+    function getAuthenticate (){
+      var deferred = $q.defer()
+
+      $http.get('/api/authenticate').then(function (success) {
+        if (success.data) {
+          if (!_.isEmpty(success.data.user)) {
+
+            localStorage.setItem('JWT', success.data.user)
+            success.data.user = getToken(success.data.user)
+          }
+          $timeout(deferred.resolve(success.data))
+        } else {
+          $timeout(deferred.reject({msg:'No Response'}))
+        }
+      }, function (error) {
+        $timeout(deferred.reject(error))
+      })
+      return deferred.promise
+    }
 
     function UserClass () {
       this.name = 'users'
@@ -60,14 +83,14 @@
       this.registerForm = false
       this.loggedin = false
       this.isAdmin = false
-      this.loginError = 0
-      this.usernameError = null
-      this.registerError = null
-      this.resetpassworderror = null
-      this.validationError = null
+      this.loginError = false
+      this.usernameError = false
+      this.registerError = false
+      this.resetpassworderror = false
+      this.validationError = false
       self = this
-      $http.get('/api/login').success(function (response) {
-        if (!response && $cookies.get('token') && $cookies.get('redirect')) {
+      getAuthenticate().then(function(data){
+        if (!data && $cookies.get('token') && $cookies.get('redirect')) {
           self.onIdentity.bind(self)({
             token: $cookies.get('token'),
             redirect: $cookies.get('redirect').replace(/^"|"$/g, '')
@@ -75,26 +98,54 @@
           $cookies.remove('token')
           $cookies.remove('redirect')
         } else {
-          self.onIdentity.bind(self)(response)
+          self.onIdentity.bind(self)(data)
         }
       })
     }
+    UserClass.prototype.editProfile = function (vm) {
+      getAuthenticate().then(function(data){
+        if (data !== '0') {
+          vm.editProfile = data
+        } else { // Not Authenticated
+          $location.url('/login')
+          logger.error('Not Authenticated', data, 'Login')
+        }
+      })
+    }
+    UserClass.prototype.login = function (vm) {
+      $http.post('/api/login', {
+        email: vm.loginCred.email,
+        password: vm.loginCred.password,
+        redirect: '/'
+      }).then(function(success){
+        if (!_.isEmpty(success.data.user)) {
+          localStorage.setItem('JWT', success.data.user)
+          success.data.user = getToken(success.data.user)
+        }
+        self.onIdentity.bind(self)(success.data)
+      },function(error){
+        self.onIdFail.bind(this)(error)
+      })
+      // .then(function (response) {
+      //   if (!response.error) {
+      //     logger.success(vm.loginCred.email, vm.loginCred, ' successfully logged in')
+      //   }
+      // })
+    }
+    UserClass.prototype.onIdentity = function (data) {
+      if (!data) return ({error: true})
 
-    UserClass.prototype.onIdentity = function (response) {
-      if (!response) return ({error: true})
-
-      var destination, data
-      destination = angular.isDefined(response.redirect || response.data) ? response.redirect || response.data.redirect : false
-      data = response.data || response
-      this.loggedin = data.authenticated
       this.user = data.user
-      this.loginError = 0
-      this.registerError = 0
-      if (this.user.roles)this.isAdmin = this.user.roles.indexOf('admin') > -1
-      $rootScope.$emit('loggedin')
-      if (destination) {
-        $location.url(destination)
+      this.loggedin = data.authenticated
+      this.loginError = false
+      this.registerError = false
+      if (this.user.roles){
+        this.isAdmin = this.user.roles.indexOf('admin') > -1
       }
+      if (data.redirect ? data.redirect : false) {
+        $location.url(data.redirect)
+      }
+      $rootScope.$emit('loggedin')
       return ({
         error: false
       })
@@ -102,7 +153,6 @@
 
     UserClass.prototype.onIdFail = function (error) {
       logger.error(error.data, error, 'Login')
-      // $location.url(response.redirect)
       this.loginError = 'Authentication failed.'
       this.registerError = error
       $rootScope.$emit('loginfailed')
@@ -111,41 +161,7 @@
         error: true
       })
     }
-    UserClass.prototype.editProfile = function (vm) {
-      var deferred = $q.defer()
-
-      $http.get('/api/login').then(function (success) {
-        // Authenticated
-        if (success.data !== '0') {
-          console.log(success.data)
-          vm.editProfile = success.data
-          $timeout(deferred.resolve)
-        } else { // Not Authenticated
-          $cookies.put('redirect', $location.url())
-          $timeout(deferred.reject)
-          $location.url('/login')
-          logger.error('Not Authenticated', success, 'Login')
-        }
-      }, function (error) {
-        console.log(error)
-      })
-
-      return deferred.promise
-    }
-    UserClass.prototype.login = function (vm) {
-      $http.post('/api/login', {
-        email: vm.loginCred.email,
-        password: vm.loginCred.password,
-        redirect: '/'
-      }).then(
-        this.onIdentity.bind(this),
-        this.onIdFail.bind(this)
-      ).then(function (response) {
-        if (!response.error) {
-          logger.success(vm.loginCred.email, vm.loginCred, ' successfully logged in')
-        }
-      })
-    }
+    
     UserClass.prototype.updateProfile = function (response) {
       var data = response.data || response
       logger.success(data.user.profile.name + ' your profile has be saved', data, 'Updated Profile')
@@ -162,7 +178,6 @@
     }
     UserClass.prototype.signup = function (vm) {
       if (vm.loginCred.password === vm.loginCred.confirmPassword) {
-        this.redirect = '/time/list'
         $http.post('/api/signup', vm.loginCred)
           .then(this.onIdentity.bind(this), this.onIdFail.bind(this))
           .then(function (response) {
@@ -222,55 +237,29 @@
     }
 
     UserClass.prototype.checkLoggedin = function () {
-      var deferred = $q.defer()
-      // Make an AJAX call to check if the user is logged in
-      $http.get('/api/login').success(function (data) {
-        // Authenticated
-        if (data.authenticated !== false) {
-          $timeout(deferred.resolve)
-        } else { // Not Authenticated
-          $cookies.put('redirect', $location.url())
-          $timeout(deferred.reject)
+      getAuthenticate().then(function(data){
+        if (data.authenticated == false) {
           $location.url('/signin')
           logger.error('please sign in', {user: 'No User'}, 'Unauthenticated')
         }
       })
-
-      return deferred.promise
     }
 
     UserClass.prototype.checkLoggedOut = function () {
-      var deferred = $q.defer()
-
-      // Make an AJAX call to check if the user is logged in
-      $http.get('/api/login').success(function (data) {
-        // Authenticated
+      getAuthenticate().then(function(data){
         if (data.authenticated !== false) {
-          $timeout(deferred.reject)
           logger.error(data.user.profile.name + ' You are already signed in', data.user, 'Authenticated Already')
           $location.url('/')
         }
-        // Not Authenticated
-        else $timeout(deferred.resolve)
       })
-
-      return deferred.promise
     }
 
     UserClass.prototype.checkAdmin = function () {
-      var deferred = $q.defer()
-
-      $http.get('/api/login').success(function (data) {
-        // Authenticated
-        if (data.authenticated !== '0' && data.user.roles.indexOf('admin') !== -1) $timeout(deferred.resolve)
-        // Not Authenticated or not Admin
-        else {
-          $timeout(deferred.reject)
+      getAuthenticate().then(function(data){
+        if (data.authenticated !== true && data.user.roles.indexOf('admin') == -1){
           $location.url('/')
         }
       })
-
-      return deferred.promise
     }
     return UserFactory
   }

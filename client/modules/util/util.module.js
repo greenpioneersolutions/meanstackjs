@@ -1,4 +1,4 @@
 ;(function () {
   'use strict'
-  angular.module('app.util', ['ui.router'])
+  angular.module('app.util', ['ui.router', 'angular-jwt'])
 })()
