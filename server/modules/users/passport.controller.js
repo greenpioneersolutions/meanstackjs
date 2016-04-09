@@ -43,5 +43,3 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function (email, pass
     })
   })
 }))
-
-

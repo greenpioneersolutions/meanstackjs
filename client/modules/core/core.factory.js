@@ -6,7 +6,7 @@
     .factory('UserFactory', UserFactory)
     .factory('MeanSocket', MeanSocket)
 
-  UserFactory.$inject = ['$rootScope', '$http', '$location', '$stateParams', '$cookies', '$q', '$timeout', 'logger','jwtHelper']
+  UserFactory.$inject = ['$rootScope', '$http', '$location', '$stateParams', '$cookies', '$q', '$timeout', 'logger', 'jwtHelper']
   MeanSocket.$inject = ['$rootScope', '$http']
 
   function MeanSocket ($rootScope, $http) {
@@ -50,26 +50,25 @@
     }
   }
   /* @ngInject */
-  function UserFactory ($rootScope, $http, $location, $stateParams, $cookies, $q, $timeout, logger,jwtHelper) {
+  function UserFactory ($rootScope, $http, $location, $stateParams, $cookies, $q, $timeout, logger, jwtHelper) {
     var self
     var UserFactory = new UserClass()
 
-    function getToken(token){
+    function getToken (token) {
       return jwtHelper.decodeToken(token)
     }
-    function getAuthenticate (){
+    function getAuthenticate () {
       var deferred = $q.defer()
 
       $http.get('/api/authenticate').then(function (success) {
         if (success.data) {
           if (!_.isEmpty(success.data.user)) {
-
             localStorage.setItem('JWT', success.data.user)
             success.data.user = getToken(success.data.user)
           }
           $timeout(deferred.resolve(success.data))
         } else {
-          $timeout(deferred.reject({msg:'No Response'}))
+          $timeout(deferred.reject({msg: 'No Response'}))
         }
       }, function (error) {
         $timeout(deferred.reject(error))
@@ -89,7 +88,7 @@
       this.resetpassworderror = false
       this.validationError = false
       self = this
-      getAuthenticate().then(function(data){
+      getAuthenticate().then(function (data) {
         if (!data && $cookies.get('token') && $cookies.get('redirect')) {
           self.onIdentity.bind(self)({
             token: $cookies.get('token'),
@@ -103,7 +102,7 @@
       })
     }
     UserClass.prototype.editProfile = function (vm) {
-      getAuthenticate().then(function(data){
+      getAuthenticate().then(function (data) {
         if (data !== '0') {
           vm.editProfile = data
         } else { // Not Authenticated
@@ -117,20 +116,20 @@
         email: vm.loginCred.email,
         password: vm.loginCred.password,
         redirect: '/'
-      }).then(function(success){
+      }).then(function (success) {
         if (!_.isEmpty(success.data.user)) {
           localStorage.setItem('JWT', success.data.user)
           success.data.user = getToken(success.data.user)
         }
         self.onIdentity.bind(self)(success.data)
-      },function(error){
+      }, function (error) {
         self.onIdFail.bind(this)(error)
       })
-      // .then(function (response) {
-      //   if (!response.error) {
-      //     logger.success(vm.loginCred.email, vm.loginCred, ' successfully logged in')
-      //   }
-      // })
+    // .then(function (response) {
+    //   if (!response.error) {
+    //     logger.success(vm.loginCred.email, vm.loginCred, ' successfully logged in')
+    //   }
+    // })
     }
     UserClass.prototype.onIdentity = function (data) {
       if (!data) return ({error: true})
@@ -139,7 +138,7 @@
       this.loggedin = data.authenticated
       this.loginError = false
       this.registerError = false
-      if (this.user.roles){
+      if (this.user.roles) {
         this.isAdmin = this.user.roles.indexOf('admin') > -1
       }
       if (data.redirect ? data.redirect : false) {
@@ -152,7 +151,7 @@
     }
 
     UserClass.prototype.onIdFail = function (error) {
-      logger.error(error.data, error, 'Login')
+      logger.error(error.data.msg, error, 'Login/Signup')
       this.loginError = 'Authentication failed.'
       this.registerError = error
       $rootScope.$emit('loginfailed')
@@ -161,7 +160,7 @@
         error: true
       })
     }
-    
+
     UserClass.prototype.updateProfile = function (response) {
       var data = response.data || response
       logger.success(data.user.profile.name + ' your profile has be saved', data, 'Updated Profile')
@@ -179,12 +178,14 @@
     UserClass.prototype.signup = function (vm) {
       if (vm.loginCred.password === vm.loginCred.confirmPassword) {
         $http.post('/api/signup', vm.loginCred)
-          .then(this.onIdentity.bind(this), this.onIdFail.bind(this))
-          .then(function (response) {
-            if (!response.error) {
-              logger.success(vm.loginCred.name, vm.loginCred, ' successfully signed up')
-              vm.loginCred = {}
+          .then(function (success) {
+            if (!_.isEmpty(success.data.user)) {
+              localStorage.setItem('JWT', success.data.user)
+              success.data.user = getToken(success.data.user)
             }
+            self.onIdentity.bind(self)(success.data)
+          }, function (error) {
+            self.onIdFail.bind(self)(error)
           })
       } else {
         logger.error(' passwords dont match', 'passwords dont match', 'Error')
@@ -229,15 +230,16 @@
 
     UserClass.prototype.logout = function (vm) {
       $http.get('/api/logout').success(function (data) {
-        // localStorage.removeItem('JWT')
+        localStorage.removeItem('JWT')
         $rootScope.$emit('logout')
         $location.url('/')
-      // this.user = {}
+        self.user = {}
+        self.loggedin = false
       })
     }
 
     UserClass.prototype.checkLoggedin = function () {
-      getAuthenticate().then(function(data){
+      getAuthenticate().then(function (data) {
         if (data.authenticated == false) {
           $location.url('/signin')
           logger.error('please sign in', {user: 'No User'}, 'Unauthenticated')
@@ -246,7 +248,7 @@
     }
 
     UserClass.prototype.checkLoggedOut = function () {
-      getAuthenticate().then(function(data){
+      getAuthenticate().then(function (data) {
         if (data.authenticated !== false) {
           logger.error(data.user.profile.name + ' You are already signed in', data.user, 'Authenticated Already')
           $location.url('/')
@@ -255,8 +257,8 @@
     }
 
     UserClass.prototype.checkAdmin = function () {
-      getAuthenticate().then(function(data){
-        if (data.authenticated !== true && data.user.roles.indexOf('admin') == -1){
+      getAuthenticate().then(function (data) {
+        if (data.authenticated !== true && data.user.roles.indexOf('admin') == -1) {
           $location.url('/')
         }
       })
