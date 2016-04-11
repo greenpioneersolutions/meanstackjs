@@ -17,7 +17,6 @@
  * Frontend : Set Files to be rendered based on the env
  * return frontendFiles
  */
-
 var path = require('path')
 var _ = require('lodash')
 var fs = require('fs')
@@ -128,6 +127,7 @@ function all (setup) {
       } else if (j.type === 'model') {
         files.models.push(require('./modules/' + r.name + '/' + j.orginal))
       } else if (j.type === 'routes') {
+        // require('./admin')(app)
         settings.app.use('/api/', require('./modules/' + r.name + '/' + j.orginal))
       } else {
         // console.log(j.type)

@@ -95,7 +95,8 @@
     "swig": "^1.4.2",
     "uglify-js": "^2.6.1",
     "uglifycss": "0.0.19",
-    "validator": "^4.3.0"
+    "validator": "^4.3.0",
+    "xtend": "^4.0.1"
   },
   "devDependencies": {
     "blessed": "^0.1.81",
