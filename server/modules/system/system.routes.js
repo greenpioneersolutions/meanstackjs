@@ -1,6 +1,5 @@
-var express = require('express')
 var system = require('./system.controller.js')
-var app = express()
 
-app.get('/testing/', system.testing)
-module.exports = app
+module.exports = function (app, auth, mail, settings) {
+  app.get('/api/testing/', system.testing(mail, settings))
+}

@@ -1,19 +1,26 @@
 'use strict'
 
 var path = require('path')
-var rootPath = path.normalize(__dirname + '/../..')
 var _ = require('lodash')
 var baseLine = {
-  root: rootPath,
-  hostname: process.env.HOST || process.env.HOSTNAME,
+  env: process.env.NODE_ENV || 'development',
+
+  // Root path of server
+  root: path.normalize(__dirname + '/../../..'),
+
+  // Server IP
+  ip: process.env.IP || '0.0.0.0',
+
+  hostname: process.env.HOST || process.env.HOSTNAME || 'localhost',
+
   templateEngine: 'swig',
   // JWT Object https://github.com/auth0/node-jsonwebtoken
   jwt: {
     // is used to compute a JWT SIGN
-     secret: 'MEANSTACKJS',
-     options:{
-      expiresIn: 60 * 120 //60 seconds * 120  = 2 hours 
-     }
+    secret: 'MEANSTACKJS',
+    options: {
+      expiresIn: 60 * 120 // 60 seconds * 120  = 2 hours 
+    }
   },
   // is used to compute a session hash
   sessionSecret: 'MEANSTACKJS',
@@ -113,6 +120,20 @@ var baseLine = {
       url: '/api/v1/',
       build: true
     }
+  },
+  email: {
+    welcome: {
+      subject: 'Welcome to Mean Stack JS',
+      text: function (username) {
+        return 'Hi ' + username + ',\n\n' +
+        'Thanks for signing up for Mean Stack JS.\n\n' +
+        'If you have any questions about the site, you can reply to this ' +
+        'email.\n\n' +
+        '— Mean Stack JS'
+      }
+    },
+    from: 'MEANSTACKJS@meanstackjs.com',
+    error: 'MEANSTACKJS@meanstackjs.com'
   }
 }
 var settings

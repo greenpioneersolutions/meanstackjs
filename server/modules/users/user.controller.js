@@ -4,9 +4,9 @@ var crypto = require('crypto')
 var nodemailer = require('nodemailer')
 var passport = require('passport')
 var mongoose = require('mongoose')
-var User = mongoose.model('User')
-var settings = require('../../../configs/settings.js')
+var User = mongoose.model('users')
 
+var settings = require('../../../configs/settings.js')
 
 var secrets = {
   host: 'smtp.mandrillapp.com', // Gmail, SMTP
@@ -17,14 +17,14 @@ var secrets = {
   }
 }
 
-var jwt = require('jsonwebtoken')     
-// res.cookie('token', token);
+var jwt = require('jsonwebtoken')
+// res.cookie('token', token)
 
 /**
  * POST /authenticate
  * Authenticate Token.
  */
-exports.postAuthenticate = function (req, res,next) {
+exports.postAuthenticate = function (req, res, next) {
   var redirect = req.body.redirect || false
   req.assert('email', 'Email is not valid').isEmail()
   req.assert('password', 'Password cannot be blank').notEmpty()
@@ -34,22 +34,22 @@ exports.postAuthenticate = function (req, res,next) {
       success: false,
       authenticated: false,
       msg: errors[0].msg,
-      redirect:redirect
+      redirect: redirect
     })
-  }else{
+  } else {
     User.findOne({
       email: req.body.email
-    }, function(err, user) {
-      if (err) throw err;
+    }, function (err, user) {
+      if (err) throw err
       if (!user) {
         res.send({
           success: false,
           authenticated: false,
           msg: 'Authentication failed. User not found.',
-          redirect:'/signin'
-        });
+          redirect: '/signin'
+        })
       } else {
-        user.comparePassword(req.body.password, function(err, isMatch) {
+        user.comparePassword(req.body.password, function (err, isMatch) {
           if (isMatch && !err) {
             req.logIn(user, function (err) {
               if (err) {
@@ -57,18 +57,18 @@ exports.postAuthenticate = function (req, res,next) {
               }
               delete user['password']
               var token = jwt.sign({
-                profile:user.profile,
-                roles:user.roles,
-                gravatar:user.gravatar,
-                email:user.email,
-                _id:user._id
-              }, settings.jwt.secret,settings.jwt.options)//good for two hours
-              res.cookie('token', token);
+                profile: user.profile,
+                roles: user.roles,
+                gravatar: user.gravatar,
+                email: user.email,
+                _id: user._id
+              }, settings.jwt.secret, settings.jwt.options) // good for two hours
+              res.cookie('token', token)
               res.json({
                 success: true,
                 authenticated: true,
                 token: 'JWT ' + token,
-                redirect:redirect
+                redirect: redirect
               })
             })
           } else {
@@ -76,8 +76,8 @@ exports.postAuthenticate = function (req, res,next) {
               success: false,
               authenticated: false,
               msg: 'Authentication failed. Wrong password.',
-              redirect:'/signin'
-            });
+              redirect: '/signin'
+            })
           }
         })
       }
@@ -93,24 +93,24 @@ exports.getAuthenticate = function (req, res) {
   var redirect = req.body.redirect || false
   if (req.user) {
     var token = jwt.sign({
-            profile:req.user.profile,
-            roles:req.user.roles,
-            gravatar:req.user.gravatar,
-            email:req.user.email,
-            _id:req.user._id
-          }, settings.jwt.secret,settings.jwt.options)
+      profile: req.user.profile,
+      roles: req.user.roles,
+      gravatar: req.user.gravatar,
+      email: req.user.email,
+      _id: req.user._id
+    }, settings.jwt.secret, settings.jwt.options)
     return res.status(200).send({
-      user:  token,
+      user: token,
       success: true,
       authenticated: true,
-      redirect:redirect
+      redirect: redirect
     })
-  }else{
+  } else {
     res.status(200).send({
       user: {},
       success: false,
       authenticated: false,
-      redirect:'/signin'
+      redirect: '/signin'
     })
   }
 }
@@ -127,7 +127,6 @@ exports.postLogin = function (req, res, next) {
   if (errors) {
     return res.status(200).send('/login')
   }
-
   passport.authenticate('local', function (err, user, info) {
     if (err) {
       return next(err)
@@ -141,18 +140,18 @@ exports.postLogin = function (req, res, next) {
       }
       delete user['password']
       var token = jwt.sign({
-        profile:user.profile,
-        roles:user.roles,
-        gravatar:user.gravatar,
-        email:user.email,
-        _id:user._id
-      }, settings.jwt.secret,settings.jwt.options)//good for two hours
-      res.cookie('token', token);
+        profile: user.profile,
+        roles: user.roles,
+        gravatar: user.gravatar,
+        email: user.email,
+        _id: user._id
+      }, settings.jwt.secret, settings.jwt.options) // good for two hours
+      res.cookie('token', token)
       res.json({
         success: true,
         authenticated: true,
         user: 'JWT ' + token,
-        redirect:redirect
+        redirect: redirect
       })
     })
   })(req, res, next)
@@ -185,7 +184,7 @@ exports.getSignup = function (req, res) {
 exports.postSignup = function (req, res, next) {
   req.assert('profile', 'Name must not be empty').notEmpty()
   req.assert('email', 'Email is not valid').isEmail()
-  req.assert('password', 'Password must be at least 4 characters long').len(4)
+  req.assert('password', 'Password must be at least 6 characters long').len(6)
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password)
 
   var errors = req.validationErrors()
@@ -211,29 +210,36 @@ exports.postSignup = function (req, res, next) {
       return res.status(400).send({ msg: 'Account with that email address already exists.' })
     }
     user.save(function (err) {
-      if (err) {
-        return next(err)
-      }
-      req.logIn(user, function (err) {
-        if (err) {
-          return next(err)
-        }
-        delete user['password']
-        var token = jwt.sign({
-          profile:user.profile,
-          roles:user.roles,
-          gravatar:user.gravatar,
-          email:user.email,
-          _id:user._id
-        }, settings.jwt.secret,settings.jwt.options)//good for two hours
-        res.cookie('token', token);
-        res.json({
-          success: true,
-          authenticated: true, 
-          user: 'JWT ' + token,
-          redirect:redirect
+      if (err && err.code === 11000) {
+        return res.status(400).send({ msg: 'Account with that email address already exists.' })
+      } else if (err && err.name === 'ValidationError') {
+        var keys = _.keys(err.errors)
+        return res.status(400).send({ msg: err.errors[keys[0]].message }) // err.message
+      } else if (err) {
+        next(err)
+      } else {
+        req.logIn(user, function (err) {
+          if (err) {
+            return next(err)
+          } else {
+            delete user['password']
+            var token = jwt.sign({
+              profile: user.profile,
+              roles: user.roles,
+              gravatar: user.gravatar,
+              email: user.email,
+              _id: user._id
+            }, settings.jwt.secret, settings.jwt.options) // good for two hours
+            res.cookie('token', token)
+            res.json({
+              success: true,
+              authenticated: true,
+              user: 'JWT ' + token,
+              redirect: redirect
+            })
+          }
         })
-      })
+      }
     })
   })
 }
