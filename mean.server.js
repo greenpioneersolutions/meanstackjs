@@ -5,7 +5,6 @@ module.exports = MeanStack
 var settings = require('./configs/settings.js')
 var express = require('express')
 var async = require('async')
-var cluster = require('cluster')
 var cookieParser = require('cookie-parser')
 var compress = require('compression')
 var session = require('express-session')
@@ -29,7 +28,6 @@ var auth = require('./server/passport.js')
 var expressValidator = require('express-validator')
 var environment = 'development'
 var status = require('express-system-status')
-var mail = require('./server/mail.js')
 if (process.env.NODE_ENV === 'test') {
   environment = 'test'
 } else if (process.env.NODE_ENV === 'production') {

@@ -1,5 +1,7 @@
-exports.__name__ = function (req, res) {
-  return res.status(200).send({
-    query: req.queryParameters
-  })
+exports.__name__ = function (mail, settings) {
+  return function (req, res) {
+    res.status(200).send({
+      query: req.queryParameters
+    })
+  }
 }
