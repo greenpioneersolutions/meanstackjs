@@ -1,12 +1,10 @@
 var _ = require('lodash')
-var async = require('async')
-var crypto = require('crypto')
-var mongoose = require('mongoose')
-var User = mongoose.model('User')
 var jwt = require('jsonwebtoken')
 var settings = require('./../configs/settings.js')
+var mongoose = require('mongoose')
 
 function findUser (id, cb) {
+  var User = mongoose.model('users')
   User.findOne({
     _id: id
   }, '-password', function (err, user) {
@@ -27,13 +25,6 @@ function isAuthenticated (req, res, next) {
     })
   }
 }
-function requiresLogin (req, res, next) {
-  if (!req.isAuthenticated()) {
-    return res.status(401).send({
-      success: false, msg: 'User is not authorized'
-    })
-  }
-}
 function isMongoId (req, res, next) {
   if ((_.size(req.params) === 1) && (!mongoose.Types.ObjectId.isValid(_.values(req.params)[0]))) {
     return res.status(500).send({success: false, msg: 'Parameter passed is not a valid Mongo ObjectId'})
@@ -42,6 +33,7 @@ function isMongoId (req, res, next) {
 }
 
 function verify (req, res, next) {
+  var User = mongoose.model('users')
   try {
     var token = getToken(req.headers)
     if (token) {
@@ -52,7 +44,7 @@ function verify (req, res, next) {
               res.status(401).send({
                 success: false,
                 msg: 'It appears your token has expired'
-              }); // Date(err.expiredAt)
+              }) // Date(err.expiredAt)
               break
             case 'JsonWebTokenError':
               res.status(401).send({

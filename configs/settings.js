@@ -3,7 +3,7 @@
 var path = require('path')
 var _ = require('lodash')
 var baseLine = {
-  env: process.env.NODE_ENV,
+  env: process.env.NODE_ENV || 'development',
 
   // Root path of server
   root: path.normalize(__dirname + '/../../..'),

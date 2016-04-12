@@ -4,7 +4,8 @@ var crypto = require('crypto')
 var nodemailer = require('nodemailer')
 var passport = require('passport')
 var mongoose = require('mongoose')
-var User = mongoose.model('User')
+var User = mongoose.model('users')
+
 var settings = require('../../../configs/settings.js')
 
 var secrets = {
@@ -126,7 +127,6 @@ exports.postLogin = function (req, res, next) {
   if (errors) {
     return res.status(200).send('/login')
   }
-
   passport.authenticate('local', function (err, user, info) {
     if (err) {
       return next(err)

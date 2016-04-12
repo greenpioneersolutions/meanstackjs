@@ -1,24 +1,34 @@
-var _ = require('lodash')
-var passport = require('passport')
 var LocalStrategy = require('passport-local').Strategy
 var mongoose = require('mongoose')
-var User = mongoose.model('User')
 
-passport.serializeUser(function (user, done) {
-  done(null, user.id)
-})
+// debug = require('debug')('meanstackjs:passport')
 
-passport.deserializeUser(function (id, done) {
+/**
+ * Passport serialize user function.
+ */
+exports.serializeUser = function (user, done) {
+  process.nextTick(function () {
+    done(null, user.id)
+  })
+}
+
+/**
+ * Passport deserialize user function.
+ */
+exports.deserializeUser = function (id, done) {
+  var User = mongoose.model('users')
   User.findOne({
     _id: id
   }, '-password', function (err, user) {
     done(err, user)
   })
-})
+}
+
 /**
  * Sign in using Email and Password.
  */
-passport.use(new LocalStrategy({ usernameField: 'email' }, function (email, password, done) {
+exports.passportStrategy = new LocalStrategy({ usernameField: 'email' }, function (email, password, done) {
+  var User = mongoose.model('users')
   email = email.toLowerCase()
   User.findOne({
     email: email
@@ -42,4 +52,4 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function (email, pass
       }
     })
   })
-}))
+})

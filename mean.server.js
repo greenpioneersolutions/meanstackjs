@@ -25,6 +25,7 @@ var flash = require('express-flash')
 var path = require('path')
 var mongoose = require('mongoose')
 var passport = require('passport')
+var auth = require('./server/passport.js')
 var expressValidator = require('express-validator')
 var environment = 'development'
 var status = require('express-system-status')
@@ -80,12 +81,13 @@ function MeanStack (opts, done) {
   }))
   self.app.use(passport.initialize())
   self.app.use(passport.session())
+  passport.serializeUser(auth.serializeUser)
+  passport.deserializeUser(auth.deserializeUser)
+  passport.use(auth.passportStrategy)
+
   self.app.use(flash())
   self.app.use(function (req, res, next) {
     res.locals.user = req.user
-    next()
-  })
-  self.app.use(function (req, res, next) {
     if (/api/i.test(req.path)) {
       try {
         if (req.body.redirect) {
@@ -98,7 +100,6 @@ function MeanStack (opts, done) {
     next()
   })
   self.app.use(errorHandler())
-
   self.setupHeaders()
   self.setupLogger()
   self.setupRoutesMiddleware()
@@ -257,37 +258,36 @@ MeanStack.prototype.setupStatic = function () {
 }
 MeanStack.prototype.setupRoutesMiddleware = function () {
   var self = this
-  self.Register = require('./server/register.js')(self.app)
-  self.build = require('buildreq')(settings.buildreq)
   /**
-   * Dynamic Query Builder & Response Function
+   * Middleware.
    */
-  self.app.use(self.build.queryMiddleware({mongoose: mongoose}))
-  self.app.use(self.build.responseMiddleware({mongoose: mongoose}))
-  /**
-   * Manual Routes - returns file structure for the front end
-   */
-  self.fileStructure = self.Register.all(settings)
-  /**
-   * Middleware to use throughout the backend
-   */
-
   self.middleware = require('./server/middleware.js')
-
+  self.build = require('buildreq')(settings.buildreq)
+  self.app.use(self.build.queryMiddleware({mongoose: mongoose}))
+  /**
+   * Routes.
+   */
+  self.Register = require('./server/register.js')
+  self.app.use(self.build.responseMiddleware({mongoose: mongoose}))
+  self.fileStructure = self.Register({
+    app: self.app,
+    settings: settings,
+    middleware: self.middleware
+  })
   /**
    * Dynamic Routes / Manually enabling them . You can change it back to automatic in the settings
    * build.routing(app, mongoose) - if reverting back to automatic
    */
   self.build.routing({
     mongoose: mongoose,
-    remove: ['user'],
+    remove: ['users'],
     middleware: {
       auth: [self.middleware.verify, self.middleware.isAuthenticated]
     }
   }, function (error, data) {
     if (error) console.log(error)
     _.forEach(data, function (m) {
-      console.log(chalk.green('Route Built by NPM buildreq ', m.route))
+      self.debug('Route Built by NPM buildreq:', m.route)
       self.app.use(m.route, m.app)
     })
   })
@@ -297,7 +297,6 @@ MeanStack.prototype.livereload = function () {
   /**
    * Livereload
    */
-  console.log(self.fileStructure, 'fileStructure')
   if (environment === 'development') {
     var scss_lessWatcher = chokidar.watch('file, dir, glob, or array', {
       ignored: /[\/\\]\./,

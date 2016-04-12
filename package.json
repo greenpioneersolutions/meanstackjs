@@ -11,7 +11,8 @@
       "self",
       "_",
       "describe",
-      "it"
+      "it",
+      "__dirname"
     ]
   },
   "scripts": {
