@@ -2,7 +2,7 @@ var os = require('os')
 var cluster = require('cluster')
 var chalk = require('chalk')
 cluster.setupMaster({
-  exec: 'server.js'
+  exec: 'mean.server.js'
 })
 cluster.on('exit', function (worker) {
   console.log(chalk.red('worker ' + worker.id + ' died'))

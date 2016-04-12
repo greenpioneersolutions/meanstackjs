@@ -1,23 +1,14 @@
-// NEED TO REFACTOR AND REFINE
-// want to add async down the road
-// var async = require('async')
+module.exports = build
 
-/**
- * Init
- * Frontend & Backend : Look up  modules locations and gather all the files in them
- * Frontend & Backend : Filter out all file starting with .   ex .DS_store .Git Ignore
- * Frontend & Backend : Create obj with all relative information on each file
- * Function ALL
- * Backend : For each file register all models and routes. not controllers because routes call controllers
- * Frontend : init variable to keep track of files and info
- * Frontend : CHECK AND MAKE DIRECTORY - Check and make directory
- * Frontend : Delete all previously compiled
- * Frontend : Render the global style
- * Frontend : Push all frontend files
- * Frontend : Set Files to be rendered based on the env
- * return frontendFiles
- */
-
+function build (options) {
+  if (options === undefined) {
+    throw new TypeError(console.log('Expected object for argument options but got ' + options))
+  }
+  if (typeof options === 'object' && options !== null) {
+    return new Register(options)
+  }
+  throw new TypeError(console.log('Expected object for argument options but got ' + options))
+}
 var path = require('path')
 var _ = require('lodash')
 var fs = require('fs')
@@ -27,118 +18,118 @@ var less = require('less')
 var uglify = require('uglify-js')
 var concat = require('concat')
 var uglifycss = require('uglifycss')
-/**
- * BACKEND
- */
-var lookDir = path.resolve(__dirname, './modules')
-var configs = []
-if (!fs.existsSync(lookDir)) {
-  throw new Error(chalk.red('Critical Folder Missing:' + chalk.red.underline.bold('Expected Server Modules Directory ./server/modules/')))
+var mongoose = require('mongoose')
+var debug = require('debug')('meanstackjs:register')
+
+function Register (opts, done) {
+  var self = this
+  self.mail = require('./mail.js')
+  self.app = opts.app
+  self.settings = opts.settings
+  self.middleware = opts.middleware
+  self.info()
+  self.config()
+  self.directories()
+  self.createBackendModels()
+  self.createBackendRoutes()
+  self.createGlobalStyle()
+  self.createFrontend()
+  self.env()
+  return self.frontendFiles
 }
-var data = {}
-var modules = fs.readdirSync(lookDir)
 
-// IF YOU NEED TO FILTER ANY FILES OUT
-modules = _.filter(modules, function (n) {
-  return !_.startsWith(n, '.')
-})
-
-data.modules = modules
-_.forEach(data.modules, function (value, key) {
-  var obj = {
-    'name': value,
-    'lookup': lookDir + '/' + value
-  }
-  var files = fs.readdirSync(lookDir + '/' + value)
-
-  files = _.filter(files, function (n) {
-    return !_.startsWith(n, '.')
-  })
-  obj.files = []
-  _.forEach(files, function (f) {
-    var fileData = _.words(f, /[^. ]+/g)
-    obj.files.push({
-      'type': fileData[1],
-      'ext': fileData[2],
-      'name': fileData[0],
-      'orginal': f
+Register.prototype.info = function () {
+  debug('started Info')
+  var self = this
+  function expandModules (arr, dir) {
+    var returnConfigs = []
+    _.forEach(arr, function (value, key) {
+      var obj = {
+        'name': value,
+        'lookup': dir + '/' + value
+      }
+      var files = fs.readdirSync(dir + '/' + value)
+      files = _.filter(files, function (n) {
+        return !_.startsWith(n, '.')
+      })
+      obj.files = []
+      _.forEach(files, function (f) {
+        var fileData = _.words(f, /[^. ]+/g)
+        obj.files.push({
+          'type': fileData[1],
+          'ext': fileData[2],
+          'name': fileData[0],
+          'orginal': f
+        })
+      // configs[value].push(f)
+      })
+      returnConfigs.push(obj)
     })
-  // configs[value].push(f)
-  })
-  configs.push(obj)
-})
-
-/**
- * FRONTEND
- */
-var frontEndDir = path.resolve(__dirname, '../client/modules')
-var frontEndConfigs = []
-if (!fs.existsSync(frontEndDir)) {
-  throw new Error(chalk.red('Critical Folder Missing:' + chalk.red.underline.bold('Expected Client Modules Directory ./client/modules/')))
-}
-var frontEnddata = {}
-var frontEndmodules = fs.readdirSync(frontEndDir)
-
-// IF YOU NEED TO FILTER ANY FILES OUT
-frontEndmodules = _.filter(frontEndmodules, function (n) {
-  return !_.startsWith(n, '.')
-})
-var mainFrontendFile = ''
-frontEndmodules = _.filter(frontEndmodules, function (n) {
-  if (path.extname(n) !== '')mainFrontendFile = n
-  return path.extname(n) === ''
-})
-
-frontEnddata.modules = frontEndmodules
-_.forEach(frontEnddata.modules, function (value, key) {
-  var obj = {
-    'name': value,
-    'lookup': frontEndDir + '/' + value
+    return returnConfigs
   }
-  var files = fs.readdirSync(frontEndDir + '/' + value)
-  files = _.filter(files, function (n) {
-    return !_.startsWith(n, '.')
-  })
-  obj.files = []
-  _.forEach(files, function (f) {
-    var fileData = _.words(f, /[^. ]+/g)
-    obj.files.push({
-      'type': fileData[1],
-      'ext': fileData[2],
-      'name': fileData[0],
-      'orginal': f
-    })
-  // configs[value].push(f)
-  })
-  frontEndConfigs.push(obj)
-})
-function all (setup) {
-  var settings = setup()
+
   /**
    * BACKEND
    */
-  _.forEach(settings.configs, function (r) {
-    var files = {
-      'models': [],
-      'controllers': []
-    }
+  var backendPath = path.resolve(__dirname, './modules')
+  if (!fs.existsSync(backendPath)) {
+    throw new Error(chalk.red('Critical Folder Missing:' + chalk.red.underline.bold('Expected Server Modules Directory ./server/modules/')))
+  }
+
+  var backendConfigs = expandModules(_.filter(fs.readdirSync(backendPath), function (n) {
+    return !_.startsWith(n, '.')
+  }), backendPath)
+
+  /**
+   * FRONTEND
+   */
+  var frontendPath = path.resolve(__dirname, '../client/modules')
+  if (!fs.existsSync(frontendPath)) {
+    throw new Error(chalk.red('Critical Folder Missing:' + chalk.red.underline.bold('Expected Server Modules Directory ./client/modules/')))
+  }
+
+  var frontendConfigs = _.filter(fs.readdirSync(frontendPath), function (n) {
+    return !_.startsWith(n, '.')
+  })
+  var mainFrontendFile = ''
+  frontendConfigs = expandModules(_.filter(frontendConfigs, function (n) {
+    if (path.extname(n) !== '')mainFrontendFile = n
+    return path.extname(n) === ''
+  }), frontendPath)
+
+  self.backendFiles = {
+    'model': [],
+    'controllers': [],
+    'routes': []
+  }
+  _.forEach(backendConfigs, function (r) {
     _.forEach(r.files, function (j) {
       if (j.type === 'controller') {
-        // files.controllers.push(require('./modules/' + r.name + '/' + j.orginal))
+        self.backendFiles.controllers.push({name: r.name, url: './modules/' + r.name + '/' + j.orginal})
       } else if (j.type === 'model') {
-        files.models.push(require('./modules/' + r.name + '/' + j.orginal))
+        self.backendFiles.model.push({name: r.name, url: './modules/' + r.name + '/' + j.orginal})
       } else if (j.type === 'routes') {
-        settings.app.use('/api/', require('./modules/' + r.name + '/' + j.orginal))
+        self.backendFiles.routes.push({name: r.name, url: './modules/' + r.name + '/' + j.orginal})
       } else {
         // console.log(j.type)
       }
     })
   })
 
+  self.backendFolders = backendConfigs
+  self.frontendFolders = frontendConfigs
+  self.mainFrontendFile = mainFrontendFile
+  debug('end Info')
+}
+
+Register.prototype.config = function (opts) {
+  debug('started config')
+
+  var self = this
   /**
    * FRONTEND
    */
-  var frontendFiles = {
+  self.frontendFiles = {
     'controller': [],
     'module': [],
     'routes': [],
@@ -155,15 +146,33 @@ function all (setup) {
     'provider': [],
     'else': []
   }
-  var frontendFilesFinal = {
+  self.frontendFilesFinal = {
     css: [],
     js: []
   }
-  var frontendFilesAggregate = {
+  self.frontendFilesAggregate = {
     css: [],
     js: []
   }
+  debug('end config')
+}
+Register.prototype.directories = function () {
+  debug('started directories')
 
+  var self = this
+  function rmdirAsync (url, callback) {
+    if (fs.existsSync(url)) {
+      fs.readdirSync(url).forEach(function (file, index) {
+        var curPath = path.resolve(url + '/' + file)
+        if (fs.lstatSync(curPath).isDirectory()) { // recurse
+          //
+        } else { // delete file
+          fs.unlinkSync(curPath)
+        }
+      })
+    // fs.rmdirSync(url)
+    }
+  }
   // CHECK AND MAKE DIRECTORY
   if (!fs.existsSync(__dirname + '/../client/scripts/')) {
     fs.mkdirSync(__dirname + '/../client/scripts/')
@@ -184,22 +193,55 @@ function all (setup) {
   rmdirAsync(__dirname + '/../client/scripts/compiled/', function () {
     // console.log(arguments)
   })
-  // RENDER THE GLOBAL STYLE
+  debug('end directories')
+}
+Register.prototype.createBackendModels = function () {
+  debug('started createBackendModels')
+
+  var self = this
+  var models
+
+  _.forEach(self.backendFiles.model, function (n) {
+    debug('Model: ' + n.name)
+    var model = mongoose.model(n.name, require(n.url))
+    model.on('index', function (err) {
+      if (err) throw err
+    })
+  })
+  debug('end createBackendModels')
+}
+Register.prototype.createBackendRoutes = function () {
+  debug('started createBackendRoutes')
+
+  var self = this
+  _.forEach(self.backendFiles.routes, function (n) {
+    debug('Route : %s', n.url)
+    require(n.url)(self.app, self.middleware, self.mail, self.settings)
+  })
+  debug('end createBackendRoutes')
+}
+Register.prototype.createGlobalStyle = function () {
+  debug('started createGlobalStyle')
+
   var globalContents = fs.readFileSync(__dirname + '/../client/styles/global.style.scss', 'utf8')
   var result = sass.renderSync({
     includePaths: [path.join(__dirname, '../client/modules'), path.join(__dirname, '../client/styles'), path.join(__dirname, '../client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(__dirname, '../client/bower_components/Materialize/sass'), path.join(__dirname, '../client/bower_components/foundation/scss'), path.join(__dirname, '../client/bower_components/font-awesome/scss')],
     data: globalContents
   })
   fs.writeFileSync(__dirname + '/../client/styles/compiled/global.style.css', result.css)
+  debug('end createGlobalStyle')
+}
+Register.prototype.createFrontend = function () {
+  debug('started createFrontend')
 
-  // PUSH ALL FRONTEND FILES
-  _.forEach(settings.frontEndConfigs, function (r) {
+  var self = this
+  _.forEach(self.frontendFolders, function (r) {
     _.forEach(r.files, function (j) {
       switch (j.type) {
         case 'module':
-          frontendFiles.module.push('/modules/' + r.name + '/' + j.orginal)
-          frontendFilesFinal.js.unshift('/modules/' + r.name + '/' + j.orginal)
-          frontendFilesAggregate.js.unshift(path.join(__dirname, '../client/modules/' + r.name + '/' + j.orginal))
+          self.frontendFiles.module.push('/modules/' + r.name + '/' + j.orginal)
+          self.frontendFilesFinal.js.unshift('/modules/' + r.name + '/' + j.orginal)
+          self.frontendFilesAggregate.js.unshift(path.join(__dirname, '../client/modules/' + r.name + '/' + j.orginal))
           break
         case 'controller':
         case 'routes':
@@ -207,36 +249,36 @@ function all (setup) {
         case 'service':
         case 'provider':
         case 'directive':
-          frontendFiles.controller.push('/modules/' + r.name + '/' + j.orginal)
-          frontendFilesFinal.js.push('/modules/' + r.name + '/' + j.orginal)
-          frontendFilesAggregate.js.push(path.join(__dirname, '../client/modules/' + r.name + '/' + j.orginal))
+          self.frontendFiles.controller.push('/modules/' + r.name + '/' + j.orginal)
+          self.frontendFilesFinal.js.push('/modules/' + r.name + '/' + j.orginal)
+          self.frontendFilesAggregate.js.push(path.join(__dirname, '../client/modules/' + r.name + '/' + j.orginal))
           break
         case 'style':
           if (j.ext === 'css') {
-            frontendFiles.style.css.push('/modules/' + r.name + '/' + j.orginal)
-            frontendFilesFinal.css.push('/modules/' + r.name + '/' + j.orginal)
-            frontendFilesAggregate.css.push(path.join(__dirname, '../client/modules/' + r.name + '/' + j.orginal))
+            self.frontendFiles.style.css.push('/modules/' + r.name + '/' + j.orginal)
+            self.frontendFilesFinal.css.push('/modules/' + r.name + '/' + j.orginal)
+            self.frontendFilesAggregate.css.push(path.join(__dirname, '../client/modules/' + r.name + '/' + j.orginal))
           } else if (j.ext === 'scss' || j.ext === 'sass') {
             var scssContents = fs.readFileSync(__dirname + '/../client/modules/' + r.name + '/' + j.orginal, 'utf8')
             // PLACED includePaths: so that @import 'global-variables.styles.scss'; work properly
             var result = sass.renderSync({
-              includePaths: [path.join(__dirname, '../client/modules'), path.join(__dirname, '../client/styles'), path.join(__dirname, '../client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(__dirname, '../client/bower_components/Materialize/sass'), path.join(__dirname, '../client/bower_components/foundation/scss')],
+              includePaths: [path.join(__dirname, '../client/modules'), path.join(__dirname, '../client/styles'), path.join(__dirname, '../client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(__dirname, '../client/bower_components/Materialize/sass'), path.join(__dirname, '../client/bower_components/foundation/scss'), path.join(__dirname, '../client/bower_components/font-awesome/scss')],
               data: scssContents
             })
             fs.writeFileSync(__dirname + '/../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css', result.css)
             if (j.ext === 'scss') {
-              frontendFiles.style.scss.push({
+              self.frontendFiles.style.scss.push({
                 orginal: '/client/modules/' + r.name + '/' + j.orginal,
                 compiled: '/client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css'
               })
             } else {
-              frontendFiles.style.sass.push({
+              self.frontendFiles.style.sass.push({
                 orginal: '/client/modules/' + r.name + '/' + j.orginal,
                 compiled: '/client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css'
               })
             }
-            frontendFilesFinal.css.push('/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css')
-            frontendFilesAggregate.css.push(path.join(__dirname, '../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css'))
+            self.frontendFilesFinal.css.push('/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css')
+            self.frontendFilesAggregate.css.push(path.join(__dirname, '../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css'))
           } else if (j.ext === 'less') {
             var lessContents = fs.readFileSync(__dirname + '/../client/modules/' + r.name + '/' + j.orginal, 'utf8')
             less.render(lessContents, function (err, result) {
@@ -244,12 +286,12 @@ function all (setup) {
                 console.log(chalk.red(err))
               }
               fs.writeFileSync(__dirname + '/../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css', result.css)
-              frontendFiles.style.less.push({
+              self.frontendFiles.style.less.push({
                 orginal: '/client/modules/' + r.name + '/' + j.orginal,
                 compiled: '/client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css'
               })
-              frontendFilesFinal.css.push('/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css')
-              frontendFilesAggregate.css.push(path.join(__dirname, '../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css'))
+              self.frontendFilesFinal.css.push('/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css')
+              self.frontendFilesAggregate.css.push(path.join(__dirname, '../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css'))
             })
           } else {
             console.log('Unknown Style', j)
@@ -262,9 +304,9 @@ function all (setup) {
           break
         default:
           if (j.ext === 'js') {
-            frontendFiles.else.push('/modules/' + r.name + '/' + j.orginal)
-            frontendFilesFinal.js.push('/modules/' + r.name + '/' + j.orginal)
-            frontendFilesAggregate.js.push(path.join(__dirname, '../client/modules/' + r.name + '/' + j.orginal))
+            self.frontendFiles.else.push('/modules/' + r.name + '/' + j.orginal)
+            self.frontendFilesFinal.js.push('/modules/' + r.name + '/' + j.orginal)
+            self.frontendFilesAggregate.js.push(path.join(__dirname, '../client/modules/' + r.name + '/' + j.orginal))
           } else if (j.ext === 'css') {
             console.log('Did you name css wrong?', j)
           } else {
@@ -274,32 +316,36 @@ function all (setup) {
       }
     })
   })
-  frontendFilesFinal.js.unshift(/modules/ + mainFrontendFile)
-  frontendFilesAggregate.js.unshift(path.join(__dirname, '../client/modules/' + mainFrontendFile))
-  _.forEach(settings.meanSettings.assets.css, function (ms) {
-    frontendFilesFinal.css.unshift(ms)
-    frontendFilesAggregate.css.unshift(path.join(__dirname, '../client/' + ms))
+  self.frontendFilesFinal.js.unshift(/modules/ + self.mainFrontendFile)
+  self.frontendFilesAggregate.js.unshift(path.join(__dirname, '../client/modules/' + self.mainFrontendFile))
+  _.forEach(self.settings.assets.css, function (ms) {
+    self.frontendFilesFinal.css.unshift(ms)
+    self.frontendFilesAggregate.css.unshift(path.join(__dirname, '../client/' + ms))
   })
-  _.forEach(settings.meanSettings.assets.js, function (ms) {
-    frontendFilesFinal.js.unshift(ms)
-    frontendFilesAggregate.js.unshift(path.join(__dirname, '../client/' + ms))
+  _.forEach(self.settings.assets.js, function (ms) {
+    self.frontendFilesFinal.js.unshift(ms)
+    self.frontendFilesAggregate.js.unshift(path.join(__dirname, '../client/' + ms))
   })
+  debug('end createFrontend')
+}
+Register.prototype.env = function () {
+  debug('started env')
 
-  // SET FILES TO BE RENDERED BASED OF THE ENV
+  var self = this
   if (process.env.NODE_ENV === 'test') {
-    concat(frontendFilesAggregate.css, path.join(__dirname, '../client/styles/compiled/concat.css'), function (error) {
+    concat(self.frontendFilesAggregate.css, path.join(__dirname, '../client/styles/compiled/concat.css'), function (error) {
       if (error)console.log(error, 'concat')
     })
-    concat(frontendFilesAggregate.js, path.join(__dirname, '../client/scripts/compiled/concat.js'), function (error) {
+    concat(self.frontendFilesAggregate.js, path.join(__dirname, '../client/scripts/compiled/concat.js'), function (error) {
       if (error)console.log(error, 'concat')
     })
-    settings.app.locals.frontendFilesFinal = {
+    self.settings.app.locals.frontendFilesFinal = {
       js: ['scripts/compiled/concat.js'],
       css: ['styles/compiled/concat.css']
     }
   } else if (process.env.NODE_ENV === 'production') {
     var uglifiedcss = uglifycss.processFiles(
-      frontendFilesAggregate.css, {
+      self.frontendFilesAggregate.css, {
         maxLineLen: 500
       }
     )
@@ -311,7 +357,7 @@ function all (setup) {
       }
     })
 
-    var uglifiedjs = uglify.minify(frontendFilesAggregate.js, {
+    var uglifiedjs = uglify.minify(self.frontendFilesAggregate.js, {
       mangle: false
     })
     fs.writeFile(path.join(__dirname, '../client/scripts/compiled/concat.min.js'), uglifiedjs.code, function (err) {
@@ -321,50 +367,12 @@ function all (setup) {
         console.log('Script generated and saved:', 'concat.min.js')
       }
     })
-    settings.app.locals.frontendFilesFinal = {
+    self.settings.app.locals.frontendFilesFinal = {
       js: ['scripts/compiled/concat.min.js'],
       css: ['styles/compiled/concat.min.css']
     }
   } else {
-    settings.app.locals.frontendFilesFinal = frontendFilesFinal
+    self.app.locals.frontendFilesFinal = self.frontendFilesFinal
   }
-  return frontendFiles
+  debug('end env')
 }
-function Register (app) {
-  this.configs = configs
-  this.frontEndConfigs = frontEndConfigs
-  this.app = app
-}
-Register.prototype.all = function (meanSettings) {
-  function setup () {
-    return {
-      configs: this.configs,
-      frontEndConfigs: this.frontEndConfigs,
-      app: this.app,
-      meanSettings: meanSettings
-    }
-  }
-  return all(setup.bind(this))
-}
-
-function rmdirAsync (url, callback) {
-  if (fs.existsSync(url)) {
-    fs.readdirSync(url).forEach(function (file, index) {
-      var curPath = path.resolve(url + '/' + file)
-      if (fs.lstatSync(curPath).isDirectory()) { // recurse
-        //
-      } else { // delete file
-        fs.unlinkSync(curPath)
-      }
-    })
-  // fs.rmdirSync(url)
-  }
-}
-function register (options) {
-  if (options === undefined) {
-    return new Register()
-  } else {
-    return new Register(options)
-  }
-}
-module.exports = register

@@ -15,12 +15,8 @@ var blogSchema = mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.ObjectId,
-    ref: 'User'
+    ref: 'users'
   }
 })
 
-var Blog = mongoose.model('Blog', blogSchema)
-
-module.exports = {
-  Blog: Blog
-}
+module.exports = blogSchema
