@@ -51,7 +51,6 @@ function run (ServerConstructor) {
 }
 
 if (!module.parent) {
-  console.log('parent')
   run(Mean)
   run(SocketIO)
   run(Livereload)

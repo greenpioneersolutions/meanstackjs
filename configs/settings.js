@@ -12,6 +12,9 @@ var baseLine = {
   ip: process.env.IP || '0.0.0.0',
 
   hostname: process.env.HOST || process.env.HOSTNAME || 'localhost',
+
+  // Enable Swagger.io at localhost:[port]/api/
+  swagger: true,
   // Enable the use of babel for ES6
   babel: {
     options: {
