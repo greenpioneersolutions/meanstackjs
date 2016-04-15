@@ -21,7 +21,7 @@
     "karma": "node node_modules/karma/bin/karma start tests/karma.test.js || karma start tests/karma.test.js ",
     "standard": "node node_modules/standard/bin/cmd.js || standard",
     "postinstall": "node node_modules/bower/bin/bower install || bower install",
-    "start": " node node_modules/nodemon/bin/nodemon.js server.js || nodemon.js server.js",
+    "start": " node node_modules/nodemon/bin/nodemon.js index.js || nodemon.js index.js",
     "cli": "node commands/cli.js"
   },
   "repository": {

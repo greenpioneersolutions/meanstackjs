@@ -1,4 +1,4 @@
-[![dependencies](https://david-dm.org/greenpioneer/meanstackjs.svg)](https://david-dm.org/greenpioneer/meanstackjs)
+[![dependencies](https://david-dm.org/greenpioneersolutions/meanstackjs.svg)](https://david-dm.org/greenpioneersolutions/meanstackjs)
 [![npm-issues](https://img.shields.io/github/issues/greenpioneersolutions/meanstackjs.svg)](https://github.com/greenpioneersolutions/meanstackjs/issues)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![meanstackjs Logo](http://meanstackjs.com/images/logo/header3x.png)](http://meanstackjs.com/)
