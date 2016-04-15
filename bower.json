@@ -10,16 +10,16 @@
     "tests"
   ],
   "devDependencies": {
-    "angular-mocks": "^1.4.7"
+    "angular-mocks": "^1.5.3"
   },
   "dependencies": {
-    "angular": "^1.4.7",
-    "angular-sanitize": "^1.4.7",
-    "angular-cookies": "^1.4.7",
-    "angular-animate": "^1.4.7",
-    "angular-resource": "^1.4.7",
+    "angular": "^1.5.3",
+    "angular-sanitize": "^1.5.3",
+    "angular-cookies": "^1.5.3",
+    "angular-animate": "^1.5.3",
+    "angular-resource": "^1.5.3",
     "angular-material": "~1.0.1",
-    "angular-mocks": "^1.4.7",
+    "angular-mocks": "^1.5.3",
     "angular-moment": "^0.10.3",
     "angular-ui-router": "^0.2.15",
     "angular-bootstrap": "^0.14.3",
@@ -29,13 +29,13 @@
     "lodash": "~3.10.1",
     "jquery": "^2.1.4",
     "moment": "^2.10.3",
-    "Materialize": "materialize#~0.97.3",
+    "materialize": "^0.97.3",
     "toastr": "^2.1.1",
     "ng-file-upload ": "10.1.8",
     "socket.io-client": "~1.4.5",
     "angular-jwt": "^0.0.9"
   },
   "resolutions": {
-    "angular": "1.4.7"
+    "angular": "1.5.3"
   }
 }

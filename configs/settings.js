@@ -13,6 +13,23 @@ var baseLine = {
 
   hostname: process.env.HOST || process.env.HOSTNAME || 'localhost',
 
+  // Enable Swagger.io at localhost:[port]/api/
+  swagger: true,
+  // Enable the use of babel for ES6
+  babel: {
+    options: {
+      // NOTE you must install the proper package to use here
+      presets: [
+        'babel-preset-es2015'
+      ],
+      plugins: [
+        'transform-class-properties'
+      ]
+    },
+    folder: 'dist',
+    active: false
+  },
+  // Template Engine
   templateEngine: 'swig',
   // JWT Object https://github.com/auth0/node-jsonwebtoken
   jwt: {

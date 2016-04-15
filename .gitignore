@@ -77,3 +77,8 @@ files/
 # --------------------
 client/styles/compiled
 client/scripts/compiled
+
+# --------------------
+# Babel Compiled files
+# --------------------
+server/dist/

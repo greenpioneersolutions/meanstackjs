@@ -20,6 +20,7 @@ var concat = require('concat')
 var uglifycss = require('uglifycss')
 var mongoose = require('mongoose')
 var debug = require('debug')('meanstackjs:register')
+var babel = require('babel-core')
 
 function Register (opts, done) {
   var self = this
@@ -30,6 +31,7 @@ function Register (opts, done) {
   self.info()
   self.config()
   self.directories()
+  self.transform()
   self.createBackendModels()
   self.createBackendRoutes()
   self.createGlobalStyle()
@@ -41,6 +43,8 @@ function Register (opts, done) {
 Register.prototype.info = function () {
   debug('started Info')
   var self = this
+  self.transformFiles = []
+  self.transformFolders = []
   function expandModules (arr, dir) {
     var returnConfigs = []
     _.forEach(arr, function (value, key) {
@@ -61,7 +65,6 @@ Register.prototype.info = function () {
           'name': fileData[0],
           'orginal': f
         })
-      // configs[value].push(f)
       })
       returnConfigs.push(obj)
     })
@@ -92,29 +95,10 @@ Register.prototype.info = function () {
     return !_.startsWith(n, '.')
   })
   var mainFrontendFile = ''
-  frontendConfigs = expandModules(_.filter(frontendConfigs, function (n) {
+  frontendConfigs = expandModules.bind(self)(_.filter(frontendConfigs, function (n) {
     if (path.extname(n) !== '')mainFrontendFile = n
     return path.extname(n) === ''
   }), frontendPath)
-
-  self.backendFiles = {
-    'model': [],
-    'controllers': [],
-    'routes': []
-  }
-  _.forEach(backendConfigs, function (r) {
-    _.forEach(r.files, function (j) {
-      if (j.type === 'controller') {
-        self.backendFiles.controllers.push({name: r.name, url: './modules/' + r.name + '/' + j.orginal})
-      } else if (j.type === 'model') {
-        self.backendFiles.model.push({name: r.name, url: './modules/' + r.name + '/' + j.orginal})
-      } else if (j.type === 'routes') {
-        self.backendFiles.routes.push({name: r.name, url: './modules/' + r.name + '/' + j.orginal})
-      } else {
-        // console.log(j.type)
-      }
-    })
-  })
 
   self.backendFolders = backendConfigs
   self.frontendFolders = frontendConfigs
@@ -154,89 +138,16 @@ Register.prototype.config = function (opts) {
     css: [],
     js: []
   }
-  debug('end config')
-}
-Register.prototype.directories = function () {
-  debug('started directories')
 
-  var self = this
-  function rmdirAsync (url, callback) {
-    if (fs.existsSync(url)) {
-      fs.readdirSync(url).forEach(function (file, index) {
-        var curPath = path.resolve(url + '/' + file)
-        if (fs.lstatSync(curPath).isDirectory()) { // recurse
-          //
-        } else { // delete file
-          fs.unlinkSync(curPath)
-        }
-      })
-    // fs.rmdirSync(url)
-    }
-  }
-  // CHECK AND MAKE DIRECTORY
-  if (!fs.existsSync(__dirname + '/../client/scripts/')) {
-    fs.mkdirSync(__dirname + '/../client/scripts/')
-  }
-  if (!fs.existsSync(__dirname + '/../client/styles/compiled/')) {
-    fs.mkdirSync(__dirname + '/../client/styles/compiled/')
-  }
-  if (!fs.existsSync(__dirname + '/../client/scripts/compiled/')) {
-    fs.mkdirSync(__dirname + '/../client/scripts/compiled/')
-  }
-  if (!fs.existsSync(__dirname + '/../client/uploads/')) {
-    fs.mkdirSync(__dirname + '/../client/uploads/')
-  }
-  // DELETE ALL PREVIOUSLY COMPILED
-  rmdirAsync(__dirname + '/../client/styles/compiled/', function () {
-    // console.log(arguments)
-  })
-  rmdirAsync(__dirname + '/../client/scripts/compiled/', function () {
-    // console.log(arguments)
-  })
-  debug('end directories')
-}
-Register.prototype.createBackendModels = function () {
-  debug('started createBackendModels')
-
-  var self = this
-  var models
-
-  _.forEach(self.backendFiles.model, function (n) {
-    debug('Model: ' + n.name)
-    var model = mongoose.model(n.name, require(n.url))
-    model.on('index', function (err) {
-      if (err) throw err
-    })
-  })
-  debug('end createBackendModels')
-}
-Register.prototype.createBackendRoutes = function () {
-  debug('started createBackendRoutes')
-
-  var self = this
-  _.forEach(self.backendFiles.routes, function (n) {
-    debug('Route : %s', n.url)
-    require(n.url)(self.app, self.middleware, self.mail, self.settings)
-  })
-  debug('end createBackendRoutes')
-}
-Register.prototype.createGlobalStyle = function () {
-  debug('started createGlobalStyle')
-
-  var globalContents = fs.readFileSync(__dirname + '/../client/styles/global.style.scss', 'utf8')
-  var result = sass.renderSync({
-    includePaths: [path.join(__dirname, '../client/modules'), path.join(__dirname, '../client/styles'), path.join(__dirname, '../client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(__dirname, '../client/bower_components/Materialize/sass'), path.join(__dirname, '../client/bower_components/foundation/scss'), path.join(__dirname, '../client/bower_components/font-awesome/scss')],
-    data: globalContents
-  })
-  fs.writeFileSync(__dirname + '/../client/styles/compiled/global.style.css', result.css)
-  debug('end createGlobalStyle')
-}
-Register.prototype.createFrontend = function () {
-  debug('started createFrontend')
-
-  var self = this
   _.forEach(self.frontendFolders, function (r) {
     _.forEach(r.files, function (j) {
+      // Use for Babel when the front end is implemented
+      // var baseDirectory = './modules/'
+      // if (j.ext === 'js' && self.settings.babel.active && j.type !== 'spec') {
+      //   self.transformFiles.push('/' + r.name + '/' + j.orginal)
+      //   self.transformFolders.push(r.name)
+      //   baseDirectory = './' + self.settings.babel.folder + '/'
+      // }
       switch (j.type) {
         case 'module':
           self.frontendFiles.module.push('/modules/' + r.name + '/' + j.orginal)
@@ -283,7 +194,7 @@ Register.prototype.createFrontend = function () {
             var lessContents = fs.readFileSync(__dirname + '/../client/modules/' + r.name + '/' + j.orginal, 'utf8')
             less.render(lessContents, function (err, result) {
               if (err) {
-                console.log(chalk.red(err))
+                debug(chalk.red(err))
               }
               fs.writeFileSync(__dirname + '/../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css', result.css)
               self.frontendFiles.style.less.push({
@@ -294,13 +205,13 @@ Register.prototype.createFrontend = function () {
               self.frontendFilesAggregate.css.push(path.join(__dirname, '../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css'))
             })
           } else {
-            console.log('Unknown Style', j)
+            debug('Unknown Style', j)
           }
           break
         case 'json':
         case 'view':
         case 'spec':
-          // console.log(j.type)
+          // debug(j.type)
           break
         default:
           if (j.ext === 'js') {
@@ -308,14 +219,146 @@ Register.prototype.createFrontend = function () {
             self.frontendFilesFinal.js.push('/modules/' + r.name + '/' + j.orginal)
             self.frontendFilesAggregate.js.push(path.join(__dirname, '../client/modules/' + r.name + '/' + j.orginal))
           } else if (j.ext === 'css') {
-            console.log('Did you name css wrong?', j)
+            debug('Did you name css wrong?', j)
           } else {
-            console.log('Unknown', j)
+            debug('Unknown', j)
           }
           break
       }
     })
   })
+
+  self.backendFiles = {
+    'model': [],
+    'controllers': [],
+    'routes': []
+  }
+  _.forEach(self.backendFolders, function (r) {
+    _.forEach(r.files, function (j) {
+      var baseDirectory = './modules/'
+      if (j.ext === 'js' && self.settings.babel.active && j.type !== 'spec') {
+        self.transformFiles.push('/' + r.name + '/' + j.orginal)
+        self.transformFolders.push(r.name)
+        baseDirectory = './' + self.settings.babel.folder + '/'
+      }
+      if (j.type === 'controller') {
+        self.backendFiles.controllers.push({name: r.name, url: baseDirectory + r.name + '/' + j.orginal})
+      } else if (j.type === 'model') {
+        self.backendFiles.model.push({name: r.name, url: baseDirectory + r.name + '/' + j.orginal})
+      } else if (j.type === 'routes') {
+        self.backendFiles.routes.push({name: r.name, url: baseDirectory + r.name + '/' + j.orginal})
+      } else {
+        // debug(j.type)
+      }
+    })
+  })
+
+  debug('end config')
+}
+Register.prototype.directories = function () {
+  debug('started directories')
+
+  var self = this
+  function rmdirAsync (url) {
+    if (fs.existsSync(url)) {
+      fs.readdirSync(url).forEach(function (file, index) {
+        var curPath = path.resolve(url + '/' + file)
+        if (fs.lstatSync(curPath).isDirectory()) { // recurse
+          //
+        } else { // delete file
+          fs.unlinkSync(curPath)
+        }
+      })
+    // fs.rmdirSync(url)
+    }
+  }
+  // CHECK AND MAKE DIRECTORY
+  if (self.settings.babel.active) {
+    debug('checking babel directories')
+    // if (!fs.existsSync(__dirname + '/../client/' + self.settings.babel.folder + '/')) {
+    //   fs.mkdirSync(__dirname + '/../client/' + self.settings.babel.folder + '/')
+    // }
+    // rmdirAsync(__dirname + '/../client/' + self.settings.babel.folder + '/')
+    if (!fs.existsSync(__dirname + '/' + self.settings.babel.folder + '/')) {
+      fs.mkdirSync(__dirname + '/' + self.settings.babel.folder + '/')
+    } else {
+      rmdirAsync(__dirname + '/' + self.settings.babel.folder + '/')
+    }
+    _.forEach(_.uniq(self.transformFolders), function (n) {
+      if (!fs.existsSync(__dirname + '/' + self.settings.babel.folder + '/' + n + '/')) {
+        fs.mkdirSync(__dirname + '/' + self.settings.babel.folder + '/' + n + '/')
+      } else {
+        rmdirAsync(__dirname + '/' + self.settings.babel.folder + '/' + n + '/')
+      }
+    })
+  }
+  if (!fs.existsSync(__dirname + '/../client/scripts/')) {
+    fs.mkdirSync(__dirname + '/../client/scripts/')
+  }
+  if (!fs.existsSync(__dirname + '/../client/styles/compiled/')) {
+    fs.mkdirSync(__dirname + '/../client/styles/compiled/')
+  }
+  if (!fs.existsSync(__dirname + '/../client/scripts/compiled/')) {
+    fs.mkdirSync(__dirname + '/../client/scripts/compiled/')
+  }
+  if (!fs.existsSync(__dirname + '/../client/uploads/')) {
+    fs.mkdirSync(__dirname + '/../client/uploads/')
+  }
+  // DELETE ALL PREVIOUSLY COMPILED
+  rmdirAsync(__dirname + '/../client/styles/compiled/')
+  rmdirAsync(__dirname + '/../client/scripts/compiled/')
+  debug('end directories')
+}
+
+Register.prototype.transform = function () {
+  var self = this
+  debug('babel:' + self.settings.babel.active)
+  if (self.settings.babel.active) {
+    debug('started transform')
+    _.forEach(self.transformFiles, function (n) {
+      fs.writeFileSync(__dirname + '/' + self.settings.babel.folder + n, babel.transformFileSync(__dirname + '/modules/' + n, self.settings.babel.options).code)
+    })
+    debug('end transform')
+  }
+}
+Register.prototype.createBackendModels = function () {
+  debug('started createBackendModels')
+
+  var self = this
+
+  _.forEach(self.backendFiles.model, function (n) {
+    debug('Model: %s - %s', n.name, n.url)
+    var model = mongoose.model(n.name, require(n.url))
+    model.on('index', function (err) {
+      if (err) throw err
+    })
+  })
+  debug('end createBackendModels')
+}
+Register.prototype.createBackendRoutes = function () {
+  debug('started createBackendRoutes')
+
+  var self = this
+  _.forEach(self.backendFiles.routes, function (n) {
+    debug('Route : %s', n.url)
+    require(n.url)(self.app, self.middleware, self.mail, self.settings)
+  })
+  debug('end createBackendRoutes')
+}
+Register.prototype.createGlobalStyle = function () {
+  debug('started createGlobalStyle')
+
+  var globalContents = fs.readFileSync(__dirname + '/../client/styles/global.style.scss', 'utf8')
+  var result = sass.renderSync({
+    includePaths: [path.join(__dirname, '../client/modules'), path.join(__dirname, '../client/styles'), path.join(__dirname, '../client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(__dirname, '../client/bower_components/Materialize/sass'), path.join(__dirname, '../client/bower_components/foundation/scss'), path.join(__dirname, '../client/bower_components/font-awesome/scss')],
+    data: globalContents
+  })
+  fs.writeFileSync(__dirname + '/../client/styles/compiled/global.style.css', result.css)
+  debug('end createGlobalStyle')
+}
+Register.prototype.createFrontend = function () {
+  debug('started createFrontend')
+  var self = this
   self.frontendFilesFinal.js.unshift(/modules/ + self.mainFrontendFile)
   self.frontendFilesAggregate.js.unshift(path.join(__dirname, '../client/modules/' + self.mainFrontendFile))
   _.forEach(self.settings.assets.css, function (ms) {
@@ -334,10 +377,10 @@ Register.prototype.env = function () {
   var self = this
   if (process.env.NODE_ENV === 'test') {
     concat(self.frontendFilesAggregate.css, path.join(__dirname, '../client/styles/compiled/concat.css'), function (error) {
-      if (error)console.log(error, 'concat')
+      if (error)debug(error, 'concat')
     })
     concat(self.frontendFilesAggregate.js, path.join(__dirname, '../client/scripts/compiled/concat.js'), function (error) {
-      if (error)console.log(error, 'concat')
+      if (error)debug(error, 'concat')
     })
     self.settings.app.locals.frontendFilesFinal = {
       js: ['scripts/compiled/concat.js'],
@@ -351,9 +394,9 @@ Register.prototype.env = function () {
     )
     fs.writeFile(path.join(__dirname, '../client/styles/compiled/concat.min.css'), uglifiedcss, function (err) {
       if (err) {
-        console.log(err)
+        debug(err)
       } else {
-        console.log('Script generated and saved:', 'concat.min.css')
+        debug('Script generated and saved:', 'concat.min.css')
       }
     })
 
@@ -362,9 +405,9 @@ Register.prototype.env = function () {
     })
     fs.writeFile(path.join(__dirname, '../client/scripts/compiled/concat.min.js'), uglifiedjs.code, function (err) {
       if (err) {
-        console.log(err)
+        debug(err)
       } else {
-        console.log('Script generated and saved:', 'concat.min.js')
+        debug('Script generated and saved:', 'concat.min.js')
       }
     })
     self.settings.app.locals.frontendFilesFinal = {
