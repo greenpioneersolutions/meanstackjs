@@ -8,18 +8,15 @@ var Livereload = require('./livereload.server.js')
 var mail = require('./server/mail.js')
 var environment = 'development'
 var settings = require('./configs/settings.js')
-if (process.env.NODE_ENV === 'test') {
-  environment = 'test'
-} else if (process.env.NODE_ENV === 'production') {
-  environment = 'production'
-}
+
 var argv = minimist(process.argv.slice(2))
 
 /**
  * Run the given server, passing in command line options as options.
  * @param  {function(*)} ServerConstructor
  */
-function run (ServerConstructor) {
+
+function run (ServerConstructor, cb) {
   // Create and start the server
   var server = new ServerConstructor(extend(argv), function (err) {
     if (err) {
@@ -27,6 +24,7 @@ function run (ServerConstructor) {
       console.error(err.stack)
       process.exit(1)
     }
+    if (cb && typeof cb === 'function')cb()
   })
 
   process.on('uncaughtException', function (err) {
@@ -43,7 +41,6 @@ function run (ServerConstructor) {
       message.text = err.stack.toString()
       console.log('message', message)
       mail.send(message, function (err) {
-        console.log(err, 'email sent server process?')
         if (err) throw err
       })
     }

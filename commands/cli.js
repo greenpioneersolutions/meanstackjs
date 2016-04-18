@@ -222,7 +222,7 @@ function write (url, str) {
   console.log(chalk.cyan('   Created File:'), url)
 }
 function readTemplate (url, data) {
-  var template = fs.readFileSync(__dirname + '/' + url, 'utf8')
+  var template = fs.readFileSync(path.join(__dirname, '/', url, 'utf8'))
 
   for (var index in data) {
     template = template.split('__' + index + '__').join(data[index])
@@ -238,7 +238,7 @@ function useTemplate (template, data) {
   return template
 }
 function readFile (url) {
-  var template = fs.readFileSync(__dirname + '/' + url, 'utf8')
+  var template = fs.readFileSync(path.join(__dirname, '/', url, 'utf8'))
   return template
 }
 function mkdir (url, fn) {

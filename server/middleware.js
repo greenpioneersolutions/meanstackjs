@@ -69,7 +69,7 @@ function verify (req, res, next) {
     } else {
       return res.status(401).send({success: false, msg: 'No token provided.'})
     }
-  } catch(err) {
+  } catch (err) {
     console.log(err, 'err')
   }
 }

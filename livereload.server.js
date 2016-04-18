@@ -5,7 +5,7 @@ var livereload = require('livereload')
 
 function Livereload (opts, done) {
   var server = livereload.createServer()
-  server.watch(path.resolve(__dirname + '/client'))
+  server.watch(path.join(__dirname, '/client'))
   done(null)
 }
 var run = require('./run.js')

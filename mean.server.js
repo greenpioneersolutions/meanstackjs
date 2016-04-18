@@ -2,7 +2,6 @@ module.exports = MeanStack
 /**
  * Module dependencies.
  */
-var settings = require('./configs/settings.js')
 var express = require('express')
 var async = require('async')
 var cookieParser = require('cookie-parser')
@@ -26,18 +25,77 @@ var mongoose = require('mongoose')
 var passport = require('passport')
 var auth = require('./server/passport.js')
 var expressValidator = require('express-validator')
-var environment = 'development'
 var status = require('express-system-status')
-if (process.env.NODE_ENV === 'test') {
-  environment = 'test'
-} else if (process.env.NODE_ENV === 'production') {
-  environment = 'production'
-}
 
 function MeanStack (opts, done) {
   var self = this
+  self.opts = opts
   self.debug = require('debug')('meanstackjs:server')
-  self.port = opts.port || settings.http.port
+  self.setupEnv()
+  self.setupExpressConfigs()
+  self.setupHeaders()
+  if (self.settings.logger)self.setupLogger()
+  self.setupRoutesMiddleware()
+  if (self.settings.swagger)self.swagger()
+  self.setupStatic()
+  self.livereload()
+
+  async.parallel({
+    connectMongoDb: function (callback) {
+      mongoose.Promise = Promise
+      mongoose.set('debug', self.environment === 'production')
+      mongoose.connect(self.settings.db, self.settings.dbOptions)
+      mongoose.connection.on('error', function (err) {
+        console.log('MongoDB Connection Error. Please make sure that MongoDB is running.')
+        self.debug('MongoDB Connection Error ')
+        callback(err, null)
+      })
+      mongoose.connection.on('open', function () {
+        self.debug('MongoDB Connection Open ')
+        callback(null, {
+          db: self.settings.db,
+          dbOptions: self.settings.dbOptions
+        })
+      })
+    },
+    server: function (callback) {
+      self.app.listen(self.app.get('port'), function () {
+        console.log('Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
+        self.debug('Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
+        callback(null, {
+          port: self.app.get('port'),
+          env: self.app.get('env')
+        })
+      })
+    }
+  },
+    function (err, results) {
+      if (err) {
+        self.debug('Exiting because of error %d', err)
+        process.exit(1)
+      }
+      done(null)
+    })
+
+  self.debug('Finished Server Load')
+}
+
+MeanStack.prototype.setupEnv = function () {
+  var self = this
+  self.settings = require('./configs/settings.js')(process.env.NODE_ENV)
+  self.environment = 'development'
+  if (process.env.NODE_ENV === 'test') {
+    self.environment = 'test'
+  } else if (process.env.NODE_ENV === 'production') {
+    self.environment = 'production'
+  } else if (process.env.NODE_ENV === 'nightwatch') {
+    self.environment = 'nightwatch'
+  }
+}
+
+MeanStack.prototype.setupExpressConfigs = function () {
+  var self = this
+  self.port = self.opts.port || self.settings.http.port
   self.debug('started')
 
   self.app = express()
@@ -53,14 +111,13 @@ function MeanStack (opts, done) {
   var swig = require('swig')
   self.app.engine('html', swig.renderFile)
   self.app.set('view engine', 'html')
-  self.app.set('views', __dirname + '/client')
+  self.app.set('views', path.join(__dirname, '/client'))
 
   /**
    * Express configuration.
    */
   self.app.set('port', self.port)
   self.app.use(compress())
-  self.app.use(logger(settings.logger))
   self.app.use(bodyParser.json())
   self.app.use(bodyParser.urlencoded({
     extended: true
@@ -71,9 +128,9 @@ function MeanStack (opts, done) {
   self.app.use(session({
     resave: true,
     saveUninitialized: true,
-    secret: settings.sessionSecret,
+    secret: self.settings.sessionSecret,
     store: new MongoStore({
-      url: settings.db,
+      url: self.settings.db,
       autoReconnect: true
     })
   }))
@@ -98,51 +155,6 @@ function MeanStack (opts, done) {
     next()
   })
   self.app.use(errorHandler())
-  self.setupHeaders()
-  self.setupLogger()
-  self.setupRoutesMiddleware()
-  if (settings.swagger)self.swagger()
-  self.setupStatic()
-  self.livereload()
-
-  async.parallel({
-    connectMongoDb: function (callback) {
-      mongoose.Promise = Promise
-      mongoose.set('debug', environment === 'production')
-      mongoose.connect(settings.db, settings.dbOptions)
-      mongoose.connection.on('error', function (err) {
-        console.log('MongoDB Connection Error. Please make sure that MongoDB is running.')
-        self.debug('MongoDB Connection Error ')
-        callback(err, null)
-      })
-      mongoose.connection.on('open', function () {
-        self.debug('MongoDB Connection Open ')
-        callback(null, {
-          db: settings.db,
-          dbOptions: settings.dbOptions
-        })
-      })
-    },
-    server: function (callback) {
-      self.app.listen(self.app.get('port'), function () {
-        console.log('Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
-        self.debug('Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
-        callback(null, {
-          port: self.app.get('port'),
-          env: self.app.get('env')
-        })
-      })
-    }
-  },
-    function (err, results) {
-      if (err) {
-        self.debug('Exiting because of error %d', err)
-        process.exit(1)
-      }
-    })
-
-  self.debug('Finished Server Load')
-  done(null)
 }
 
 MeanStack.prototype.setupHeaders = function () {
@@ -176,6 +188,7 @@ MeanStack.prototype.setupHeaders = function () {
 
 MeanStack.prototype.setupLogger = function () {
   var self = this
+  self.app.use(logger(self.settings.logger))
   self.app.use(function (req, res, next) {
     // Log requests using the "debug" module so that the output is hidden by default.
     // Enable with DEBUG=* environment variable.
@@ -201,7 +214,9 @@ MeanStack.prototype.swagger = function () {
     if (html) {
       return res.send(html)
     }
-    fs.readFile(swaggerUI.dist + '/index.html', { encoding: 'utf8'}, function (err, data) {
+    fs.readFile(swaggerUI.dist + '/index.html', {
+      encoding: 'utf8'
+    }, function (err, data) {
       if (err) {
         console.error(err)
         return res.send(500)
@@ -231,9 +246,9 @@ MeanStack.prototype.swagger = function () {
     return !_.startsWith(n, '.')
   })
   _.forEach(swaggerDir, function (n) {
-    var model = require(__dirname + '/server/swagger/' + n + '/models')
+    var model = require(path.join(__dirname, '/server/swagger/', n, '/models'))
     swagger.addModels(model)
-    require(__dirname + '/server/swagger/' + n + '/services')
+    require(path.join(__dirname, '/server/swagger/', n, '/services'))
       .load(swagger, {
         searchableOptions: defaultGetParams
       })
@@ -265,16 +280,16 @@ MeanStack.prototype.setupStatic = function () {
   self.app.use(express.static(path.join(__dirname, 'client/'), {
     maxAge: 31557600000
   }))
-  if (environment === 'development') {
+  if (self.environment === 'development') {
     self.app.use('/api/v1/status', // middleware.verify  if you want the api to be behind token based
       status({
         app: self.app,
-        config: settings,
+        config: self.settings,
         auth: true,
         user: 'admin',
         pass: 'pass',
         extra: {
-          environment: environment
+          environment: self.environment
         },
         mongoose: mongoose // Now Supporting Mongoose
       })
@@ -325,9 +340,9 @@ MeanStack.prototype.setupStatic = function () {
     }
     // took out user
     res.render(path.resolve('server') + '/layout/index.html', {
-      html: settings.html,
+      html: self.settings.html,
       assets: self.app.locals.frontendFilesFinal,
-      environment: environment
+      environment: self.environment
     })
   })
 }
@@ -337,7 +352,7 @@ MeanStack.prototype.setupRoutesMiddleware = function () {
    * Middleware.
    */
   self.middleware = require('./server/middleware.js')
-  self.build = require('buildreq')(settings.buildreq)
+  self.build = require('buildreq')(self.settings.buildreq)
   self.app.use(self.build.queryMiddleware({mongoose: mongoose}))
   /**
    * Routes.
@@ -346,7 +361,7 @@ MeanStack.prototype.setupRoutesMiddleware = function () {
   self.app.use(self.build.responseMiddleware({mongoose: mongoose}))
   self.fileStructure = self.Register({
     app: self.app,
-    settings: settings,
+    settings: self.settings,
     middleware: self.middleware
   })
   /**
@@ -373,7 +388,7 @@ MeanStack.prototype.livereload = function () {
   /**
    * Livereload
    */
-  if (environment === 'development') {
+  if (self.environment === 'development') {
     var scss_lessWatcher = chokidar.watch('file, dir, glob, or array', {
       ignored: /[\/\\]\./,
       persistent: true
@@ -429,12 +444,12 @@ MeanStack.prototype.livereload = function () {
         console.log(chalk.green('Recompiled LESS'))
       } else {
         // RENDER THE GLOBAL STYLE
-        var globalContents = fs.readFileSync(__dirname + '/client/styles/global.style.scss', 'utf8')
+        var globalContents = fs.readFileSync(path.join(__dirname, '/client/styles/global.style.scss'), 'utf8')
         var result = sass.renderSync({
           includePaths: [path.join(__dirname, './client/modules'), path.join(__dirname, './client/styles'), path.join(__dirname, './client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(__dirname, './client/bower_components/Materialize/sass'), path.join(__dirname, './client/bower_components/foundation/scss'), path.join(__dirname, './client/bower_components/font-awesome/scss')],
           data: globalContents
         })
-        fs.writeFileSync(__dirname + '/client/styles/compiled/global.style.css', result.css)
+        fs.writeFileSync(path.join(__dirname, '/client/styles/compiled/global.style.css'), result.css)
         _.forEach(self.fileStructure.style.scss, function (s, k) {
           var scssContents = fs.readFileSync(path.join(__dirname, s.orginal), 'utf8')
           // PLACED includePaths: so that @import 'global-variables.styles.scss'; work properly

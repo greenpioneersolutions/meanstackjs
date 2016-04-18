@@ -12,13 +12,19 @@
       "_",
       "describe",
       "it",
-      "__dirname"
+      "__dirname",
+      "localStorage",
+      "io"
+    ],
+     "ignore": [
+      "commands/template/"
     ]
   },
   "scripts": {
-    "test": "npm run mocha && npm run karma && npm run standard",
-    "mocha": "node node_modules/mocha/bin/mocha tests/server.test.js && node_modules/mocha/bin/mocha server/modules/**/*.spec.js  ",
-    "karma": "node node_modules/karma/bin/karma start tests/karma.test.js || karma start tests/karma.test.js ",
+    "test": "npm run mocha && npm run karma && npm run nightwatch && npm run standard",
+    "nightwatch": "node_modules/nightwatch/bin/nightwatch || nightwatch",
+    "mocha": "node node_modules/mocha/bin/mocha tests/unit/mocha.test.js && node_modules/mocha/bin/mocha server/modules/**/*.spec.js  ",
+    "karma": "node node_modules/karma/bin/karma start tests/unit/karma.test.js || karma start tests/unit/karma.test.js ",
     "standard": "node node_modules/standard/bin/cmd.js || standard",
     "postinstall": "node node_modules/bower/bin/bower install || bower install",
     "start": " node node_modules/nodemon/bin/nodemon.js index.js || nodemon.js index.js",
@@ -84,6 +90,7 @@
     "mongoose-validator": "^1.2.4",
     "morgan": "^1.6.1",
     "multer": "^1.1.0",
+    "nightwatch": "^0.8.18",
     "node-sass": "^3.4.2",
     "node-uuid": "^1.4.7",
     "node-xlsx": "^0.6.0",

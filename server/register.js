@@ -110,6 +110,7 @@ Register.prototype.config = function (opts) {
   debug('started config')
 
   var self = this
+  self.dir = __dirname
   /**
    * FRONTEND
    */
@@ -138,7 +139,6 @@ Register.prototype.config = function (opts) {
     css: [],
     js: []
   }
-
   _.forEach(self.frontendFolders, function (r) {
     _.forEach(r.files, function (j) {
       // Use for Babel when the front end is implemented
@@ -170,13 +170,13 @@ Register.prototype.config = function (opts) {
             self.frontendFilesFinal.css.push('/modules/' + r.name + '/' + j.orginal)
             self.frontendFilesAggregate.css.push(path.join(__dirname, '../client/modules/' + r.name + '/' + j.orginal))
           } else if (j.ext === 'scss' || j.ext === 'sass') {
-            var scssContents = fs.readFileSync(__dirname + '/../client/modules/' + r.name + '/' + j.orginal, 'utf8')
+            var scssContents = fs.readFileSync(self.dir + '/../client/modules/' + r.name + '/' + j.orginal, 'utf8')
             // PLACED includePaths: so that @import 'global-variables.styles.scss'; work properly
             var result = sass.renderSync({
               includePaths: [path.join(__dirname, '../client/modules'), path.join(__dirname, '../client/styles'), path.join(__dirname, '../client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(__dirname, '../client/bower_components/Materialize/sass'), path.join(__dirname, '../client/bower_components/foundation/scss'), path.join(__dirname, '../client/bower_components/font-awesome/scss')],
               data: scssContents
             })
-            fs.writeFileSync(__dirname + '/../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css', result.css)
+            fs.writeFileSync(self.dir + '/../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css', result.css)
             if (j.ext === 'scss') {
               self.frontendFiles.style.scss.push({
                 orginal: '/client/modules/' + r.name + '/' + j.orginal,
@@ -191,12 +191,12 @@ Register.prototype.config = function (opts) {
             self.frontendFilesFinal.css.push('/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css')
             self.frontendFilesAggregate.css.push(path.join(__dirname, '../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css'))
           } else if (j.ext === 'less') {
-            var lessContents = fs.readFileSync(__dirname + '/../client/modules/' + r.name + '/' + j.orginal, 'utf8')
+            var lessContents = fs.readFileSync(self.dir + '/../client/modules/' + r.name + '/' + j.orginal, 'utf8')
             less.render(lessContents, function (err, result) {
               if (err) {
                 debug(chalk.red(err))
               }
-              fs.writeFileSync(__dirname + '/../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css', result.css)
+              fs.writeFileSync(self.dir + '/../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css', result.css)
               self.frontendFiles.style.less.push({
                 orginal: '/client/modules/' + r.name + '/' + j.orginal,
                 compiled: '/client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css'
@@ -279,34 +279,34 @@ Register.prototype.directories = function () {
     //   fs.mkdirSync(__dirname + '/../client/' + self.settings.babel.folder + '/')
     // }
     // rmdirAsync(__dirname + '/../client/' + self.settings.babel.folder + '/')
-    if (!fs.existsSync(__dirname + '/' + self.settings.babel.folder + '/')) {
-      fs.mkdirSync(__dirname + '/' + self.settings.babel.folder + '/')
+    if (!fs.existsSync(self.dir + '/' + self.settings.babel.folder + '/')) {
+      fs.mkdirSync(self.dir + '/' + self.settings.babel.folder + '/')
     } else {
-      rmdirAsync(__dirname + '/' + self.settings.babel.folder + '/')
+      rmdirAsync(self.dir + '/' + self.settings.babel.folder + '/')
     }
     _.forEach(_.uniq(self.transformFolders), function (n) {
-      if (!fs.existsSync(__dirname + '/' + self.settings.babel.folder + '/' + n + '/')) {
-        fs.mkdirSync(__dirname + '/' + self.settings.babel.folder + '/' + n + '/')
+      if (!fs.existsSync(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')) {
+        fs.mkdirSync(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')
       } else {
-        rmdirAsync(__dirname + '/' + self.settings.babel.folder + '/' + n + '/')
+        rmdirAsync(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')
       }
     })
   }
-  if (!fs.existsSync(__dirname + '/../client/scripts/')) {
-    fs.mkdirSync(__dirname + '/../client/scripts/')
+  if (!fs.existsSync(self.dir + '/../client/scripts/')) {
+    fs.mkdirSync(self.dir + '/../client/scripts/')
   }
-  if (!fs.existsSync(__dirname + '/../client/styles/compiled/')) {
-    fs.mkdirSync(__dirname + '/../client/styles/compiled/')
+  if (!fs.existsSync(self.dir + '/../client/styles/compiled/')) {
+    fs.mkdirSync(self.dir + '/../client/styles/compiled/')
   }
-  if (!fs.existsSync(__dirname + '/../client/scripts/compiled/')) {
-    fs.mkdirSync(__dirname + '/../client/scripts/compiled/')
+  if (!fs.existsSync(self.dir + '/../client/scripts/compiled/')) {
+    fs.mkdirSync(self.dir + '/../client/scripts/compiled/')
   }
-  if (!fs.existsSync(__dirname + '/../client/uploads/')) {
-    fs.mkdirSync(__dirname + '/../client/uploads/')
+  if (!fs.existsSync(self.dir + '/../client/uploads/')) {
+    fs.mkdirSync(self.dir + '/../client/uploads/')
   }
   // DELETE ALL PREVIOUSLY COMPILED
-  rmdirAsync(__dirname + '/../client/styles/compiled/')
-  rmdirAsync(__dirname + '/../client/scripts/compiled/')
+  rmdirAsync(self.dir + '/../client/styles/compiled/')
+  rmdirAsync(self.dir + '/../client/scripts/compiled/')
   debug('end directories')
 }
 
@@ -316,7 +316,7 @@ Register.prototype.transform = function () {
   if (self.settings.babel.active) {
     debug('started transform')
     _.forEach(self.transformFiles, function (n) {
-      fs.writeFileSync(__dirname + '/' + self.settings.babel.folder + n, babel.transformFileSync(__dirname + '/modules/' + n, self.settings.babel.options).code)
+      fs.writeFileSync(self.dir + '/' + self.settings.babel.folder + n, babel.transformFileSync(self.dir + '/modules/' + n, self.settings.babel.options).code)
     })
     debug('end transform')
   }
@@ -347,13 +347,13 @@ Register.prototype.createBackendRoutes = function () {
 }
 Register.prototype.createGlobalStyle = function () {
   debug('started createGlobalStyle')
-
-  var globalContents = fs.readFileSync(__dirname + '/../client/styles/global.style.scss', 'utf8')
+  var self = this
+  var globalContents = fs.readFileSync(self.dir + '/../client/styles/global.style.scss', 'utf8')
   var result = sass.renderSync({
     includePaths: [path.join(__dirname, '../client/modules'), path.join(__dirname, '../client/styles'), path.join(__dirname, '../client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(__dirname, '../client/bower_components/Materialize/sass'), path.join(__dirname, '../client/bower_components/foundation/scss'), path.join(__dirname, '../client/bower_components/font-awesome/scss')],
     data: globalContents
   })
-  fs.writeFileSync(__dirname + '/../client/styles/compiled/global.style.css', result.css)
+  fs.writeFileSync(self.dir + '/../client/styles/compiled/global.style.css', result.css)
   debug('end createGlobalStyle')
 }
 Register.prototype.createFrontend = function () {
