@@ -2,6 +2,7 @@ var bcrypt = require('bcrypt-nodejs')
 var crypto = require('crypto')
 var mongoose = require('mongoose')
 var settings = require('../../../configs/settings.js').get()
+var environment = require('../../environment.js').get()
 var mail = require('../../mail.js')
 var validate = require('mongoose-validator')
 
@@ -111,7 +112,7 @@ userSchema.pre('save', function (next) {
   }
 })
 userSchema.post('save', function (user) {
-  if (user.wasNew) {
+  if (user.wasNew && environment === 'production') {
     var message = {}
     message.to = user.email
     message.subject = settings.email.welcome.subject
@@ -146,15 +147,7 @@ userSchema.virtual('gravatar').get(function () {
   var md5 = crypto.createHash('md5').update(this.email).digest('hex')
   return 'https://gravatar.com/avatar/' + md5 + '?s=200&d=retro'
 })
-// Trim whitespace
-userSchema.pre('validate', function (next) {
-  var self = this
-  if (typeof self.email === 'string') {
-    self.email = self.email.trim()
-  }
-  if (typeof self.profile.name === 'string') self.profile.name = self.profile.name.trim()
-  next()
-})
+
 userSchema.virtual('firstName').get(function () {
   return this.profile.name.split(' ')[0]
 })
@@ -163,13 +156,14 @@ userSchema.virtual('lastName').get(function () {
   return this.profile.name.split(' ').slice(1).join(' ')
 })
 
-userSchema.virtual('mlaName').get(function () {
-  var split = this.profile.name.split(' ')
-  if (split.length >= 2) {
-    return split[1] + ', ' + split[0]
-  } else {
-    return split[0]
+// Trim whitespace
+userSchema.pre('validate', function (next) {
+  var self = this
+  if (typeof self.email === 'string') {
+    self.email = self.email.trim()
   }
+  if (typeof self.profile.name === 'string') self.profile.name = self.profile.name.trim()
+  next()
 })
 
 module.exports = userSchema

@@ -35,12 +35,12 @@ function Mean (opts, done) {
   self.setupExpressConfigs()
   self.setupHeaders()
   if (self.settings.logger)self.setupLogger()
-  self.setupRoutesMiddleware()
   if (self.settings.swagger)self.swagger()
   if (self.environment === 'development') {
     self.nightwatch()
     self.plato()
   }
+  self.setupRoutesMiddleware()
   self.setupStatic()
   self.livereload()
 
@@ -88,6 +88,7 @@ Mean.prototype.setupEnv = function () {
   var self = this
   self.environment = require('./server/environment.js').get()
   self.settings = require('./configs/settings.js').get()
+  self.dir = __dirname
 }
 
 Mean.prototype.setupExpressConfigs = function () {
@@ -108,7 +109,7 @@ Mean.prototype.setupExpressConfigs = function () {
   var swig = require('swig')
   self.app.engine('html', swig.renderFile)
   self.app.set('view engine', 'html')
-  self.app.set('views', path.join(__dirname, '/client'))
+  self.app.set('views', path.join(self.dir, '/client'))
 
   /**
    * Express configuration.
@@ -235,7 +236,7 @@ Mean.prototype.swagger = function () {
     skipParm
   ]
 
-  var swaggerPath = path.resolve(__dirname, './server/swagger')
+  var swaggerPath = path.resolve(self.dir, './server/swagger')
   if (!fs.existsSync(swaggerPath)) {
     throw new Error('Critical Folder Missing:')
   }
@@ -243,9 +244,9 @@ Mean.prototype.swagger = function () {
     return !_.startsWith(n, '.')
   })
   _.forEach(swaggerDir, function (n) {
-    var model = require(path.join(__dirname, '/server/swagger/', n, '/models'))
+    var model = require(path.join(self.dir, '/server/swagger/', n, '/models'))
     swagger.addModels(model)
-    require(path.join(__dirname, '/server/swagger/', n, '/services'))
+    require(path.join(self.dir, '/server/swagger/', n, '/services'))
       .load(swagger, {
         searchableOptions: defaultGetParams
       })
@@ -273,17 +274,19 @@ Mean.prototype.swagger = function () {
 }
 Mean.prototype.nightwatch = function () {
   var self = this
-  self.app.use('/e2e', express.static(path.join(__dirname, 'reports/nightwatch/')))
+  console.log(path.join(self.dir, 'reports/nightwatch/'),'nightwatch')
+  self.app.use('/e2e', express.static(path.join(self.dir, 'reports/nightwatch/')))
 }
 Mean.prototype.plato = function () {
   var self = this
-  self.app.use('/plato', express.static(path.join(__dirname, 'reports/plato')))
+  console.log(path.join(self.dir, 'reports/plato'),'plato')
+  self.app.use('/plato', express.static(path.join(self.dir, 'reports/plato')))
   require('./reports/plato.js').report(self.settings.plato)
 }
 Mean.prototype.setupStatic = function () {
   var self = this
 
-  self.app.use(express.static(path.join(__dirname, 'client/'), {
+  self.app.use(express.static(path.join(self.dir, 'client/'), {
     maxAge: 31557600000
   }))
   if (self.environment === 'development') {
@@ -421,7 +424,7 @@ Mean.prototype.livereload = function () {
         console.log(url)
         var scssContents = fs.readFileSync(path.resolve(url), 'utf8')
         var result = sass.renderSync({
-          includePaths: [path.join(__dirname, './client/modules'), path.join(__dirname, './client/styles'), path.join(__dirname, './client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(__dirname, './client/bower_components/Materialize/sass'), path.join(__dirname, './client/bower_components/foundation/scss'), path.join(__dirname, './client/bower_components/font-awesome/scss')],
+          includePaths: [path.join(self.dir, './client/modules'), path.join(self.dir, './client/styles'), path.join(self.dir, './client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(self.dir, './client/bower_components/Materialize/sass'), path.join(self.dir, './client/bower_components/foundation/scss'), path.join(self.dir, './client/bower_components/font-awesome/scss')],
           data: scssContents
         })
         fs.writeFileSync(path.resolve('./client/styles/compiled/' + fileData[fileData.length - 3] + '.' + fileData[fileData.length - 2] + '.' + fileData[fileData.length - 1] + '.css'), result.css)
@@ -439,31 +442,31 @@ Mean.prototype.livereload = function () {
           fs.writeFileSync(path.resolve('./client/styles/compiled/' + fileData[fileData.length - 3] + '.' + fileData[fileData.length - 2] + '.' + fileData[fileData.length - 1] + '.css'), result.css)
         })
         _.forEach(self.fileStructure.style.less, function (l, k) {
-          var lessContents = fs.readFileSync(path.join(__dirname, l.orginal), 'utf8')
+          var lessContents = fs.readFileSync(path.join(self.dir, l.orginal), 'utf8')
           less.render(lessContents, function (err, result) {
             if (err) {
               console.log(chalk.red(err))
             }
-            fs.writeFileSync(path.join(__dirname, l.compiled), result.css)
+            fs.writeFileSync(path.join(self.dir, l.compiled), result.css)
           })
         })
         console.log(chalk.green('Recompiled LESS'))
       } else {
         // RENDER THE GLOBAL STYLE
-        var globalContents = fs.readFileSync(path.join(__dirname, '/client/styles/global.style.scss'), 'utf8')
+        var globalContents = fs.readFileSync(path.join(self.dir, '/client/styles/global.style.scss'), 'utf8')
         var result = sass.renderSync({
-          includePaths: [path.join(__dirname, './client/modules'), path.join(__dirname, './client/styles'), path.join(__dirname, './client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(__dirname, './client/bower_components/Materialize/sass'), path.join(__dirname, './client/bower_components/foundation/scss'), path.join(__dirname, './client/bower_components/font-awesome/scss')],
+          includePaths: [path.join(self.dir, './client/modules'), path.join(self.dir, './client/styles'), path.join(self.dir, './client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(self.dir, './client/bower_components/Materialize/sass'), path.join(self.dir, './client/bower_components/foundation/scss'), path.join(self.dir, './client/bower_components/font-awesome/scss')],
           data: globalContents
         })
-        fs.writeFileSync(path.join(__dirname, '/client/styles/compiled/global.style.css'), result.css)
+        fs.writeFileSync(path.join(self.dir, '/client/styles/compiled/global.style.css'), result.css)
         _.forEach(self.fileStructure.style.scss, function (s, k) {
-          var scssContents = fs.readFileSync(path.join(__dirname, s.orginal), 'utf8')
+          var scssContents = fs.readFileSync(path.join(self.dir, s.orginal), 'utf8')
           // PLACED includePaths: so that @import 'global-variables.styles.scss'; work properly
           var result = sass.renderSync({
-            includePaths: [path.join(__dirname, './client/modules'), path.join(__dirname, './client/styles'), path.join(__dirname, './client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(__dirname, './client/bower_components/Materialize/sass'), path.join(__dirname, './client/bower_components/foundation/scss'), path.join(__dirname, './client/bower_components/font-awesome/scss')],
+            includePaths: [path.join(self.dir, './client/modules'), path.join(self.dir, './client/styles'), path.join(self.dir, './client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(self.dir, './client/bower_components/Materialize/sass'), path.join(self.dir, './client/bower_components/foundation/scss'), path.join(self.dir, './client/bower_components/font-awesome/scss')],
             data: scssContents
           })
-          fs.writeFileSync(path.join(__dirname, s.compiled), result.css)
+          fs.writeFileSync(path.join(self.dir, s.compiled), result.css)
         })
         console.log(chalk.green('Recompiled Global SCSS'))
       }
