@@ -197,7 +197,6 @@ Register.prototype.config = function (opts) {
               if (err) {
                 debug(chalk.red(err))
               }
-              console.log(path.join(self.dir, '/../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css'),'less compiled')
               fs.writeFileSync(path.join(self.dir, '/../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css'), result.css)
               self.frontendFiles.style.less.push({
                 orginal: '/client/modules/' + r.name + '/' + j.orginal,
@@ -385,7 +384,7 @@ Register.prototype.env = function () {
     concat(self.frontendFilesAggregate.js, path.join(self.dir, '../client/scripts/compiled/concat.js'), function (error) {
       if (error)debug(error, 'concat')
     })
-    self.settings.app.locals.frontendFilesFinal = {
+    self.app.locals.frontendFilesFinal = {
       js: ['scripts/compiled/concat.js'],
       css: ['styles/compiled/concat.css']
     }
@@ -413,7 +412,7 @@ Register.prototype.env = function () {
         debug('Script generated and saved:', 'concat.min.js')
       }
     })
-    self.settings.app.locals.frontendFilesFinal = {
+    self.app.locals.frontendFilesFinal = {
       js: ['scripts/compiled/concat.min.js'],
       css: ['styles/compiled/concat.min.css']
     }

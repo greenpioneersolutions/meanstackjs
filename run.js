@@ -2,10 +2,10 @@ module.exports = run
 
 var extend = require('xtend')
 var minimist = require('minimist')
-var Mean = require('./mean.server.js')
-var SocketIO = require('./socketio.server.js')
-var Livereload = require('./livereload.server.js')
-var MongoExpress = require('./mongo_express.server.js')
+var Mean = require('./server.mean.js')
+var SocketIO = require('./server.socketio.js')
+var Livereload = require('./server.livereload.js')
+var MongoExpress = require('./server.mongo_express.js')
 var mail = require('./server/mail.js')
 var environment = require('./server/environment.js').get()
 var settings = require('./configs/settings.js').get()
@@ -30,19 +30,21 @@ function run (ServerConstructor, cb) {
 
   process.on('uncaughtException', function (err) {
     console.error('[UNCAUGHT EXCEPTION]')
+    if(err.code === 'EACCES')console.log('Try Running in Sudo or Admin access')
+    if(err.code === 'EADDRINUSE')console.log('The Port is already occupied')
     console.error(err.stack)
     if (environment === 'development') {
       console.error('[UNCAUGHT EXCEPTION] ' + err.message)
       console.error(err.stack.toString())
-    // output to file later
+      process.exit(1)
     } else {
-      var message
+      var message = {}
       message.to = settings.email.error
       message.subject = '[UNCAUGHT EXCEPTION] ' + err.message
       message.text = err.stack.toString()
-      console.log('message', message)
       mail.send(message, function (err) {
         if (err) throw err
+        process.exit(1)
       })
     }
   })

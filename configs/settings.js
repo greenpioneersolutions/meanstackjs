@@ -158,8 +158,8 @@ var baseLine = {
         '— Mean Stack JS'
       }
     },
-    from: 'MEANSTACKJS@meanstackjs.com',
-    error: 'MEANSTACKJS@meanstackjs.com'
+    from: 'MEANSTACKJS@localhost.com',
+    error: 'MEANSTACKJS@localhost.com'
   }
 }
 if (environment === 'test') {

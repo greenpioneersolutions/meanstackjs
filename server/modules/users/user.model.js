@@ -116,9 +116,7 @@ userSchema.post('save', function (user) {
     message.to = user.email
     message.subject = settings.email.welcome.subject
     message.text = settings.email.welcome.text(user.profile.name.split(' ')[0])
-    console.log('message', message)
     mail.send(message, function (err) {
-      console.log(err, 'email sent ?')
       if (err) throw err
     })
   }
