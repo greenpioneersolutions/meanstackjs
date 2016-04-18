@@ -2,7 +2,7 @@
   'use strict'
 
   angular
-    .module('app.util')
+    .module('app.core')
     .factory('logger', logger)
     .factory('exception', exception)
     .factory('httpInterceptor', httpInterceptor)

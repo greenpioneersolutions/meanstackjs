@@ -1,7 +1,7 @@
 ;(function () {
   'use strict'
 
-  var util = angular.module('app.util')
+  var util = angular.module('app.core')
   util.config(interceptors)
 
   interceptors.$inject = ['$httpProvider', 'jwtInterceptorProvider']

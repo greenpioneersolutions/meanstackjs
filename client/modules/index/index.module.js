@@ -1,4 +1,4 @@
 ;(function () {
   'use strict'
-  angular.module('app.index', [])
+  angular.module('app.index', ['app.core'])
 })()

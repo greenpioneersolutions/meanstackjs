@@ -30,8 +30,8 @@ function Register (opts, done) {
   self.settings = opts.settings
   self.middleware = opts.middleware
   self.info()
-  self.config()
   self.directories()
+  self.config()
   self.transform()
   self.createBackendModels()
   self.createBackendRoutes()
@@ -197,6 +197,7 @@ Register.prototype.config = function (opts) {
               if (err) {
                 debug(chalk.red(err))
               }
+              console.log(path.join(self.dir, '/../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css'),'less compiled')
               fs.writeFileSync(path.join(self.dir, '/../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css'), result.css)
               self.frontendFiles.style.less.push({
                 orginal: '/client/modules/' + r.name + '/' + j.orginal,
