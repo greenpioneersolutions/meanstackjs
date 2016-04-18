@@ -1,6 +1,5 @@
 module.exports = {
   'Localhost Check:login': function (browser) {
-    console.log(browser.launch_url + 'signin/')
     browser
       .url(browser.launch_url + 'signin/')
       .waitForElementVisible('body', 1000)

@@ -274,12 +274,10 @@ Mean.prototype.swagger = function () {
 }
 Mean.prototype.nightwatch = function () {
   var self = this
-  console.log(path.join(self.dir, 'reports/nightwatch/'),'nightwatch')
   self.app.use('/e2e', express.static(path.join(self.dir, 'reports/nightwatch/')))
 }
 Mean.prototype.plato = function () {
   var self = this
-  console.log(path.join(self.dir, 'reports/plato'),'plato')
   self.app.use('/plato', express.static(path.join(self.dir, 'reports/plato')))
   require('./reports/plato.js').report(self.settings.plato)
 }

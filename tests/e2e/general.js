@@ -11,7 +11,6 @@ module.exports = {
       .end()
   },
   'Localhost Check:page': function (browser) {
-    console.log(browser.launch_url)
     browser
       .url(browser.launch_url)
       .waitForElementVisible('body', 1000)

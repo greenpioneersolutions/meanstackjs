@@ -30,8 +30,8 @@ function run (ServerConstructor, cb) {
 
   process.on('uncaughtException', function (err) {
     console.error('[UNCAUGHT EXCEPTION]')
-    if(err.code === 'EACCES')console.log('Try Running in Sudo or Admin access')
-    if(err.code === 'EADDRINUSE')console.log('The Port is already occupied')
+    if (err.code === 'EACCES')console.log('Try Running in Sudo or Admin access')
+    if (err.code === 'EADDRINUSE')console.log('The Port is already occupied')
     console.error(err.stack)
     if (environment === 'development') {
       console.error('[UNCAUGHT EXCEPTION] ' + err.message)
