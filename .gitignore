@@ -86,9 +86,9 @@ server/dist/
 # --------------------
 # Night Watch reports
 # --------------------
-tests/reports/
+reports/nightwatch/
 
 # --------------------
 # Plato reports
 # --------------------
-reports/plato/*
+reports/plato/

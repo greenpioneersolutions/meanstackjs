@@ -93,6 +93,7 @@
     "morgan": "^1.6.1",
     "multer": "^1.1.0",
     "nightwatch": "^0.8.18",
+    "nightwatch-html-reporter": "^1.0.4",
     "node-sass": "^3.4.2",
     "node-uuid": "^1.4.7",
     "node-xlsx": "^0.6.0",

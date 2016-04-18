@@ -37,7 +37,10 @@ function Mean (opts, done) {
   if (self.settings.logger)self.setupLogger()
   self.setupRoutesMiddleware()
   if (self.settings.swagger)self.swagger()
-  if (self.environment === 'development')self.plato()
+  if (self.environment === 'development') {
+    self.nightwatch()
+    self.plato()
+  }
   self.setupStatic()
   self.livereload()
 
@@ -267,6 +270,10 @@ Mean.prototype.swagger = function () {
     }
   })
   swagger.configure('/api', '1.0')
+}
+Mean.prototype.nightwatch = function () {
+  var self = this
+  self.app.use('/e2e', express.static(path.join(__dirname, 'reports/nightwatch/')))
 }
 Mean.prototype.plato = function () {
   var self = this
