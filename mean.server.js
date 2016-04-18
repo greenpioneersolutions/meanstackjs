@@ -37,6 +37,7 @@ function Mean (opts, done) {
   if (self.settings.logger)self.setupLogger()
   self.setupRoutesMiddleware()
   if (self.settings.swagger)self.swagger()
+  if (self.environment === 'development')self.plato()
   self.setupStatic()
   self.livereload()
 
@@ -266,6 +267,11 @@ Mean.prototype.swagger = function () {
     }
   })
   swagger.configure('/api', '1.0')
+}
+Mean.prototype.plato = function () {
+  var self = this
+  self.app.use('/plato', express.static(path.join(__dirname, 'reports/plato')))
+  require('./reports/plato.js').report(self.settings.plato)
 }
 Mean.prototype.setupStatic = function () {
   var self = this

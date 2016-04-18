@@ -30,6 +30,14 @@ var baseLine = {
     folder: 'dist',
     active: false
   },
+  // Plato
+  plato: {
+    title: 'mean stack',
+    eslint: {
+      lastsemic: true,
+      asi: true
+    }
+  },
   // Template Engine
   templateEngine: 'swig',
   // JWT Object https://github.com/auth0/node-jsonwebtoken
