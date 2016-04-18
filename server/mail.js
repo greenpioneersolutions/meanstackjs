@@ -1,5 +1,5 @@
 var nodemailer = require('nodemailer')
-var settings = require('../configs/settings.js')
+var settings = require('../configs/settings.js').get()
 var secrets = {
   host: 'smtp.mandrillapp.com', // Gmail, SMTP
   port: '587',

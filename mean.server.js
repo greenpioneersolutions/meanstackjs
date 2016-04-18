@@ -82,15 +82,8 @@ function Mean (opts, done) {
 
 Mean.prototype.setupEnv = function () {
   var self = this
-  self.settings = require('./configs/settings.js')(process.env.NODE_ENV)
-  self.environment = 'development'
-  if (process.env.NODE_ENV === 'test') {
-    self.environment = 'test'
-  } else if (process.env.NODE_ENV === 'production') {
-    self.environment = 'production'
-  } else if (process.env.NODE_ENV === 'nightwatch') {
-    self.environment = 'nightwatch'
-  }
+  self.environment = require('./server/environment.js').get()
+  self.settings = require('./configs/settings.js').get()
 }
 
 Mean.prototype.setupExpressConfigs = function () {

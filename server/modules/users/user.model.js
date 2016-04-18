@@ -1,7 +1,7 @@
 var bcrypt = require('bcrypt-nodejs')
 var crypto = require('crypto')
 var mongoose = require('mongoose')
-var settings = require('../../../configs/settings.js')
+var settings = require('../../../configs/settings.js').get()
 var mail = require('../../mail.js')
 var validate = require('mongoose-validator')
 

@@ -1,3 +1,4 @@
+process.env.NODE_ENV = 'nightwatch'
 var MeanStack = require('../mean.server.js')
 var run = require('../run.js')
 module.exports = {
@@ -22,7 +23,6 @@ module.exports = {
   asyncHookTimeout: 10000,
 
   before: function (done) {
-    process.env.NODE_ENV = 'nightwatch'
     run(MeanStack, function (err) {
       if (err) console.log(err)
       done()

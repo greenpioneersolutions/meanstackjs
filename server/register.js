@@ -24,6 +24,7 @@ var babel = require('babel-core')
 
 function Register (opts, done) {
   var self = this
+  self.environment = require('./environment.js').get()
   self.mail = require('./mail.js')
   self.app = opts.app
   self.settings = opts.settings
@@ -375,7 +376,7 @@ Register.prototype.env = function () {
   debug('started env')
 
   var self = this
-  if (process.env.NODE_ENV === 'test') {
+  if (self.environment === 'test') {
     concat(self.frontendFilesAggregate.css, path.join(__dirname, '../client/styles/compiled/concat.css'), function (error) {
       if (error)debug(error, 'concat')
     })
@@ -386,7 +387,7 @@ Register.prototype.env = function () {
       js: ['scripts/compiled/concat.js'],
       css: ['styles/compiled/concat.css']
     }
-  } else if (process.env.NODE_ENV === 'production') {
+  } else if (self.environment === 'production') {
     var uglifiedcss = uglifycss.processFiles(
       self.frontendFilesAggregate.css, {
         maxLineLen: 500

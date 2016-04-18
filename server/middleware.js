@@ -1,6 +1,6 @@
 var _ = require('lodash')
 var jwt = require('jsonwebtoken')
-var settings = require('./../configs/settings.js')
+var settings = require('./../configs/settings.js').get()
 var mongoose = require('mongoose')
 
 function findUser (id, cb) {
