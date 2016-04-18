@@ -5,6 +5,7 @@ var minimist = require('minimist')
 var Mean = require('./mean.server.js')
 var SocketIO = require('./socketio.server.js')
 var Livereload = require('./livereload.server.js')
+var MongoExpress = require('./mongo_express.server.js')
 var mail = require('./server/mail.js')
 var environment = 'development'
 var settings = require('./configs/settings.js')
@@ -51,4 +52,5 @@ if (!module.parent) {
   run(Mean)
   run(SocketIO)
   run(Livereload)
+  run(MongoExpress)
 }

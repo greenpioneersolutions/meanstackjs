@@ -1,4 +1,4 @@
-module.exports = MeanStack
+module.exports = Mean
 /**
  * Module dependencies.
  */
@@ -27,7 +27,7 @@ var auth = require('./server/passport.js')
 var expressValidator = require('express-validator')
 var status = require('express-system-status')
 
-function MeanStack (opts, done) {
+function Mean (opts, done) {
   var self = this
   self.opts = opts
   self.debug = require('debug')('meanstackjs:server')
@@ -80,7 +80,7 @@ function MeanStack (opts, done) {
   self.debug('Finished Server Load')
 }
 
-MeanStack.prototype.setupEnv = function () {
+Mean.prototype.setupEnv = function () {
   var self = this
   self.settings = require('./configs/settings.js')(process.env.NODE_ENV)
   self.environment = 'development'
@@ -93,7 +93,7 @@ MeanStack.prototype.setupEnv = function () {
   }
 }
 
-MeanStack.prototype.setupExpressConfigs = function () {
+Mean.prototype.setupExpressConfigs = function () {
   var self = this
   self.port = self.opts.port || self.settings.http.port
   self.debug('started')
@@ -157,7 +157,7 @@ MeanStack.prototype.setupExpressConfigs = function () {
   self.app.use(errorHandler())
 }
 
-MeanStack.prototype.setupHeaders = function () {
+Mean.prototype.setupHeaders = function () {
   var self = this
   self.app.use(function (req, res, next) {
     // var extname = path.extname(url.parse(req.url).pathname)
@@ -186,7 +186,7 @@ MeanStack.prototype.setupHeaders = function () {
   })
 }
 
-MeanStack.prototype.setupLogger = function () {
+Mean.prototype.setupLogger = function () {
   var self = this
   self.app.use(logger(self.settings.logger))
   self.app.use(function (req, res, next) {
@@ -196,7 +196,7 @@ MeanStack.prototype.setupLogger = function () {
     next()
   })
 }
-MeanStack.prototype.swagger = function () {
+Mean.prototype.swagger = function () {
   var self = this
   var Swagger = require('swagger-node-express')
   var swaggerUI = require('swagger-ui')
@@ -274,7 +274,7 @@ MeanStack.prototype.swagger = function () {
   })
   swagger.configure('/api', '1.0')
 }
-MeanStack.prototype.setupStatic = function () {
+Mean.prototype.setupStatic = function () {
   var self = this
 
   self.app.use(express.static(path.join(__dirname, 'client/'), {
@@ -346,7 +346,7 @@ MeanStack.prototype.setupStatic = function () {
     })
   })
 }
-MeanStack.prototype.setupRoutesMiddleware = function () {
+Mean.prototype.setupRoutesMiddleware = function () {
   var self = this
   /**
    * Middleware.
@@ -383,7 +383,7 @@ MeanStack.prototype.setupRoutesMiddleware = function () {
     })
   })
 }
-MeanStack.prototype.livereload = function () {
+Mean.prototype.livereload = function () {
   var self = this
   /**
    * Livereload
@@ -471,5 +471,5 @@ MeanStack.prototype.livereload = function () {
 
 var run = require('./run.js')
 if (!module.parent) {
-  run(MeanStack)
+  run(Mean)
 }

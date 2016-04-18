@@ -16,7 +16,7 @@
       "localStorage",
       "io"
     ],
-     "ignore": [
+    "ignore": [
       "commands/template/"
     ]
   },
@@ -73,6 +73,7 @@
     "connect-assets": "^5.0.1",
     "connect-mongo": "^0.8.2",
     "cookie-parser": "^1.4.0",
+    "debug": "^2.2.0",
     "errorhandler": "^1.4.2",
     "express": "^4.13.3",
     "express-flash": "^0.0.2",
@@ -86,6 +87,7 @@
     "lodash": "^3.10.1",
     "method-override": "^2.3.5",
     "minimist": "^1.2.0",
+    "mongo-express": "^0.30.48",
     "mongoose": "^4.2.7",
     "mongoose-validator": "^1.2.4",
     "morgan": "^1.6.1",
