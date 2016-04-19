@@ -9,16 +9,9 @@ var MongoExpress = require('./server.mongo_express.js')
 var mail = require('./server/mail.js')
 var environment = require('./server/environment.js').get()
 var settings = require('./configs/settings.js').get()
-
 var argv = minimist(process.argv.slice(2))
 
-/**
- * Run the given server, passing in command line options as options.
- * @param  {function(*)} ServerConstructor
- */
-
 function run (ServerConstructor, cb) {
-  // Create and start the server
   var server = new ServerConstructor(extend(argv), function (err) {
     if (err) {
       console.error('Error during ' + server.serverName + ' startup. Abort.')

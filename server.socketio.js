@@ -4,9 +4,6 @@ var express = require('express')
 var debug = require('debug')('meanstackjs:socketio')
 
 function SocketIO (opts, done) {
-  /**
-   * Socket.IO - Plan to move to a file later
-   */
   var app = express()
   var socketServer = require('http').createServer(app)
   var io = require('socket.io')(socketServer)

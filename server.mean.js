@@ -1,7 +1,5 @@
 module.exports = Mean
-/**
- * Module dependencies.
- */
+
 var express = require('express')
 var async = require('async')
 var cookieParser = require('cookie-parser')

@@ -1,5 +1,5 @@
 process.env.NODE_ENV = 'nightwatch'
-var MeanStack = require('../mean.server.js')
+var MeanStack = require('../server.mean.js')
 var run = require('../run.js')
 
 var HtmlReporter = require('nightwatch-html-reporter')
