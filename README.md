@@ -25,6 +25,9 @@ We are building in this framework to make your life as a designer or developer e
 - Docker (New)
 - Swagger.io (New)
 - Babel(New)
+- Mongo-Express (New)
+- Plato (New)
+- NightWatch E2E (New)
 
 Those are just some of the reasons why we believe using mean stack js will help you in your development. What we want to do moving forward with this project is to layout a road map so that you can give your thoughts and let us know what we can add to make your life easier with this framework. We welcome all of those who wish to contribute and be apart of this. Join us in building and using the newest style in mean stacks
 

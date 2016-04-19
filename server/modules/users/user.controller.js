@@ -6,7 +6,7 @@ var passport = require('passport')
 var mongoose = require('mongoose')
 var User = mongoose.model('users')
 
-var settings = require('../../../configs/settings.js')
+var settings = require('../../../configs/settings.js').get()
 
 var secrets = {
   host: 'smtp.mandrillapp.com', // Gmail, SMTP

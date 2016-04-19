@@ -2,17 +2,14 @@
 
 var path = require('path')
 var _ = require('lodash')
+var environment = require('../server/environment.js').get()
 var baseLine = {
-  env: process.env.NODE_ENV || 'development',
-
+  env: environment,
   // Root path of server
-  root: path.normalize(__dirname + '/../../..'),
-
+  root: path.join(__dirname, '/../../..'),
   // Server IP
   ip: process.env.IP || '0.0.0.0',
-
   hostname: process.env.HOST || process.env.HOSTNAME || 'localhost',
-
   // Enable Swagger.io at localhost:[port]/api/
   swagger: true,
   // Enable the use of babel for ES6
@@ -29,6 +26,14 @@ var baseLine = {
     folder: 'dist',
     active: false
   },
+  // Plato
+  plato: {
+    title: 'mean stack',
+    eslint: {
+      lastsemic: true,
+      asi: true
+    }
+  },
   // Template Engine
   templateEngine: 'swig',
   // JWT Object https://github.com/auth0/node-jsonwebtoken
@@ -36,7 +41,7 @@ var baseLine = {
     // is used to compute a JWT SIGN
     secret: 'MEANSTACKJS',
     options: {
-      expiresIn: 60 * 120 // 60 seconds * 120  = 2 hours 
+      expiresIn: 60 * 120 // 60 seconds * 120  = 2 hours
     }
   },
   // is used to compute a session hash
@@ -149,17 +154,28 @@ var baseLine = {
         '— Mean Stack JS'
       }
     },
-    from: 'MEANSTACKJS@meanstackjs.com',
-    error: 'MEANSTACKJS@meanstackjs.com'
+    from: 'MEANSTACKJS@localhost.com',
+    error: 'MEANSTACKJS@localhost.com'
   }
 }
-var settings
-if (process.env.NODE_ENV === 'test') {
-  settings = _.merge(baseLine, require('./environments/test.js'))
-} else if (process.env.NODE_ENV === 'production') {
-  settings = _.merge(baseLine, require('./environments/production.js'))
+if (environment === 'test') {
+  baseLine = _.merge(baseLine, require('./environments/test.js'))
+} else if (environment === 'production') {
+  baseLine = _.merge(baseLine, require('./environments/production.js'))
+} else if (environment === 'nightwatch') {
+  baseLine = _.merge(baseLine, require('./environments/nightwatch.js'))
 } else {
-  settings = _.merge(baseLine, require('./environments/development.js'))
+  baseLine = _.merge(baseLine, require('./environments/development.js'))
 }
 
-module.exports = settings
+module.exports = {
+  set: set,
+  get: get
+}
+function get (env) {
+  return baseLine
+}
+function set (identifer, value) {
+  baseLine[identifer] = value
+  return baseLine
+}

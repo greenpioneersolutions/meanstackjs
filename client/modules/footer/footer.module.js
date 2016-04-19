@@ -1,5 +1,5 @@
 ;(function () {
   'use strict'
 
-  angular.module('app.footer', [])
+  angular.module('app.footer', ['app.core'])
 })()

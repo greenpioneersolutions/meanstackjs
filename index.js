@@ -1,15 +1,18 @@
-var Site = require('./mean.server.js')
-var SocketIO = require('./socketio.server.js')
-var Livereload = require('./livereload.server.js')
+var Mean = require('./server.mean.js')
+var SocketIO = require('./server.socketio.js')
+var Livereload = require('./server.livereload.js')
+var MongoExpress = require('./server.mongo_express.js')
 var run = require('./run.js')
+var environment = require('./server/environment.js').get()
 
 if (!module.parent) {
-  if (process.env.NODE_ENV === 'development') {
-    run(Site)
+  if (environment === 'development') {
+    run(Mean)
     run(SocketIO)
     run(Livereload)
+    run(MongoExpress)
   } else {
-    run(Site)
+    run(Mean)
     run(SocketIO)
   }
 }

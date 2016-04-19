@@ -2,7 +2,7 @@
   'use strict'
 
   angular
-    .module('app.util')
+    .module('app.core')
     .provider('routerHelper', routerHelperProvider)
     .provider('exceptionHandler', exceptionHandlerProvider)
     .config(config)

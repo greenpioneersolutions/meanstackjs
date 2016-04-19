@@ -2,7 +2,7 @@
   'use strict'
 
   angular
-    .module('app.util')
+    .module('app.core')
     .factory('logger', logger)
     .factory('exception', exception)
     .factory('httpInterceptor', httpInterceptor)
@@ -10,7 +10,7 @@
 
   logger.$inject = ['$log', 'toastr']
   exception.$inject = []
-  httpInterceptor.$inject = ['$q', '$location','logger']
+  httpInterceptor.$inject = ['$q', '$location', 'logger']
   noCacheInterceptor.$inject = []
   /* @ngInject */
   function logger ($log, toastr) {
@@ -21,9 +21,7 @@
       info: info,
       success: success,
       warning: warning,
-
-      // straight to console; bypass toastr
-      log: $log.log
+      log: $log.log // straight to console; bypass toastr
     }
 
     return service
@@ -75,21 +73,21 @@
   function httpInterceptor ($q, $location, logger) {
     return {
       'response': function (response) {
-        if (response.status === 402 || response.status === 401 ) {
-          if (response.data.msg){
-            logger.error(response.data.msg,response,'Error')
+        if (response.status === 402 || response.status === 401) {
+          if (response.data.msg) {
+            logger.error(response.data.msg, response, 'Error')
           }
           $location.path('/signin')
           return $q.reject(response)
         }
-        
+
         return response || $q.when(response)
       },
 
       'responseError': function (rejection) {
-        if (rejection.status === 402  || rejection.status === 401 ) {
-          if (rejection.data.msg){
-            logger.error(rejection.data.msg,rejection,'Error')
+        if (rejection.status === 402 || rejection.status === 401) {
+          if (rejection.data.msg) {
+            logger.error(rejection.data.msg, rejection, 'Error')
           }
           $location.url('/signin')
           return $q.reject(rejection)
@@ -104,8 +102,8 @@
     return {
       request: function (config) {
         var n = config.url.search(/template|modal|Modal/i)
-        if (n == -1) {
-          if (config.method == 'GET') {
+        if (n === -1) {
+          if (config.method === 'GET') {
             var separator = config.url.indexOf('?') === -1 ? '?' : '&'
             config.url = config.url + separator + 'noCache=' + new Date().getTime()
           }

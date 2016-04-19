@@ -8,9 +8,9 @@
       'ngResource',
       'ngCookies',
       'ui.bootstrap',
-      'app.util',
       'ui.router',
       'angularMoment',
-      'ngFileUpload'
+      'ngFileUpload',
+      'angular-jwt'
     ])
 })()

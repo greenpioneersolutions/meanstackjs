@@ -82,3 +82,13 @@ client/scripts/compiled
 # Babel Compiled files
 # --------------------
 server/dist/
+
+# --------------------
+# Night Watch reports
+# --------------------
+reports/nightwatch/
+
+# --------------------
+# Plato reports
+# --------------------
+reports/plato/
