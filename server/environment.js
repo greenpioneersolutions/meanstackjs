@@ -6,7 +6,7 @@ module.exports = {
 var environment = 'development'
 
 function get (env) {
-  environment = env || process.env.NODE_ENV
+  environment = env || process.env.NODE_ENV || environment
   return environment
 }
 function set (env) {

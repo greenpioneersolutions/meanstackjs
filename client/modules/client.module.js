@@ -2,9 +2,8 @@
   'use strict'
 
   angular.module('app', [
-    'app.util',
-    'app.index',
     'app.core',
+    'app.index',
     'app.header',
     'app.footer',
     'app.user',

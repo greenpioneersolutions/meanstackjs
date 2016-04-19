@@ -183,6 +183,7 @@
               localStorage.setItem('JWT', success.data.user)
               success.data.user = getToken(success.data.user)
             }
+            success.data.redirect = '/'
             self.onIdentity.bind(self)(success.data)
           }, function (error) {
             self.onIdFail.bind(self)(error)
@@ -196,7 +197,6 @@
         .then(
           function (response) {
             if (response.data.valid) {
-              // console do nothing cause its valid
               vm.tokenCheck = false
             }
           }, function (response) {

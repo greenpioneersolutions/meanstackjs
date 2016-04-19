@@ -80,7 +80,7 @@ var mongoexpress = {
     username: process.env.ME_CONFIG_BASICAUTH_USERNAME || 'admin',
     password: process.env.ME_CONFIG_BASICAUTH_PASSWORD || 'pass'
   },
-
+  console: false,
   options: {
     // documentsPerPage: how many documents you want to see at once in collection view
     documentsPerPage: 10,
