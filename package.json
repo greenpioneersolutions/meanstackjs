@@ -1,6 +1,6 @@
 {
   "name": "meanstackjs",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "We are building in this framework to make your life as a designer or developer easier. We believe in making this framework usable for User Experience Designers, Quality Assurance Engineers, Software Engineers, Frontend & Backend Developers & Full Stack Engineers...",
   "main": "index.js",
   "standard": {
