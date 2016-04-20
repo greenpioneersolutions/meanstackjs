@@ -1,6 +1,6 @@
 {
   "name": "meanstackjs",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "We are building in this framework to make your life as a designer or developer easier. We believe in making this framework usable for User Experience Designers, Quality Assurance Engineers, Software Engineers, Frontend & Backend Developers & Full Stack Engineers...",
   "main": "index.js",
   "standard": {
@@ -14,7 +14,10 @@
       "it",
       "__dirname",
       "localStorage",
-      "io"
+      "io",
+      "expect",
+      "inject",
+      "beforeEach"
     ],
     "ignore": [
       "commands/template/"
@@ -120,6 +123,7 @@
     "chai": "^3.4.1",
     "inquirer": "^0.11.2",
     "karma": "^0.13.16",
+    "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^0.2.2",
     "karma-jasmine": "^0.3.6",
     "karma-mocha": "^0.2.1",
