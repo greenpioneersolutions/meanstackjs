@@ -1,4 +1,5 @@
 language: node_js
+sudo: true
 node_js:
   - "0.10.26"
   - 4
@@ -13,16 +14,7 @@ matrix:
     - node_js: 5
 env:
   - NODE_ENV=nightwatch
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - g++-4.8
-    - gcc-4.8
-    - clang
 before_script:
-  - gem update --system
   - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
   - sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
   - sudo apt-get update
