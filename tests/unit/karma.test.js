@@ -1,5 +1,3 @@
-// Karma configuration
-
 module.exports = function (config) {
   var path = require('path')
   var _ = require('lodash')
@@ -14,7 +12,13 @@ module.exports = function (config) {
   ]
   var files = dependencyFiles.reverse().concat(srcFiles)
 
-  config.set({
+  var configuration = {
+    customLaunchers: {
+      Chrome_travis_ci: {
+        base: 'Chrome',
+        flags: ['--no-sandbox']
+      }
+    },
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: './',
 
@@ -68,5 +72,9 @@ module.exports = function (config) {
       'karma-chai',
       'karma-chrome-launcher'
     ]
-  })
+  }
+  if (process.env.TRAVIS) {
+    configuration.browsers = ['Chrome_travis_ci']
+  }
+  config.set(configuration)
 }

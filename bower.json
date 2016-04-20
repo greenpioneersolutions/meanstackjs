@@ -36,6 +36,6 @@
     "angular-jwt": "^0.0.9"
   },
   "resolutions": {
-    "angular": "1.5.3"
+    "angular": "1.5.5"
   }
 }
