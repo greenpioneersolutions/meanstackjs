@@ -1,0 +1,20 @@
+language: node_js
+node_js:
+  - "0.10.26"
+  - 4
+  - 5
+os:
+  - linux
+  - centos
+  - macosx
+  - windows
+matrix:
+  allow_failures:
+    - node_js: 5
+env:
+  - NODE_ENV=nightwatch
+before_script:
+  - npm i bower
+script:
+  - npm test
+services: mongodb
