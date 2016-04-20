@@ -17,8 +17,9 @@
       if (validated) UserFactory.login(vm)
       else logger.warning('Data not valid', vm, 'Login Validation')
     }
-    vm.signup = function () {
-      UserFactory.signup(vm)
+    vm.signup = function (validated) {
+      if (validated) UserFactory.signup(vm)
+      else logger.warning('Data not valid', vm, 'Signup Validation')
     }
     vm.forgot = function () {
       UserFactory.forgot(vm)
