@@ -13,8 +13,9 @@
     vm.find = function () {
       vm.editProfile = angular.copy(UserFactory.user)
     }
-    vm.login = function () {
-      UserFactory.login(vm)
+    vm.login = function (validated) {
+      if (validated) UserFactory.login(vm)
+      else logger.warning('Data not valid', vm, 'Login Validation')
     }
     vm.signup = function () {
       UserFactory.signup(vm)
