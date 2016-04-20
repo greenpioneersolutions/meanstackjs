@@ -148,8 +148,8 @@ describe('CORE Testing', function () {
         try {
           UserFactory.login()
           $httpBackend.flush()
-        } catch (e) {
-          expect(e).to.exist
+        } catch (err) {
+          expect(err).to.exist
         }
       })
 
@@ -166,8 +166,8 @@ describe('CORE Testing', function () {
         try {
           UserFactory.signup()
           $httpBackend.flush()
-        } catch (e) {
-          expect(e).to.exist
+        } catch (err) {
+          expect(err).to.exist
         }
       })
     })
