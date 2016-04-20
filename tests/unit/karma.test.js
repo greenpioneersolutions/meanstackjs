@@ -1,6 +1,9 @@
 // Karma configuration
 
 module.exports = function (config) {
+  if (process.env.TRAVIS) {
+    config.browsers = ['Chrome_travis_ci']
+  }
   config.set({
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: './',
