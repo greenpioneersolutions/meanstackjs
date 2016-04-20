@@ -1,10 +1,13 @@
 // Karma configuration
 
 module.exports = function (config) {
-  if (process.env.TRAVIS) {
-    config.browsers = ['Chrome_travis_ci']
-  }
-  config.set({
+  var configuration = {
+    customLaunchers: {
+      Chrome_travis_ci: {
+        base: 'Chrome',
+        flags: ['--no-sandbox']
+      }
+    },
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: './',
 
@@ -60,5 +63,9 @@ module.exports = function (config) {
       'karma-mocha',
       'karma-chrome-launcher'
     ]
-  })
+  }
+  if (process.env.TRAVIS) {
+    configuration.browsers = ['Chrome_travis_ci']
+  }
+  config.set(configuration)
 }
