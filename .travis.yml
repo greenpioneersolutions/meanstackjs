@@ -13,7 +13,20 @@ matrix:
     - node_js: 5
 env:
   - NODE_ENV=nightwatch
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
+    - gcc-4.8
+    - clang
 before_script:
+  - gem update --system
+  - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+  - sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+  - sudo apt-get update
+  - sudo apt-get install google-chrome-stable
   - npm i -g nsp
   - npm i -g chromedriver
   - export CHROME_BIN=chromium-browser
@@ -21,10 +34,11 @@ before_script:
   - sh -e /etc/init.d/xvfb start
   - npm install selenium-standalone@latest -g
   - selenium-standalone install
-  - 'selenium-standalone start start 2>&1 &'
+  - 'selenium-standalone start 2>&1 &'
   - sleep 3
 script:
   - npm test
 after_script:
   - nsp check
 services: mongodb
+
