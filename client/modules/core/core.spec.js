@@ -158,7 +158,7 @@ describe('CORE Testing', function () {
           .respond(200, authResponse)
         UserFactory.login(credentials)
         $httpBackend.flush()
-        jwt = localStorage.getItem('JWT')
+        var jwt = localStorage.getItem('JWT')
         expect(jwt).to.not.equal(null)
       })
 
