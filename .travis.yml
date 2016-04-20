@@ -8,11 +8,6 @@ os:
   - centos
   - macosx
   - windows
-matrix:
-  allow_failures:
-    - "0.10.26"
-    - 4
-    - 5
 env:
   - NODE_ENV=nightwatch
 before_script:
