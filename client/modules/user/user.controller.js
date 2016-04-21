@@ -28,8 +28,9 @@
     vm.resetTokenCheck = function () {
       UserFactory.resetTokenCheck(vm)
     }
-    vm.reset = function () {
-      UserFactory.resetpassword(vm)
+    vm.reset = function (validated) {
+      if (validated) UserFactory.resetpassword(vm)
+      else logger.warning('Data not valid', vm, 'Reset Password Validation')
     }
     vm.resetToken = $stateParams.token
     vm.update = function () {
