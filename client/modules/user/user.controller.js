@@ -33,8 +33,9 @@
       else logger.warning('Data not valid', vm, 'Reset Password Validation')
     }
     vm.resetToken = $stateParams.token
-    vm.update = function () {
-      UserFactory.update(vm)
+    vm.update = function (validated) {
+      if (validated) UserFactory.update(vm)
+      else logger.warning('Data not valid', vm, 'Profile Validation')
     }
     vm.upload = function (file) {
       Upload.upload({
