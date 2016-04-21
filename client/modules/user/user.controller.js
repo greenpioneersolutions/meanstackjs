@@ -21,8 +21,9 @@
       if (validated) UserFactory.signup(vm)
       else logger.warning('Data not valid', vm, 'Signup Validation')
     }
-    vm.forgot = function () {
-      UserFactory.forgot(vm)
+    vm.forgot = function (validated) {
+      if (validated) UserFactory.forgot(vm)
+      else logger.warning('Data not valid', vm, 'Forgot Password Validation')
     }
     vm.resetTokenCheck = function () {
       UserFactory.resetTokenCheck(vm)
