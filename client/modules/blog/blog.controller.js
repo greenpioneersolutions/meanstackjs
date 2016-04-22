@@ -16,7 +16,7 @@
     vm.create = function (validated) {
       if (!validated) {
         logger.warning('Data not valid', vm, 'Create Blog Post Validation')
-        return;
+        return
       }
       var blog = new BlogFactory(vm.blog)
       blog.user = vm.UserFactory.user
@@ -47,7 +47,7 @@
     vm.update = function (validated) {
       if (!validated) {
         logger.warning('Data not valid', vm, 'Edit Blog Post Validation')
-        return;
+        return
       }
       BlogFactory.update({
         id: $stateParams.id
