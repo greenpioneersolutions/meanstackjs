@@ -13,7 +13,11 @@
     vm.blog = {}
     vm.UserFactory = UserFactory
     activate()
-    vm.create = function () {
+    vm.create = function (validated) {
+      if (!validated) {
+        logger.warning('Data not valid', vm, 'Create Blog Post Validation')
+        return;
+      }
       var blog = new BlogFactory(vm.blog)
       blog.user = vm.UserFactory.user
       blog.$save(function (response) {
