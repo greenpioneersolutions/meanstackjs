@@ -13,24 +13,29 @@
     vm.find = function () {
       vm.editProfile = angular.copy(UserFactory.user)
     }
-    vm.login = function () {
-      UserFactory.login(vm)
+    vm.login = function (validated) {
+      if (validated) UserFactory.login(vm)
+      else logger.warning('Data not valid', vm, 'Login Validation')
     }
-    vm.signup = function () {
-      UserFactory.signup(vm)
+    vm.signup = function (validated) {
+      if (validated) UserFactory.signup(vm)
+      else logger.warning('Data not valid', vm, 'Signup Validation')
     }
-    vm.forgot = function () {
-      UserFactory.forgot(vm)
+    vm.forgot = function (validated) {
+      if (validated) UserFactory.forgot(vm)
+      else logger.warning('Data not valid', vm, 'Forgot Password Validation')
     }
     vm.resetTokenCheck = function () {
       UserFactory.resetTokenCheck(vm)
     }
-    vm.reset = function () {
-      UserFactory.resetpassword(vm)
+    vm.reset = function (validated) {
+      if (validated) UserFactory.resetpassword(vm)
+      else logger.warning('Data not valid', vm, 'Reset Password Validation')
     }
     vm.resetToken = $stateParams.token
-    vm.update = function () {
-      UserFactory.update(vm)
+    vm.update = function (validated) {
+      if (validated) UserFactory.update(vm)
+      else logger.warning('Data not valid', vm, 'Profile Validation')
     }
     vm.upload = function (file) {
       Upload.upload({
