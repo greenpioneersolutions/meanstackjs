@@ -90,7 +90,7 @@
     "lodash": "^3.10.1",
     "method-override": "^2.3.5",
     "minimist": "^1.2.0",
-    "mongo-express": "^0.30.48",
+    "mongo-express": "^0.30.52",
     "mongoose": "^4.2.7",
     "mongoose-validator": "^1.2.4",
     "morgan": "^1.6.1",

@@ -31,12 +31,12 @@
 
                 <ul class="navbar-nav nav auth-link navbar-right">
                     <li ng-show="!vm.UserFactory.loggedin">
-                        <a href='/signin'>
+                        <a id="signin" href='/signin'>
                             Sign In
                         </a>
                     </li>
                     <li ng-show="!vm.UserFactory.loggedin">
-                        <a href='/signup'>
+                        <a id="signup" href='/signup'>
                             Sign Up
                         </a>
                     </li>
@@ -47,12 +47,12 @@
                         </a>
                         <ul class="uib-dropdown-menu" aria-labelledby="simple-dropdown">
                             <li>
-                                <a href='/account'>
+                                <a id="account" href='/account'>
                                     Your Account
                                 </a>
                             </li>
                             <li>
-                                <a href='#' ng-click='vm.logout()'>
+                                <a id="signout" href='#' ng-click='vm.logout()'>
                                     Sign Out
                                 </a>
                             </li>
