@@ -41,17 +41,7 @@ module.exports = {
   before: function (done) {
     run(MeanStack, function (err) {
       if (err) console.log(err)
-      var mongoose = require('mongoose')
-      var User = mongoose.model('users')
-      User.find({}).remove().then(function () {
-        User.create({
-          email: 'test@greenpioneersolutions.com',
-          password: 'truetrue1!',
-          profile: {
-            name: 'jason greenpioneer'
-          }
-        }).then(function () {})
-      })
+      require('./seed.js')
       done()
     })
   },
