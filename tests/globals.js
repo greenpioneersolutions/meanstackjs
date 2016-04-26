@@ -41,8 +41,9 @@ module.exports = {
   before: function (done) {
     run(MeanStack, function (err) {
       if (err) console.log(err)
-      require('./seed.js')
-      done()
+      require('./seed.js')(function () {
+        done()
+      })
     })
   },
 
