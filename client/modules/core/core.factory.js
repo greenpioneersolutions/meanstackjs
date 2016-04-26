@@ -123,7 +123,7 @@
         }
         self.onIdentity.bind(self)(success.data)
       }, function (error) {
-        self.onIdFail.bind(this)(error)
+        self.onIdFail.bind(self)(error)
       })
     // .then(function (response) {
     //   if (!response.error) {

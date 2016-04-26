@@ -1,43 +1,11 @@
-var assert = require('assert')
+process.env.NODE_ENV = 'nightwatch'
+var Mean = require('../../server.mean.js')
+var run = require('../../run.js')
+var glob = require('glob')
 
-function add () {
-  return Array.prototype.slice.call(arguments).reduce(function (prev, curr) {
-    return prev + curr
-  }, 0)
-}
-
-describe('add()', function () {
-  var tests = [
-    {
-      args: [1, 2],
-      expected: 3
-    },
-    {
-      args: [1, 2, 3],
-      expected: 6
-    },
-    {
-      args: [1, 2, 3, 4],
-      expected: 10
-    }
-  ]
-
-  tests.forEach(function (test) {
-    it('correctly adds ' + test.args.length + ' args', function () {
-      var res = add.apply(null, test.args)
-      assert.equal(res, test.expected)
-    })
-  })
-})
-
-describe('a suite of tests', function () {
-  this.timeout(500)
-
-  it('should take less than 500ms', function (done) {
-    setTimeout(done, 300)
-  })
-
-  it('should take less than 500ms as well', function (done) {
-    setTimeout(done, 200)
+run(Mean)
+require('../seed.js')(function () {
+  glob.sync('server/modules/**/*.spec.js').forEach(function (file) {
+    require('../../' + file)
   })
 })
