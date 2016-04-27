@@ -16,7 +16,6 @@ var chalk = require('chalk')
 var sass = require('node-sass')
 var less = require('less')
 var uglify = require('uglify-js')
-var concat = require('concat')
 var uglifycss = require('uglifycss')
 var mongoose = require('mongoose')
 var debug = require('debug')('meanstackjs:register')
@@ -420,4 +419,16 @@ Register.prototype.env = function () {
     self.app.locals.frontendFilesFinal = self.frontendFilesFinal
   }
   debug('end env')
+}
+
+function concat (files, dest, callback) {
+  fs.writeFile(dest, '', function (error) {
+    if (error) return callback(error)
+    _.forEach(files, function (n) {
+      fs.readFile(n, function (error, buffer) {
+        if (error) throw error
+        fs.appendFile(dest, buffer)
+      })
+    })
+  })
 }
