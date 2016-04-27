@@ -8,9 +8,9 @@
     .config(config)
 
   routerHelperProvider.$inject = ['$locationProvider', '$stateProvider', '$urlRouterProvider']
+
   /* @ngInject */
   function routerHelperProvider ($locationProvider, $stateProvider, $urlRouterProvider) {
-    /* jshint validthis:true */
     var config = {
       docTitle: undefined,
       resolveAlways: {}
@@ -23,9 +23,11 @@
     }
 
     this.$get = RouterHelper
-    RouterHelper.$inject = ['$location', '$rootScope', '$state', 'logger']
+
+    RouterHelper.$inject = ['$rootScope', '$state', 'logger']
+
     /* @ngInject */
-    function RouterHelper ($location, $rootScope, $state, logger) {
+    function RouterHelper ($rootScope, $state, logger) {
       var handlingStateChangeError = false
       var hasOtherwise = false
       var stateCounts = {
@@ -61,19 +63,21 @@
         // Provide an exit clause if it tries to do it twice.
         $rootScope.$on('$stateChangeError',
           function (event, toState, toParams, fromState, fromParams, error) {
-            if (handlingStateChangeError) {
-              return
-            }
+            if (handlingStateChangeError) return
+
             stateCounts.errors++
             handlingStateChangeError = true
             var destination = (toState &&
               (toState.title || toState.name || toState.loadedTemplateUrl)) ||
               'unknown target'
-            var msg = 'Error routing to ' + destination + '. ' +
-              (error.data || '') + '. <br/>' + (error.statusText || '') +
+            var msg = 'Error routing to ' + destination + '. '
+            if (error.data && error.statusText) {
+              msg += (error.data || '') + '. \n' + (error.statusText || '') +
               ': ' + (error.status || '')
+            }
+
             logger.warning(msg, [toState])
-            $location.url('/')
+            $state.go('index')
           }
         )
       }
@@ -104,7 +108,6 @@
    * Must configure the exception handling
    */
   function exceptionHandlerProvider () {
-    /* jshint validthis:true */
     this.config = {
       appErrorPrefix: undefined
     }

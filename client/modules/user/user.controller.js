@@ -5,9 +5,10 @@
     .module('app.user', [])
     .controller('UserController', UserController)
 
-  UserController.$inject = ['$http', 'config', '$location', '$timeout', 'UserFactory', 'logger', 'Upload', '$stateParams']
+  UserController.$inject = ['$scope', '$http', '$cookies', 'config', '$state', '$timeout', 'UserFactory', 'logger', 'Upload', '$stateParams']
+
   /* @ngInject */
-  function UserController ($http, config, $location, $timeout, UserFactory, logger, Upload, $stateParams) {
+  function UserController ($scope, $http, $cookies, config, $state, $timeout, UserFactory, logger, Upload, $stateParams) {
     var vm = this
     vm.resetCred = vm.editProfile = vm.loginCred = vm.loginError = {}
     vm.find = function () {
@@ -53,7 +54,11 @@
     activate()
 
     function activate () {
-      console.log('Activated UserController View')
+      // Handle redirects
+      $scope.$on('$stateChangeSuccess', function (ev, toState, toParams, fromState, fromParams) {
+        var redirectPath = $state.href(fromState.name, fromParams)
+        $cookies.put('redirect', redirectPath)
+      })
     }
   }
 })()
