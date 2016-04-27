@@ -1,12 +1,31 @@
 [![dependencies](https://david-dm.org/greenpioneersolutions/meanstackjs.svg)](https://david-dm.org/greenpioneersolutions/meanstackjs)
 [![npm-issues](https://img.shields.io/github/issues/greenpioneersolutions/meanstackjs.svg)](https://github.com/greenpioneersolutions/meanstackjs/issues)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
-[![meanstackjs Logo](http://meanstackjs.com/images/logo/header3x.png)](http://meanstackjs.com/)
 [![Build Status](https://travis-ci.org/greenpioneersolutions/meanstackjs.svg?branch=master)](https://travis-ci.org/greenpioneersolutions/meanstackjs)
+[![Join the chat at https://gitter.im/greenpioneersolutions/meanstackjs](https://badges.gitter.im/greenpioneersolutions/meanstackjs.svg)](https://gitter.im/greenpioneersolutions/meanstackjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![meanstackjs Logo](http://meanstackjs.com/images/logo/header3x.png)](http://meanstackjs.com/)
 -----------------
 
 NOTE: Documentation is currently being rewritten
 ------------------
+
+```bash
+# Get the latest snapshot
+git clone https://github.com/greenpioneersolutions/meanstackjs.git
+
+# Change directory
+cd meanstackjs
+
+# Install NPM dependencies
+npm install
+
+# Start up the server
+npm start
+# or
+node index.js
+# or
+nodemon index.js
+```
 
 We are building in this framework to make your life as a designer or developer easier. We believe in making this framework usable for User Experience Designers, Quality Assurance Engineers, Software Engineers, Frontend & Backend Developers & Full Stack Engineers... etc. Were doing this by having key features in the framework we like we listed below:
 
