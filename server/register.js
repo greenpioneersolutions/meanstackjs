@@ -244,7 +244,7 @@ Register.prototype.config = function (opts) {
       if (j.type === 'controller') {
         self.backendFiles.controllers.push({name: r.name, url: baseDirectory + r.name + '/' + j.orginal})
       } else if (j.type === 'model') {
-        self.backendFiles.model.push({name: r.name, url: baseDirectory + r.name + '/' + j.orginal})
+        self.backendFiles.model.push({name: j.name, url: baseDirectory + r.name + '/' + j.orginal})
       } else if (j.type === 'routes') {
         self.backendFiles.routes.push({name: r.name, url: baseDirectory + r.name + '/' + j.orginal})
       } else {
