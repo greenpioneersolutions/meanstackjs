@@ -9,17 +9,20 @@
 
     <div class="row">
         <div class="col-sm-6 col-sm-offset-3">
-            <form  ng-submit="vm.login()">
-                <div class="form-group">
+            <form  name="loginForm" ng-submit="vm.login(loginForm.$valid)" novalidate>
+                <div class="form-group" ng-class="{'has-warning': loginForm.email.$invalid && loginForm.email.$dirty, 'has-success': loginForm.email.$valid && loginForm.email.$dirty}">
                    <label for="email" class="control-label">Email</label>
-                    <input type="email" name="email" id="email" placeholder="Email@email.com" autofocus="" ng-model="vm.loginCred.email" class="form-control">
+                    <input type="email" name="email" id="email" placeholder="Email@email.com" autofocus="" ng-model="vm.loginCred.email" class="form-control" required>
+                  <p class="help-block" id="error-email" ng-show="loginForm.email.$error.email">Must be a valid email address</p>
                 </div>
-                <div class="form-group">
+                <div class="form-group" ng-class="{'has-warning': loginForm.password.$invalid && loginForm.password.$dirty, 'has-success': loginForm.password.$valid && loginForm.password.$dirty}">
                     <label for="password" class="control-label">Password</label>
-                    <input type="password" name="password" id="password" placeholder="Password" ng-model="vm.loginCred.password" class="form-control">
+                    <input type="password" name="password" id="password" placeholder="Password" ng-model="vm.loginCred.password" class="form-control" ng-minlength="6" ng-pattern="/^(?=.*\w)(?=.*\d)(?=.*(_|[^\w])).+$/" required>
+                  <p class="help-block" id="error-minlength" ng-show="loginForm.password.$error.minlength">Password must be at least 6 characters</p>
+                  <p class="help-block" id="error-pattern" ng-show="signupForm.password.$error.pattern">Password must contain a letter, a number, and a symbol</p>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Login</button><a href="/forgot" class="btn btn-link">Forgot your password?</a></div>
+                    <button type="submit" class="btn btn-primary" id="signin" ng-disabled="loginForm.$invalid">Login</button><a href="/forgot" class="btn btn-link">Forgot your password?</a></div>
     		
             </form>
         </div>

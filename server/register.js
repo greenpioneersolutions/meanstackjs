@@ -16,7 +16,6 @@ var chalk = require('chalk')
 var sass = require('node-sass')
 var less = require('less')
 var uglify = require('uglify-js')
-var concat = require('concat')
 var uglifycss = require('uglifycss')
 var mongoose = require('mongoose')
 var debug = require('debug')('meanstackjs:register')
@@ -245,7 +244,7 @@ Register.prototype.config = function (opts) {
       if (j.type === 'controller') {
         self.backendFiles.controllers.push({name: r.name, url: baseDirectory + r.name + '/' + j.orginal})
       } else if (j.type === 'model') {
-        self.backendFiles.model.push({name: r.name, url: baseDirectory + r.name + '/' + j.orginal})
+        self.backendFiles.model.push({name: j.name, url: baseDirectory + r.name + '/' + j.orginal})
       } else if (j.type === 'routes') {
         self.backendFiles.routes.push({name: r.name, url: baseDirectory + r.name + '/' + j.orginal})
       } else {
@@ -420,4 +419,16 @@ Register.prototype.env = function () {
     self.app.locals.frontendFilesFinal = self.frontendFilesFinal
   }
   debug('end env')
+}
+
+function concat (files, dest, callback) {
+  fs.writeFile(dest, '', function (error) {
+    if (error) return callback(error)
+    _.forEach(files, function (n) {
+      fs.readFile(n, function (error, buffer) {
+        if (error) throw error
+        fs.appendFile(dest, buffer)
+      })
+    })
+  })
 }

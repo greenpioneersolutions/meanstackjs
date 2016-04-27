@@ -1,7 +1,6 @@
 process.env.NODE_ENV = 'nightwatch'
 var MeanStack = require('../server.mean.js')
 var run = require('../run.js')
-
 var HtmlReporter = require('nightwatch-html-reporter')
 var path = require('path')
 var reporter = new HtmlReporter({
@@ -42,7 +41,9 @@ module.exports = {
   before: function (done) {
     run(MeanStack, function (err) {
       if (err) console.log(err)
-      done()
+      require('./seed.js')(function () {
+        done()
+      })
     })
   },
 

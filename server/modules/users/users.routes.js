@@ -1,4 +1,4 @@
-var user = require('./user.controller.js')
+var user = require('./users.controller.js')
 var fs = require('fs')
 var path = require('path')
 var multer = require('multer')

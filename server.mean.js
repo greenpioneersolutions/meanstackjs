@@ -217,7 +217,7 @@ Mean.prototype.swagger = function () {
         console.error(err)
         return res.send(500)
       }
-      html = data.replace('http://petstore.swagger.wordnik.com/api/api-docs', '/api-docs')
+      html = data.replace('http://petstore.swagger.io/v2/swagger.json', '/api-docs')
       res.send(html)
     })
   }

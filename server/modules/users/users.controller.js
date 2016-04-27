@@ -110,7 +110,7 @@ exports.getAuthenticate = function (req, res) {
       user: {},
       success: false,
       authenticated: false,
-      redirect: '/signin'
+      redirect: false
     })
   }
 }
@@ -125,14 +125,19 @@ exports.postLogin = function (req, res, next) {
   var errors = req.validationErrors()
   var redirect = req.body.redirect || false
   if (errors) {
-    return res.status(200).send('/login')
+    return res.status(200).send('/signin')
   }
   passport.authenticate('local', function (err, user, info) {
     if (err) {
       return next(err)
     }
     if (!user) {
-      return res.status(400).send(info.message)
+      return res.status(400).send({
+        success: false,
+        authenticated: false,
+        msg: info.message,
+        redirect: false
+      })
     }
     req.logIn(user, function (err) {
       if (err) {

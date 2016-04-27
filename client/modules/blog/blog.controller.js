@@ -13,7 +13,11 @@
     vm.blog = {}
     vm.UserFactory = UserFactory
     activate()
-    vm.create = function () {
+    vm.create = function (validated) {
+      if (!validated) {
+        logger.warning('Data not valid', vm, 'Create Blog Post Validation')
+        return
+      }
       var blog = new BlogFactory(vm.blog)
       blog.user = vm.UserFactory.user
       blog.$save(function (response) {
@@ -40,18 +44,20 @@
         logger.error(error)
       })
     }
-    vm.update = function (isValid) {
-      if (isValid) {
-        BlogFactory.update({
-          id: $stateParams.id
-        }, vm.blog,
-          function (success) {
-            $location.url('/blog/view/' + $stateParams.id)
-          },
-          function (error) {
-            logger.error(error)
-          })
+    vm.update = function (validated) {
+      if (!validated) {
+        logger.warning('Data not valid', vm, 'Edit Blog Post Validation')
+        return
       }
+      BlogFactory.update({
+        id: $stateParams.id
+      }, vm.blog,
+        function (success) {
+          $location.url('/blog/view/' + $stateParams.id)
+        },
+        function (error) {
+          logger.error(error)
+        })
     }
     vm.delete = function (blogId) {
       var deleteConfirm = confirm('Are you sure you want to delete this blog?') // eslint-disable-line

@@ -6,9 +6,18 @@
 @import 'global-variables.styles.scss';
 
 .blog-main{
-	max-width: 70rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
+	max-width: 100rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.blog-post{
+  border-bottom: 1px solid #ddd;
+	max-width: 100rem;
+  padding-bottom: 3rem;
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 .blog-post-meta{

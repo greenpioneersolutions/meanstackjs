@@ -1,0 +1,90 @@
+/* 
+	Styles here should be specific to this module. It will be aggregated and compiled when the environment starts up.
+	-----------------------------
+*/
+@import 'global-variables.styles.scss';
+
+.jumbotron {
+  margin-bottom: 0;
+}
+
+.banner {
+  padding: 7rem 0;
+  width: 100%;
+}
+
+.banner--contribute {
+  background-color: #f8f8f8;
+}
+
+.banner--features {
+  background-color: darken($gray-light, 25%);
+  color: lighten($gray-light, 25%);
+}
+
+.tagline {
+  margin: 0 0 3rem 0;
+  text-align: center;
+}
+
+.tagline-heading {
+  color: $meanstack-grey;
+}
+
+.tagline-heading--light {
+  color: white;
+}
+
+.tagline-subheading {
+  color: $meanstack-blue;
+  font-size: 2.1rem;
+}
+
+.tagline-subheading--light {
+  color: $meanstack-red;
+}
+
+.feature {
+  margin-bottom: 3rem;
+}
+
+.feature-icon,
+.feature-text {
+  display: inline-block;
+}
+
+.feature-icon {
+  color: darken($gray-light, 5%);
+  font-size: 4rem;
+}
+
+.feature-text {
+  font-size: 1.8rem;
+  margin-left: 1rem;
+  max-width: 70%;
+}
+
+.miscFeatures {
+  background-color: darken($gray-light, 5%);
+  margin-top: 2rem;
+}
+
+.stackLink {
+  display: block;
+  margin-bottom: 2rem;
+}
+
+.stackInfo {
+  margin-bottom: 4rem;
+  position: relative;
+  &:after {
+		content: "";
+    position: absolute;
+    bottom: -20px;
+    left: 86px;
+    height: 2px;
+    background-color: #ddd;
+    width: 55%;
+  }
+
+}
