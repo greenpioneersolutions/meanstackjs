@@ -22,7 +22,7 @@
                 <div ng-class="{'has-error': vm.loginCred.password !== vm.loginCred.confirmPassword && signupForm.confirmPassword.$dirty, 'has-success': signupForm.password.$valid && signupForm.password.$dirty && vm.loginCred.password === vm.loginCred.confirmPassword}">
                   <div class="form-group" ng-class="{'has-warning': signupForm.password.$invalid && signupForm.password.$dirty, 'has-success': signupForm.password.$valid && signupForm.password.$dirty}">
                       <label for="password" class="control-label">Password</label>
-                          <input type="password" name="password" id="password" ng-model="vm.loginCred.password" placeholder="Password" class="form-control" ng-minlength="6" ng-pattern="/^(?=.*\w)(?=.*\d)(?=.*(_|[^\w])).+$/" required>
+                          <input type="password" name="password" id="password" ng-model="vm.loginCred.password" placeholder="Password" class="form-control" ng-minlength="6" ng-pattern="/^(?=.*[a-z])(?=.*\d)(?=.*(_|[^\w])).+$/" required>
                     <p class="help-block" id="error-minlength" ng-show="signupForm.password.$error.minlength">Password must be at least 6 characters long</p>
                     <p class="help-block" id="error-pattern" ng-show="signupForm.password.$error.pattern">Password must contain a letter, a number, and a symbol</p>
                   </div>
