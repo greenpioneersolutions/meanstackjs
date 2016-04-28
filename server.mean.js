@@ -24,6 +24,8 @@ var passport = require('passport')
 var auth = require('./server/passport.js')
 var expressValidator = require('express-validator')
 var status = require('express-system-status')
+var Agenda = require('agenda')
+var Agendash = require('agendash')
 
 function Mean (opts, done) {
   var self = this
@@ -34,6 +36,7 @@ function Mean (opts, done) {
   self.setupHeaders()
   if (self.settings.logger)self.setupLogger()
   if (self.settings.swagger)self.swagger()
+  if (self.settings.agendash.active) self.agenda()
   if (self.environment === 'development') {
     self.nightwatch()
     self.plato()
@@ -278,6 +281,23 @@ Mean.prototype.plato = function () {
   var self = this
   self.app.use('/plato', express.static(path.join(self.dir, 'reports/plato')))
   require('./reports/plato.js').report(self.settings.plato)
+}
+Mean.prototype.agenda = function () {
+  var self = this
+  self.agenda = new Agenda(self.settings.agendash.options)
+  var auth = require('basic-auth')
+  var admins = {
+    'admin': { password: 'pass' }
+  }
+  function admin (req, res, next) {
+    var user = auth(req)
+    if (!user || !admins[user.name] || admins[user.name].password !== user.pass) {
+      res.set('WWW-Authenticate', 'Basic realm="example"')
+      return res.status(401).send()
+    }
+    return next()
+  }
+  self.app.use('/agendash', admin, Agendash(self.agenda))
 }
 Mean.prototype.setupStatic = function () {
   var self = this
