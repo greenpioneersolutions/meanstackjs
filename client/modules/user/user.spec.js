@@ -10,17 +10,16 @@ describe('USER Testing', function () {
       password: 'testuser11!@'
     }
   }
+
   beforeEach(module('app.core'))
   beforeEach(module('app.user'))
-  beforeEach(inject(function (_$httpBackend_, _UserFactory_) {
+  beforeEach(inject(function (_$httpBackend_, _$location_, _UserFactory_) {
     $httpBackend = _$httpBackend_
     $httpBackend.when('GET', /\/api\/authenticate\?noCache=\d+/)
       .respond(200, authResponse)
-    $httpBackend.when('GET', /modules\/core\/[\d\w]+\.view\.html\?noCache=\d+/)
+    $httpBackend.when('GET', /modules\/[\d\w]+\/[\d\w]+\.view\.html\?noCache=\d+/)
       .respond(200, '')
     $httpBackend.when('GET', /\/api\/logout\?noCache=\d+/)
-      .respond(200, '')
-    $httpBackend.when('GET', /\/api\/signup\?noCache=\d+/)
       .respond(200, '')
     // Constructor contains http.get
     UserFactory = _UserFactory_
@@ -40,17 +39,6 @@ describe('USER Testing', function () {
       expect(UserFactory.loggedin).to.equal(false)
     })
 
-    it('checkLoggedin() should do nothing when logged in', function () {
-      UserFactory.checkLoggedin()
-      $httpBackend.flush()
-    })
-
-    it('should have a user object when logged in', function () {
-      UserFactory.checkLoggedin()
-      $httpBackend.flush()
-      expect(UserFactory.user).to.exist
-    })
-
     // logout() for following tests first because of authentication in constructor
     beforeEach(function () {
       var jwt = localStorage.getItem('JWT')
@@ -62,6 +50,7 @@ describe('USER Testing', function () {
     })
 
     it('checkLoggedOut() should do nothing when logged out', function () {
+      expect(UserFactory.user).to.be.empty
       UserFactory.checkLoggedOut()
       $httpBackend.flush()
       expect(UserFactory.user).to.be.empty
@@ -82,6 +71,17 @@ describe('USER Testing', function () {
       }
     })
 
+    it('signup() should throw an error when no credentials passed into function', function () {
+      $httpBackend.when('POST', '/api/signup')
+        .respond(200, '')
+      try {
+        UserFactory.signup()
+        $httpBackend.flush()
+      } catch (err) {
+        expect(err).to.exist
+      }
+    })
+
     it('login() should store JWT in localStorage', function () {
       $httpBackend.when('POST', '/api/login')
         .respond(200, authResponse)
@@ -91,25 +91,38 @@ describe('USER Testing', function () {
       expect(jwt).to.not.equal(null)
     })
 
-    it('signup() should throw an error when no credentials passed in', function () {
-      try {
-        UserFactory.signup()
-        $httpBackend.flush()
-      } catch (err) {
-        expect(err).to.exist
-      }
+    it('login() should store user in user object', function () {
+      $httpBackend.when('POST', '/api/login')
+        .respond(200, authResponse)
+      UserFactory.login(credentials)
+      $httpBackend.flush()
+      expect(UserFactory.user).to.not.be.empty
+    })
+
+    it('should have a non-empty user object when logged in', function () {
+      $httpBackend.when('POST', '/api/login')
+        .respond(200, authResponse)
+      UserFactory.login(credentials)
+      $httpBackend.flush()
+      expect(UserFactory.user).to.not.be.empty
+    })
+
+    it('checkLoggedin() should do nothing when logged in', function () {
+      $httpBackend.when('POST', '/api/login')
+        .respond(200, authResponse)
+      UserFactory.login(credentials)
+      $httpBackend.flush()
+      expect(UserFactory.user).to.not.be.empty
+      UserFactory.checkLoggedin()
+      $httpBackend.flush()
+      expect(UserFactory.user).to.not.be.empty
     })
   })
 
   describe('controller', function () {
     var UserController
 
-    beforeEach(inject(function (_$httpBackend_, $rootScope, $controller) {
-      $httpBackend = _$httpBackend_
-      $httpBackend.when('GET', /\/api\/authenticate\?noCache=\d+/)
-        .respond(200, authResponse)
-      $httpBackend.when('GET', /modules\/\w+\/[\w\d]+\.view\.html\?noCache=\d+/)
-        .respond(200, '')
+    beforeEach(inject(function ($rootScope, $controller) {
       var $scope = $rootScope.$new()
       UserController = $controller('UserController', {$scope: $scope})
     }))
@@ -118,18 +131,10 @@ describe('USER Testing', function () {
       expect(UserController).to.exist
     })
 
-    // logout() for following tests first because of authentication in constructor
-    beforeEach(function () {
-      var jwt = localStorage.getItem('JWT')
-      expect(jwt).to.not.equal(null)
+    it('vm.login() should login', function () {
+      // log out
       UserFactory.logout()
       $httpBackend.flush()
-      jwt = localStorage.getItem('JWT')
-      expect(jwt).to.equal(null)
-    })
-
-    it('vm.login() should login', function () {
-      // logged out
       expect(UserFactory.user).to.be.empty
 
       // login
@@ -143,7 +148,9 @@ describe('USER Testing', function () {
     })
 
     it('vm.signup() should authenticate', function () {
-      // logged out
+      // log out
+      UserFactory.logout()
+      $httpBackend.flush()
       expect(UserFactory.user).to.be.empty
 
       // signup
@@ -157,13 +164,83 @@ describe('USER Testing', function () {
       expect(UserFactory.user).to.not.be.empty
     })
 
-    it('vm.find() should store user in vm', function () {
+    it('vm.forgot() should not fail and should reset email form input after success', function () {
+      // log out
+      UserFactory.logout()
+      $httpBackend.flush()
+      expect(UserFactory.user).to.be.empty
+
+      var payload = {email: 'testuser@test.com'}
+
+      $httpBackend.when('POST', '/api/forgot')
+        .respond(200, authResponse)
+
+      // Simulate setting form input field
+      UserController.forgot.email = payload.email
+
+      UserController.forgot(true)
+      $httpBackend.flush()
+      expect(UserFactory.loginError).to.equal(false)
+      expect(UserController.forgot.email).to.be.empty
+    })
+
+    // it('vm.reset() should not fail', function () {
+    //   var resetToken = 'e937d89281c5172cae7a4469a46'
+    //
+    //   // Simulate setting form input field
+    //   UserController.resetCred = {}
+    //   UserController.resetCred.password = 'testuser2!'
+    //   UserController.resetCred.confirmPasword = 'testuser2!'
+    //   UserController.resetToken = resetToken
+    //
+    //   $httpBackend.when('POST', /\/api\/reset\/[\w\d]+/)
+    //     .respond(200, authResponse)
+    //   UserController.reset(true)
+    //   $httpBackend.flush()
+    //
+    //   expect(UserFactory.loginError).to.equal(false)
+    // })
+
+    // Ensure logged in for following test cases
+    beforeEach(function () {
       // login
       $httpBackend.when('POST', '/api/login')
         .respond(200, authResponse)
       angular.extend(UserController, credentials)
       UserController.login(true)
       $httpBackend.flush()
+    })
+
+    it('vm.update() should update user correctly', function () {
+      UserController.editProfile = {profile: {}}
+
+      // Simulate setting form input fields
+      UserController.editProfile.profile.email = 'test@user.com'
+      UserController.editProfile.profile.name = 'Test User'
+      UserController.editProfile.profile.gender = 'Male'
+      UserController.editProfile.profile.location = 'New York'
+
+      $httpBackend.when('POST', '/api/account/profile')
+        .respond({
+          user: {
+            email: 'test@user.com',
+            profile: {
+              name: 'Test User',
+              gender: 'Male',
+              location: 'New York'
+            }
+          }
+        })
+      UserController.update(true)
+      $httpBackend.flush()
+
+      expect(UserFactory.user.email).to.equal('test@user.com')
+      expect(UserFactory.user.profile.name).to.equal('Test User')
+      expect(UserFactory.user.profile.gender).to.equal('Male')
+      expect(UserFactory.user.profile.location).to.equal('New York')
+    })
+
+    it('vm.find() should store user in vm', function () {
       UserController.find()
       expect(UserController.editProfile).to.not.be.empty
     })

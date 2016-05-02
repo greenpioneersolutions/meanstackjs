@@ -8,6 +8,7 @@ describe('HEADER Testing', function () {
     var HeaderController
 
     beforeEach(module('app.header'))
+    beforeEach(module('app.user'))
     beforeEach(inject(function (_$httpBackend_, $controller, $rootScope, _UserFactory_) {
       UserFactory = _UserFactory_
       $httpBackend = _$httpBackend_
