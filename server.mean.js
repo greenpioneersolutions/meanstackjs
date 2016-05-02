@@ -431,18 +431,18 @@ Mean.prototype.livereload = function () {
    * Livereload
    */
   if (self.environment === 'development') {
-    var scss_lessWatcher = chokidar.watch('file, dir, glob, or array', {
+    var scssLessWatcher = chokidar.watch('file, dir, glob, or array', {
       ignored: /[\/\\]\./,
       persistent: true
     })
-    var scss_lessGlobalWatcher = chokidar.watch('file, dir, glob, or array', {
+    var scssLessGlobalWatcher = chokidar.watch('file, dir, glob, or array', {
       ignored: /[\/\\]\./,
       persistent: true
     })
-    scss_lessWatcher.on('add', function (url) {
+    scssLessWatcher.on('add', function (url) {
       // console.log(url)
     })
-    scss_lessWatcher.on('change', function (url) {
+    scssLessWatcher.on('change', function (url) {
       var fileData = _.words(url, /[^./ ]+/g)
       if (fileData[fileData.length - 1] === 'less') {
         var lessContents = fs.readFileSync(path.resolve(url), 'utf8')
@@ -464,7 +464,7 @@ Mean.prototype.livereload = function () {
         console.log(chalk.green('Recompiled SCSS'))
       }
     })
-    scss_lessGlobalWatcher.on('change', function (url) {
+    scssLessGlobalWatcher.on('change', function (url) {
       var fileData = _.words(url, /[^./ ]+/g)
       if (fileData[fileData.length - 1] === 'less') {
         var lessContents = fs.readFileSync(path.resolve(url), 'utf8')
@@ -504,10 +504,10 @@ Mean.prototype.livereload = function () {
         console.log(chalk.green('Recompiled Global SCSS'))
       }
     })
-    scss_lessWatcher.add('./client/modules/*/*.less')
-    scss_lessWatcher.add('./client/modules/*/*.scss')
-    scss_lessGlobalWatcher.add('./client/*/*.less')
-    scss_lessGlobalWatcher.add('./client/*/*.scss')
+    scssLessWatcher.add('./client/modules/*/*.less')
+    scssLessWatcher.add('./client/modules/*/*.scss')
+    scssLessGlobalWatcher.add('./client/*/*.less')
+    scssLessGlobalWatcher.add('./client/*/*.scss')
   }
 }
 
