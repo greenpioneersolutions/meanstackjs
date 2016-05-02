@@ -285,6 +285,23 @@ Mean.prototype.plato = function () {
 Mean.prototype.agenda = function () {
   var self = this
   self.agenda = new Agenda(self.settings.agendash.options)
+  // //async
+  // self.agenda.define('viewusers', function (job, done) {
+  //   console.log(job, 'viewAll Users')
+  //   done()
+  // })
+  // //sync
+  // self.agenda.define('sayhello', function (job) {
+  //   console.log(job, 'Hello!')
+  // })
+  self.agenda.on('ready', function () {
+    // //every 3 mins or every minute
+    // self.agenda.every('3 minutes', 'viewusers')
+    // self.agenda.every('*/1 * * * *', 'sayhello')
+
+    self.agenda.start()
+  })
+
   var auth = require('basic-auth')
   var admins = {
     'admin': { password: 'pass' }
