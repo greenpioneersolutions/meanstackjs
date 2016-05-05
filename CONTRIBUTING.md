@@ -9,7 +9,7 @@ will be happy to accept your Pull Requests as long as those adhere to some basic
 * Please make sure that your contribution fits well in the project's style & concept:
   * JS Standard
   * John Papa angular style guide
-  * Pass All Test ( once testing has been fully implement)
+  * Pass All Test
 
 ### Creating an Issue
 
@@ -21,10 +21,10 @@ Before you create a new Issue:
 
 ### Making Changes
 
-* Create a topic branch from the development branch.
+* Create a topic branch from the development branch with the issue number EX. `#200_make_changes`
 * Use `standard` to verify your style - `npm install -g standard` if you dont have it already
 * Keep git commit messages clear and appropriate
-* Make Sure you have added any tests necessary to test your code.
+* Make Sure you have added any tests necessary to test your code. `npm test`
 * Update the Documentation to go along with any changes in functionality / improvements in a separate pull request against the gh-pages branch.
 
 ### Submitting the Pull Request
@@ -32,5 +32,5 @@ Before you create a new Issue:
 * Push your changes to your topic branch on your fork of the repo.
 * Submit a pull request from your topic branch to the development branch
 * We use [GitFlow](https://guides.github.com/introduction/flow/)
-* Be sure to tag any issues your pull request is taking care of / contributing to.
+* Be sure to tag any issues your pull request is taking care of / contributing to. EX. `#201 add and updated this`
   * By adding "Closes #xyz" to a commit message will auto close the issue once the pull request is merged in.
