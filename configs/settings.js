@@ -34,6 +34,14 @@ var baseLine = {
       asi: true
     }
   },
+  agendash: {
+    active: true,
+    options: {
+      db: {
+        address: 'mongodb://localhost/agendaDb'
+      }
+    }
+  },
   // Template Engine
   templateEngine: 'swig',
   // JWT Object https://github.com/auth0/node-jsonwebtoken

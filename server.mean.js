@@ -24,6 +24,8 @@ var passport = require('passport')
 var auth = require('./server/passport.js')
 var expressValidator = require('express-validator')
 var status = require('express-system-status')
+var Agenda = require('agenda')
+var Agendash = require('agendash')
 
 function Mean (opts, done) {
   var self = this
@@ -34,6 +36,7 @@ function Mean (opts, done) {
   self.setupHeaders()
   if (self.settings.logger)self.setupLogger()
   if (self.settings.swagger)self.swagger()
+  if (self.settings.agendash.active) self.agenda()
   if (self.environment === 'development') {
     self.nightwatch()
     self.plato()
@@ -279,6 +282,40 @@ Mean.prototype.plato = function () {
   self.app.use('/plato', express.static(path.join(self.dir, 'reports/plato')))
   require('./reports/plato.js').report(self.settings.plato)
 }
+Mean.prototype.agenda = function () {
+  var self = this
+  self.agenda = new Agenda(self.settings.agendash.options)
+  // //async
+  // self.agenda.define('viewusers', function (job, done) {
+  //   console.log(job, 'viewAll Users')
+  //   done()
+  // })
+  // //sync
+  // self.agenda.define('sayhello', function (job) {
+  //   console.log(job, 'Hello!')
+  // })
+  self.agenda.on('ready', function () {
+    // //every 3 mins or every minute
+    // self.agenda.every('3 minutes', 'viewusers')
+    // self.agenda.every('*/1 * * * *', 'sayhello')
+
+    self.agenda.start()
+  })
+
+  var auth = require('basic-auth')
+  var admins = {
+    'admin': { password: 'pass' }
+  }
+  function admin (req, res, next) {
+    var user = auth(req)
+    if (!user || !admins[user.name] || admins[user.name].password !== user.pass) {
+      res.set('WWW-Authenticate', 'Basic realm="example"')
+      return res.status(401).send()
+    }
+    return next()
+  }
+  self.app.use('/agendash', admin, Agendash(self.agenda))
+}
 Mean.prototype.setupStatic = function () {
   var self = this
 
@@ -394,18 +431,18 @@ Mean.prototype.livereload = function () {
    * Livereload
    */
   if (self.environment === 'development') {
-    var scss_lessWatcher = chokidar.watch('file, dir, glob, or array', {
+    var scssLessWatcher = chokidar.watch('file, dir, glob, or array', {
       ignored: /[\/\\]\./,
       persistent: true
     })
-    var scss_lessGlobalWatcher = chokidar.watch('file, dir, glob, or array', {
+    var scssLessGlobalWatcher = chokidar.watch('file, dir, glob, or array', {
       ignored: /[\/\\]\./,
       persistent: true
     })
-    scss_lessWatcher.on('add', function (url) {
+    scssLessWatcher.on('add', function (url) {
       // console.log(url)
     })
-    scss_lessWatcher.on('change', function (url) {
+    scssLessWatcher.on('change', function (url) {
       var fileData = _.words(url, /[^./ ]+/g)
       if (fileData[fileData.length - 1] === 'less') {
         var lessContents = fs.readFileSync(path.resolve(url), 'utf8')
@@ -427,7 +464,7 @@ Mean.prototype.livereload = function () {
         console.log(chalk.green('Recompiled SCSS'))
       }
     })
-    scss_lessGlobalWatcher.on('change', function (url) {
+    scssLessGlobalWatcher.on('change', function (url) {
       var fileData = _.words(url, /[^./ ]+/g)
       if (fileData[fileData.length - 1] === 'less') {
         var lessContents = fs.readFileSync(path.resolve(url), 'utf8')
@@ -467,10 +504,10 @@ Mean.prototype.livereload = function () {
         console.log(chalk.green('Recompiled Global SCSS'))
       }
     })
-    scss_lessWatcher.add('./client/modules/*/*.less')
-    scss_lessWatcher.add('./client/modules/*/*.scss')
-    scss_lessGlobalWatcher.add('./client/*/*.less')
-    scss_lessGlobalWatcher.add('./client/*/*.scss')
+    scssLessWatcher.add('./client/modules/*/*.less')
+    scssLessWatcher.add('./client/modules/*/*.scss')
+    scssLessGlobalWatcher.add('./client/*/*.less')
+    scssLessGlobalWatcher.add('./client/*/*.scss')
   }
 }
 

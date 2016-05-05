@@ -1,13 +1,16 @@
 <div class="container" ng-init="vm.list()">
   <div class="row">
       <div class="col-sm-12 __name__-header text-center">
-        <h1 class="__name__-title">MeanStackJS __name__</h1>
-        <p class="lead __name__-description">Using the official example template of creating a __name__ with Bootstrap.</p>
+        <h1 class="__name__-title">MeanStackJS __Name__s</h1>
+        <p class="lead __name__-description">Using the official example template of creating a __name__ module with Bootstrap.</p>
       </div>
   </div> 
   <div class="row">
     <div class="center-block __name__-main ">
-      <h1 ng-show="!vm.__name__s">No __name__ Data Points <a href="/create">Create One Now</a></h1>
+      <div ng-show="!vm.__name__s">
+        <h3>No __Name__ Data Points</h3>
+        <a class="btn btn-primary" href="/__name__/create">Create One Now</a>
+      </div>
       
       <div class="__name__-post" ng-repeat="(key, value) in vm.__name__s | orderBy:'-date'">
         <a href="/__name__/view/{{value._id}}"><h2 class="__name__-post-title">{{value.title}}</h2></a>
