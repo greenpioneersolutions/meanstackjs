@@ -40,7 +40,6 @@ nb-configuration.xml
 # --------------------
 # Node Files
 # --------------------
-.nodemonignore
 npm-debug.log
 node_modules/
 
