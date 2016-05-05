@@ -14,7 +14,7 @@
   function getStates () {
     return [
       {
-        state: '__name__create',
+        state: '__name__Create',
         config: {
           url: '/__name__/create',
           templateUrl: 'modules/__name__/create.view.html',
@@ -28,7 +28,7 @@
         }
       },
       {
-        state: '__name__edit',
+        state: '__name__Edit',
         config: {
           url: '/__name__/edit/:id',
           templateUrl: 'modules/__name__/edit.view.html',
@@ -42,7 +42,7 @@
         }
       },
       {
-        state: '__name__list',
+        state: '__name__List',
         config: {
           url: '/__name__/list',
           templateUrl: 'modules/__name__/list.view.html',
@@ -51,7 +51,7 @@
         }
       },
       {
-        state: '__name__view',
+        state: '__name__View',
         config: {
           url: '/__name__/view/:id',
           templateUrl: 'modules/__name__/view.view.html',
