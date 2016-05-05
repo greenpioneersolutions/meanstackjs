@@ -2,6 +2,7 @@ var _ = require('lodash')
 var jwt = require('jsonwebtoken')
 var settings = require('./../configs/settings.js').get()
 var mongoose = require('mongoose')
+var debug = require('debug')('meanstackjs:middleware')
 
 function findUser (id, cb) {
   var User = mongoose.model('users')
@@ -18,8 +19,10 @@ function findUser (id, cb) {
  */
 function isAuthenticated (req, res, next) {
   if (req.isAuthenticated()) {
+    debug('middleware: isAuthenticated')
     return next()
   } else {
+    debug('middleware: is Not Authenticated ')
     return res.status(401).send({
       success: false, msg: 'User needs to re-authenticated'
     })
@@ -27,6 +30,7 @@ function isAuthenticated (req, res, next) {
 }
 function isMongoId (req, res, next) {
   if ((_.size(req.params) === 1) && (!mongoose.Types.ObjectId.isValid(_.values(req.params)[0]))) {
+    debug('middleware Not Mongo ID: ' + _.values(req.params)[0])
     return res.status(500).send({success: false, msg: 'Parameter passed is not a valid Mongo ObjectId'})
   }
   next()
@@ -39,6 +43,7 @@ function verify (req, res, next) {
     if (token) {
       jwt.verify(token, settings.jwt.secret, function (err, decoded) {
         if (err) {
+          debug('middleware verify error: ', err)
           switch (err.name) {
             case 'TokenExpiredError':
               res.status(401).send({
@@ -61,12 +66,14 @@ function verify (req, res, next) {
             if (!user) {
               return res.status(401).send({success: false, msg: 'Authentication failed. User not found.'})
             } else {
+              debug('middleware verify user: ', user.email)
               next()
             }
           })
         }
       })
     } else {
+      debug('middleware no token provided')
       return res.status(401).send({success: false, msg: 'No token provided.'})
     }
   } catch (err) {

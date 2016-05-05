@@ -1,5 +1,6 @@
 var nodemailer = require('nodemailer')
 var settings = require('../configs/settings.js').get()
+var debug = require('debug')('meanstackjs:mail')
 var secrets = {
   host: 'smtp.mandrillapp.com', // Gmail, SMTP
   port: '587',
@@ -25,7 +26,9 @@ exports.send = function (message, cb) {
     subject: message.subject,
     text: message.text
   }
+  debug('mailOptions', mailOptions)
   transporter.sendMail(mailOptions, function (err) {
+    if (err)debug('mail error:', err)
     cb(err)
   })
 }
