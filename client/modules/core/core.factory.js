@@ -144,6 +144,11 @@
       if (data.redirect ? data.redirect : false) {
         $location.url(data.redirect)
       }
+      var localRedirect = $cookies.get('redirect')
+      if (localRedirect) {
+        $location.url(localRedirect)
+        $cookies.remove('redirect')
+      }
       $rootScope.$emit('loggedin')
       return ({
         error: false

@@ -9,7 +9,7 @@
     .factory('noCacheInterceptor', noCacheInterceptor)
 
   logger.$inject = ['$log', 'toastr']
-  exception.$inject = []
+  exception.$inject = ['$q', 'logger']
   httpInterceptor.$inject = ['$q', '$location', 'logger']
   noCacheInterceptor.$inject = []
   /* @ngInject */
@@ -61,9 +61,9 @@
         if (e.data && e.data.description) {
           thrownDescription = '\n' + e.data.description
           newMessage = message + thrownDescription
+          e.data.description = newMessage
         }
-        e.data.description = newMessage
-        logger.error(newMessage)
+        logger.error(newMessage || message, e, 'Uncaught exception')
         return $q.reject(e)
       }
     }
@@ -75,21 +75,34 @@
       'response': function (response) {
         if (response.status === 402 || response.status === 401) {
           if (response.data.msg) {
-            logger.error(response.data.msg, response, 'Error')
+            logger.error(response.data.msg, response, 'Error: Unauthorized')
           }
           $location.path('/signin')
           return $q.reject(response)
         }
-
+        if (response.status === 500 || response.status === 502) {
+          if (response.data.msg) {
+            logger.error(response.data.msg, response, 'Error: Server error')
+          }
+          $location.path('/500')
+          return $q.reject(response)
+        }
         return response || $q.when(response)
       },
 
       'responseError': function (rejection) {
         if (rejection.status === 402 || rejection.status === 401) {
           if (rejection.data.msg) {
-            logger.error(rejection.data.msg, rejection, 'Error')
+            logger.error(rejection.data.msg, rejection, 'Error: Unauthorized')
           }
           $location.url('/signin')
+          return $q.reject(rejection)
+        }
+        if (rejection.status === 500 || rejection.status === 502) {
+          if (rejection.data.msg) {
+            logger.error(rejection.data.msg, rejection, 'Error: Server error')
+          }
+          $location.url('/500')
           return $q.reject(rejection)
         }
         return $q.reject(rejection)

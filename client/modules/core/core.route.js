@@ -20,6 +20,14 @@
           templateUrl: 'modules/core/404.view.html',
           title: '404'
         }
+      },
+      {
+        state: '500',
+        config: {
+          url: '/500',
+          templateUrl: 'modules/core/500.view.html',
+          title: '500'
+        }
       }
     ]
   }
