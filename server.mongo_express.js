@@ -1,5 +1,4 @@
 module.exports = MongoExpress
-
 var express = require('express')
 var mongo = {
   db: 'db',

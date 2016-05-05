@@ -1,6 +1,8 @@
 var os = require('os')
 var cluster = require('cluster')
 var chalk = require('chalk')
+var debug = require('debug')('meanstackjs:cluster')
+debug('starting up Cluster')
 cluster.setupMaster({
   exec: 'index.js'
 })
