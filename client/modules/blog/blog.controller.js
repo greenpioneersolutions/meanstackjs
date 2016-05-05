@@ -60,7 +60,9 @@
         })
     }
     vm.delete = function (blogId) {
-      var deleteConfirm = confirm('Are you sure you want to delete this blog?') // eslint-disable-line
+      // Disable confirm for testing purposes
+      var deleteConfirm = true
+      // var deleteConfirm = confirm('Are you sure you want to delete this blog?') // eslint-disable-line
       if (deleteConfirm === true) {
         BlogFactory.remove({
           id: blogId

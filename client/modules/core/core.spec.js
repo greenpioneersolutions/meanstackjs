@@ -5,6 +5,27 @@ describe('CORE Testing', function () {
     $injector = _$injector_
   }))
 
+  describe('MeanSockets factory', function () {
+    var MeanSocket
+    var connection
+    beforeEach(inject(function (_MeanSocket_) {
+      MeanSocket = _MeanSocket_
+      connection = MeanSocket.connect()
+    }))
+
+    it('should connect when connect() is called and return a proper connection', function () {
+      // connect() called in beforeEach
+      expect(connection).to.exist
+      expect(connection.io).to.exist
+    })
+
+    it('should disconnect when disconnect() is called and return a proper disconnection', function () {
+      var disconnection = MeanSocket.disconnect()
+      expect(disconnection).to.exist
+      expect(disconnection.io).to.exist
+    })
+  })
+
   describe('route', function () {
     describe('404 route', function () {
       var state404
@@ -62,113 +83,9 @@ describe('CORE Testing', function () {
   describe('controller', function () {
     it('should exist', function () {
       inject(function ($rootScope, $controller) {
-        var scope = $rootScope.$new()
-        var controller = $controller('CoreController', {$scope: scope})
-        expect(controller).to.exist
-      })
-    })
-  })
-
-  describe('factories', function () {
-    describe('UserFactory', function () {
-      var UserFactory
-      var $httpBackend
-      var authResponse = {
-        user: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwcm9maWxlIjp7ImdlbmRlciI6Ik1hbGUiLCJsb2NhdGlvbiI6IkludGVybmF0aW9uYWwiLCJ3ZWJzaXRlIjoiZ29vZ2xlLmNvbSIsInBpY3R1cmUiOiIiLCJuYW1lIjoiVGVzdCBVc2VyIn0sInJvbGVzIjpbXSwiZ3JhdmF0YXIiOiJodHRwczovL2dyYXZhdGFyLmNvbS9hdmF0YXIvZDViYjRmZmZmYTZhMzI0MjhjN2UzMTBjMzQxYjRmN2I_cz0yMDAmZD1yZXRybyIsImVtYWlsIjoidGVzdEB1c2VyLmNvbSIsIl9pZCI6IjU3MTdhMmQ1MGI1ZTQ0YWE1ZTU0NjQ4YiIsImlhdCI6MTQ2MTE2NzQ5NSwiZXhwIjoxNDYxMTc0Njk1fQ.tsAiRGB-lUhnD70XXtliNsTzQj3gKLA0a28yTJWoo8c'
-      }
-      var credentials = {
-        loginCred: {
-          email: 'test@user.com',
-          password: 'testuser11!@'
-        }
-      }
-      beforeEach(inject(function (_$httpBackend_) {
-        $httpBackend = _$httpBackend_
-      }))
-      beforeEach(inject(function (_UserFactory_) {
-        $httpBackend.when('GET', /\/api\/authenticate\?noCache=\d+/)
-          .respond(200, authResponse)
-        $httpBackend.when('GET', /modules\/core\/(\d|\w)+\.view\.html\?noCache=\d+/)
-          .respond(200, '')
-        $httpBackend.when('GET', /\/api\/logout\?noCache=\d+/)
-          .respond(200, '')
-        $httpBackend.when('GET', /\/api\/signup\?noCache=\d+/)
-          .respond(200, '')
-        // Constructor contains http.get
-        UserFactory = _UserFactory_
-        $httpBackend.flush()
-      }))
-
-      it('constructor should authenticate without login or register error', function () {
-        // authenticated in beforeEach via UserFactory's UserClass constructor
-        expect(UserFactory.loginError).to.equal(false)
-        expect(UserFactory.registerError).to.equal(false)
-      })
-
-      it('logout() should log out user', function () {
-        UserFactory.logout()
-        $httpBackend.flush()
-        expect(UserFactory.loggedin).to.equal(false)
-      })
-
-      it('checkLoggedin() should do nothing when logged in', function () {
-        UserFactory.checkLoggedin()
-        $httpBackend.flush()
-      })
-
-      it('should have a user object when logged in', function () {
-        UserFactory.checkLoggedin()
-        $httpBackend.flush()
-        expect(UserFactory.user).to.exist
-      })
-
-      // logout() for following tests first because of authentication in constructor
-      beforeEach(function () {
-        var jwt = localStorage.getItem('JWT')
-        expect(jwt).to.not.equal(null)
-        UserFactory.logout()
-        $httpBackend.flush()
-        jwt = localStorage.getItem('JWT')
-        expect(jwt).to.equal(null)
-      })
-
-      it('checkLoggedOut() should do nothing when logged out', function () {
-        UserFactory.checkLoggedOut()
-        $httpBackend.flush()
-        expect(UserFactory.user).to.be.empty
-      })
-
-      it('should have an empty user object when logged out', function () {
-        UserFactory.checkLoggedOut()
-        $httpBackend.flush()
-        expect(UserFactory.user).to.be.empty
-      })
-
-      it('login() should throw an error when no credentials passed in', function () {
-        try {
-          UserFactory.login()
-          $httpBackend.flush()
-        } catch (err) {
-          expect(err).to.exist
-        }
-      })
-
-      it('login() should store JWT in localStorage', function () {
-        $httpBackend.when('POST', '/api/login')
-          .respond(200, authResponse)
-        UserFactory.login(credentials)
-        $httpBackend.flush()
-        var jwt = localStorage.getItem('JWT')
-        expect(jwt).to.not.equal(null)
-      })
-
-      it('signup() should throw an error when no credentials passed in', function () {
-        try {
-          UserFactory.signup()
-          $httpBackend.flush()
-        } catch (err) {
-          expect(err).to.exist
-        }
+        var $scope = $rootScope.$new()
+        var CoreController = $controller('CoreController', {$scope: $scope})
+        expect(CoreController).to.exist
       })
     })
   })
