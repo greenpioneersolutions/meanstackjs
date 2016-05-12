@@ -29,7 +29,7 @@ script:
   - npm test
 after_script:
   - nsp check
-services: mongodb
+#services: mongodb
 notifications:
   slack: meanstackjs:YtrF35Q7mPqPW5y6NHyDNvkh
   webhooks:
