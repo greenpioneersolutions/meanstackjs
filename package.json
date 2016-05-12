@@ -137,7 +137,7 @@
     "mocha": "^2.3.4",
     "multiline": "^1.0.2",
     "nodemon": "^1.8.1",
-    "phantomjs": "^2.1.7",
+    "phantomjs-prebuilt": "^2.1.7",
     "standard": "latest",
     "supertest": "^1.1.0"
   }
