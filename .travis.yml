@@ -10,14 +10,14 @@ os:
   - windows
 env:
   - NODE_ENV=nightwatch
+services:
+- mongodb
 addons:
   apt:
     sources:
-      - mongodb-upstart
-      - mongodb-3.0-precise
+    - mongodb-3.0-precise
     packages:
-      - mongodb-org-server
-      - mongodb-org-shell
+    - mongodb-org-server
 before_script:
   - sleep 15
   - npm i -g nsp
@@ -32,7 +32,6 @@ script:
   - npm test
 after_script:
   - nsp check
-services: mongodb
 notifications:
   slack: meanstackjs:YtrF35Q7mPqPW5y6NHyDNvkh
   webhooks:
