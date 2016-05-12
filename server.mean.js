@@ -34,7 +34,6 @@ function Mean (opts, done) {
   self.setupHeaders()
   if (self.settings.logger)self.setupLogger()
   if (self.settings.swagger)self.swagger()
-  console.log(self.settings.agendash.active, 'self.settings.agendash.active')
   if (self.settings.agendash.active) self.agenda()
   if (self.environment === 'development') {
     self.nightwatch()
