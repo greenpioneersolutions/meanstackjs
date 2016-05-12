@@ -35,7 +35,7 @@ var baseLine = {
     }
   },
   agendash: {
-    active: true,
+    active: false,
     options: {
       db: {
         address: 'mongodb://localhost/agendaDb'
