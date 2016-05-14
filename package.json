@@ -24,8 +24,8 @@
     ]
   },
   "scripts": {
-    "test": "npm run mocha && npm run karma && npm run nightwatch && npm run standard",
-    "nightwatch": "node_modules/nightwatch/bin/nightwatch || nightwatch",
+    "test": "npm run mocha && npm run karma && npm run e2e && npm run standard",
+    "e2e": "node_modules/nightwatch/bin/nightwatch || nightwatch",
     "mocha": "node node_modules/mocha/bin/mocha tests/unit/mocha.test.js  ",
     "karma": "node node_modules/karma/bin/karma start tests/unit/karma.test.js || karma start tests/unit/karma.test.js ",
     "standard": "node node_modules/standard/bin/cmd.js || standard",
@@ -137,7 +137,7 @@
     "mocha": "^2.3.4",
     "multiline": "^1.0.2",
     "nodemon": "^1.8.1",
-    "phantomjs": "^2.1.7",
+    "phantomjs-prebuilt": "^2.1.7",
     "standard": "latest",
     "supertest": "^1.1.0"
   }

@@ -24,8 +24,6 @@ var passport = require('passport')
 var auth = require('./server/passport.js')
 var expressValidator = require('express-validator')
 var status = require('express-system-status')
-var Agenda = require('agenda')
-var Agendash = require('agendash')
 
 function Mean (opts, done) {
   var self = this
@@ -283,6 +281,8 @@ Mean.prototype.plato = function () {
   require('./reports/plato.js').report(self.settings.plato)
 }
 Mean.prototype.agenda = function () {
+  var Agenda = require('agenda')
+  var Agendash = require('agendash')
   var self = this
   self.agenda = new Agenda(self.settings.agendash.options)
   // //async
