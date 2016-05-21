@@ -74,7 +74,7 @@ var baseLine = {
     keywords: 'MEAN, MEANSTACKJS, mongodb, expressjs, angularjs,nodejs, javascript',
     description: 'The Meanstack js is a opensource framework that is made for and by developers'
   },
-
+  seo: require('./seo.js'),
   // The session cookie name
   sessionName: 'connect.meanstackjs',
   title: 'MEANSTACKJS',

@@ -381,8 +381,14 @@ Mean.prototype.setupStatic = function () {
       req.user.authenticated = true
     }
     // took out user
+    var html = self.settings.html
+    if (self.settings.seo[req.path]) {
+      if (self.settings.seo[req.path].title) html.title = self.settings.seo[req.path].title
+      if (self.settings.seo[req.path].description) html.description = self.settings.seo[req.path].description
+      if (self.settings.seo[req.path].keywords) html.keywords = self.settings.seo[req.path].keywords
+    }
     res.render(path.resolve('server') + '/layout/index.html', {
-      html: self.settings.html,
+      html: html,
       assets: self.app.locals.frontendFilesFinal,
       environment: self.environment
     })
