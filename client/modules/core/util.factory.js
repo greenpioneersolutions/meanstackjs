@@ -24,8 +24,7 @@
       log: $log.log // straight to console; bypass toastr
     }
 
-    return service
-    // ///////////////////
+    return services
 
     function error (message, data, title) {
       toastr.error(message, title)
