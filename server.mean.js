@@ -8,7 +8,6 @@ var session = require('express-session')
 var bodyParser = require('body-parser')
 var Promise = require('bluebird')
 var logger = require('morgan')
-var errorHandler = require('errorhandler')
 var methodOverride = require('method-override')
 var sass = require('node-sass')
 var less = require('less')
@@ -39,9 +38,10 @@ function Mean (opts, done) {
     self.nightwatch()
     self.plato()
   }
-  self.setupRoutesMiddleware()
-  self.setupStatic()
   self.livereload()
+  self.setupRoutesMiddleware()
+  self.setupErrorHandling()
+  self.setupStatic()
 
   async.parallel({
     connectMongoDb: function (callback) {
@@ -199,22 +199,7 @@ Mean.prototype.setupExpressConfigs = function () {
   passport.serializeUser(auth.serializeUser)
   passport.deserializeUser(auth.deserializeUser)
   passport.use(auth.passportStrategy)
-
   self.app.use(flash())
-  self.app.use(function (req, res, next) {
-    res.locals.user = req.user
-    if (/api/i.test(req.path)) {
-      try {
-        if (req.body.redirect) {
-          req.session.returnTo = req.body.redirect
-        }
-      } catch (err) {
-        console.log(err)
-      }
-    }
-    next()
-  })
-  self.app.use(errorHandler())
 }
 
 Mean.prototype.setupHeaders = function () {
@@ -379,121 +364,6 @@ Mean.prototype.agenda = function () {
   }
   self.app.use('/agendash', admin, Agendash(self.agenda))
 }
-Mean.prototype.setupStatic = function () {
-  var self = this
-
-  self.app.use(express.static(path.join(self.dir, 'client/'), {
-    maxAge: 31557600000
-  }))
-  if (self.environment === 'development') {
-    self.app.use('/api/v1/status', // middleware.verify  if you want the api to be behind token based
-      status({
-        app: self.app,
-        config: self.settings,
-        auth: true,
-        user: 'admin',
-        pass: 'pass',
-        extra: {
-          environment: self.environment
-        },
-        mongoose: mongoose // Now Supporting Mongoose
-      })
-    )
-  }
-  /**
-   * Primary Failover routes.
-   */
-  self.app.get('/api/*', function (req, res) {
-    res.status(400).send({
-      error: 'nothing found in api'
-    })
-  })
-  self.app.get('/bower_components/*', function (req, res) {
-    res.status(400).send({
-      error: 'nothing found in bower_components'
-    })
-  })
-  self.app.get('/images/*', function (req, res) {
-    res.status(400).send({
-      error: 'nothing found in images'
-    })
-  })
-  self.app.get('/scripts/*', function (req, res) {
-    res.status(400).send({
-      error: 'nothing found in scripts'
-    })
-  })
-  self.app.get('/styles/*', function (req, res) {
-    res.status(400).send({
-      error: 'nothing found in styles'
-    })
-  })
-  self.app.get('/uploads/*', function (req, res) {
-    res.status(400).send({
-      error: 'nothing found in uploads'
-    })
-  })
-  /**
-   * Primary app routes.
-   */
-  self.app.get('/*', function (req, res) {
-    if (_.isUndefined(req.user)) {
-      req.user = {}
-      req.user.authenticated = false
-    } else {
-      req.user.authenticated = true
-    }
-    // took out user
-    var html = self.settings.html
-    if (self.settings.seo[req.path]) {
-      if (self.settings.seo[req.path].title) html.title = self.settings.seo[req.path].title
-      if (self.settings.seo[req.path].description) html.description = self.settings.seo[req.path].description
-      if (self.settings.seo[req.path].keywords) html.keywords = self.settings.seo[req.path].keywords
-    }
-    res.render(path.resolve('server') + '/layout/index.html', {
-      html: html,
-      assets: self.app.locals.frontendFilesFinal,
-      environment: self.environment
-    })
-  })
-}
-Mean.prototype.setupRoutesMiddleware = function () {
-  var self = this
-  /**
-   * Middleware.
-   */
-  self.middleware = require('./server/middleware.js')
-  self.build = require('buildreq')(self.settings.buildreq)
-  self.app.use(self.build.queryMiddleware({mongoose: mongoose}))
-  /**
-   * Routes.
-   */
-  self.Register = require('./server/register.js')
-  self.app.use(self.build.responseMiddleware({mongoose: mongoose}))
-  self.fileStructure = self.Register({
-    app: self.app,
-    settings: self.settings,
-    middleware: self.middleware
-  })
-  /**
-   * Dynamic Routes / Manually enabling them . You can change it back to automatic in the settings
-   * build.routing(app, mongoose) - if reverting back to automatic
-   */
-
-  self.build.routing({
-    mongoose: mongoose,
-    remove: ['users'],
-    middleware: {
-      auth: [self.middleware.verify, self.middleware.isAuthenticated]
-    }
-  }, function (error, data) {
-    if (error) console.log(error)
-    _.forEach(data, function (m) {
-      self.debug('Route Built by NPM buildreq:', m.route)
-      self.app.use(m.route, m.app)
-    })
-  })
-}
 Mean.prototype.livereload = function () {
   var self = this
   /**
@@ -578,6 +448,141 @@ Mean.prototype.livereload = function () {
     scssLessGlobalWatcher.add('./client/*/*.less')
     scssLessGlobalWatcher.add('./client/*/*.scss')
   }
+}
+
+Mean.prototype.setupRoutesMiddleware = function () {
+  var self = this
+  /**
+   * Middleware.
+   */
+  self.middleware = require('./server/middleware.js')
+  self.build = require('buildreq')(self.settings.buildreq)
+  self.app.use(self.build.queryMiddleware({mongoose: mongoose}))
+  /**
+   * Routes.
+   */
+  self.Register = require('./server/register.js')
+  self.app.use(self.build.responseMiddleware({mongoose: mongoose}))
+  self.fileStructure = self.Register({
+    app: self.app,
+    settings: self.settings,
+    middleware: self.middleware
+  })
+  /**
+   * Dynamic Routes / Manually enabling them . You can change it back to automatic in the settings
+   * build.routing(app, mongoose) - if reverting back to automatic
+   */
+
+  self.build.routing({
+    mongoose: mongoose,
+    remove: ['users'],
+    middleware: {
+      auth: [self.middleware.verify, self.middleware.isAuthenticated]
+    }
+  }, function (error, data) {
+    if (error) console.log(error)
+    _.forEach(data, function (m) {
+      self.debug('Route Built by NPM buildreq:', m.route)
+      self.app.use(m.route, m.app)
+    })
+  })
+
+  self.app.use(function (req, res, next) {
+    res.locals.user = req.user
+    if (/api/i.test(req.path)) {
+      try {
+        if (req.body.redirect) {
+          req.session.returnTo = req.body.redirect
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    next()
+  })
+}
+
+Mean.prototype.setupErrorHandling = function () {
+  var self = this
+  require('./server/error.js')(self)
+}
+Mean.prototype.setupStatic = function () {
+  var self = this
+
+  self.app.use(express.static(path.join(self.dir, 'client/'), {
+    maxAge: 31557600000
+  }))
+  if (self.environment === 'development') {
+    self.app.use('/api/v1/status', // middleware.verify  if you want the api to be behind token based
+      status({
+        app: self.app,
+        config: self.settings,
+        auth: true,
+        user: 'admin',
+        pass: 'pass',
+        extra: {
+          environment: self.environment
+        },
+        mongoose: mongoose // Now Supporting Mongoose
+      })
+    )
+  }
+  /**
+   * Primary Failover routes.
+   */
+  self.app.get('/api/*', function (req, res) {
+    res.status(400).send({
+      error: 'nothing found in api'
+    })
+  })
+  self.app.get('/bower_components/*', function (req, res) {
+    res.status(400).send({
+      error: 'nothing found in bower_components'
+    })
+  })
+  self.app.get('/images/*', function (req, res) {
+    res.status(400).send({
+      error: 'nothing found in images'
+    })
+  })
+  self.app.get('/scripts/*', function (req, res) {
+    res.status(400).send({
+      error: 'nothing found in scripts'
+    })
+  })
+  self.app.get('/styles/*', function (req, res) {
+    res.status(400).send({
+      error: 'nothing found in styles'
+    })
+  })
+  self.app.get('/uploads/*', function (req, res) {
+    res.status(400).send({
+      error: 'nothing found in uploads'
+    })
+  })
+  /**
+   * Primary app routes.
+   */
+  self.app.get('/*', function (req, res) {
+    if (_.isUndefined(req.user)) {
+      req.user = {}
+      req.user.authenticated = false
+    } else {
+      req.user.authenticated = true
+    }
+    // took out user
+    var html = self.settings.html
+    if (self.settings.seo[req.path]) {
+      if (self.settings.seo[req.path].title) html.title = self.settings.seo[req.path].title
+      if (self.settings.seo[req.path].description) html.description = self.settings.seo[req.path].description
+      if (self.settings.seo[req.path].keywords) html.keywords = self.settings.seo[req.path].keywords
+    }
+    res.render(path.resolve('server') + '/layout/index.html', {
+      html: html,
+      assets: self.app.locals.frontendFilesFinal,
+      environment: self.environment
+    })
+  })
 }
 
 var run = require('./run.js')

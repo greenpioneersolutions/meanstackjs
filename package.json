@@ -90,6 +90,7 @@
     "express-system-status": "^0.2.2",
     "express-validator": "^2.18.0",
     "glob": "^7.0.3",
+    "http-status-codes": "^1.0.6",
     "jsonwebtoken": "^6.2.0",
     "less": "^2.5.3",
     "livereload": "^0.4.1",
