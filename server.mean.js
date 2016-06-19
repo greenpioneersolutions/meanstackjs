@@ -10,6 +10,7 @@ var express = require('express')
 var expressValidator = require('express-validator')
 var flash = require('express-flash')
 var fs = require('fs')
+var https = require('https')
 var less = require('less')
 var logger = require('morgan')
 var methodOverride = require('method-override')
@@ -18,10 +19,12 @@ var path = require('path')
 var passport = require('passport')
 var Promise = require('bluebird')
 var sass = require('node-sass')
+var sitemap = require('express-sitemap')()
 var session = require('express-session')
 var status = require('express-system-status')
-
 var _ = require('lodash')
+
+// Requires Something from Above
 var MongoStore = require('connect-mongo')(session)
 
 function Mean (opts, done) {
@@ -42,12 +45,11 @@ function Mean (opts, done) {
   self.setupRoutesMiddleware()
   self.setupErrorHandling()
   self.setupStatic()
-
   async.parallel({
     connectMongoDb: function (callback) {
       mongoose.Promise = Promise
       mongoose.set('debug', self.environment === 'production')
-      mongoose.connect(self.settings.db, self.settings.dbOptions)
+      mongoose.connect(self.settings.mongodb.uri, self.settings.mongodb.options)
       mongoose.connection.on('error', function (err) {
         console.log('MongoDB Connection Error. Please make sure that MongoDB is running.')
         self.debug('MongoDB Connection Error ')
@@ -56,19 +58,31 @@ function Mean (opts, done) {
       mongoose.connection.on('open', function () {
         self.debug('MongoDB Connection Open ')
         callback(null, {
-          db: self.settings.db,
-          dbOptions: self.settings.dbOptions
+          db: self.settings.mongodb.uri,
+          dbOptions: self.settings.mongodb.options
         })
       })
     },
     server: function (callback) {
-      self.app.listen(self.app.get('port'), function () {
-        console.log('Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
-        self.debug('Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
-        callback(null, {
-          port: self.app.get('port'),
-          env: self.app.get('env')
+      if (self.settings.https.active) {
+        https.createServer({
+          key: fs.readFileSync(self.settings.https.key),
+          cert: fs.readFileSync(self.settings.https.cert)
+        }, self.app).listen(self.settings.https.port, function () {
+          console.log('Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
+          self.debug('Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
         })
+      }
+      // OR - check if you set both to false we default to turn on http
+      if (self.settings.http.active || (self.settings.https.active === false) === (self.settings.http.active === false)) {
+        self.app.listen(self.app.get('port'), function () {
+          console.log('Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
+          self.debug('Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
+        })
+      }
+      callback(null, {
+        port: self.app.get('port'),
+        env: self.app.get('env')
       })
     }
   },
@@ -190,7 +204,7 @@ Mean.prototype.setupExpressConfigs = function () {
     saveUninitialized: true,
     secret: self.settings.sessionSecret,
     store: new MongoStore({
-      url: self.settings.db,
+      url: self.settings.mongodb.uri,
       autoReconnect: true
     })
   }))
@@ -331,38 +345,45 @@ Mean.prototype.plato = function () {
 Mean.prototype.agenda = function () {
   var Agenda = require('agenda')
   var Agendash = require('agendash')
+  var backup = require('mongodb-backup')
+  var restore = require('mongodb-restore')
   var self = this
   self.agenda = new Agenda(self.settings.agendash.options)
-  // //async
-  // self.agenda.define('viewusers', function (job, done) {
-  //   console.log(job, 'viewAll Users')
-  //   done()
-  // })
-  // //sync
-  // self.agenda.define('sayhello', function (job) {
-  //   console.log(job, 'Hello!')
-  // })
+  if (!fs.existsSync(self.dir + '/backups/')) {
+    fs.mkdirSync(self.dir + '/backups/')
+  }
+  self.agenda.define('backup', function (job, done) {
+    var db = {}
+    if (!fs.statSync(path.join(__dirname, 'backups/'))) done('No Root Directory ')
+    if (job.attrs.data.uri) db.uri = job.attrs.data.uri
+    else done('No URI was passed')
+    if (job.attrs.data.collections) db.collections = job.attrs.data.collections
+    try {
+      backup(db)
+    } catch (err) {
+      done(err)
+    }
+    done()
+  })
+  self.agenda.define('restore', function (job, done) {
+    var db = {}
+    if (!fs.statSync(path.join(__dirname, 'backups/'))) done('No Root Directory ')
+    if (job.attrs.data.uri) db.uri = job.attrs.data.uri
+    else done('No URI was passed')
+    try {
+      restore(db)
+    } catch (err) {
+      done(err)
+    }
+    done()
+  })
   self.agenda.on('ready', function () {
     // //every 3 mins or every minute
-    // self.agenda.every('3 minutes', 'viewusers')
-    // self.agenda.every('*/1 * * * *', 'sayhello')
-
+    // self.agenda.every('3 minutes', 'restore')
+    // self.agenda.every('*/1 * * * *', 'backup')
     self.agenda.start()
   })
-
-  var auth = require('basic-auth')
-  var admins = {
-    'admin': { password: 'pass' }
-  }
-  function admin (req, res, next) {
-    var user = auth(req)
-    if (!user || !admins[user.name] || admins[user.name].password !== user.pass) {
-      res.set('WWW-Authenticate', 'Basic realm="example"')
-      return res.status(401).send()
-    }
-    return next()
-  }
-  self.app.use('/agendash', admin, Agendash(self.agenda))
+  self.app.use('/agenda', require('./server/middleware.js').isAdmin, Agendash(self.agenda))
 }
 Mean.prototype.livereload = function () {
   var self = this
@@ -559,6 +580,9 @@ Mean.prototype.setupStatic = function () {
     res.status(400).send({
       error: 'nothing found in uploads'
     })
+  })
+  self.app.get('/sitemap', function (req, res) {
+    res.send(sitemap.generate(self.app))
   })
   /**
    * Primary app routes.
