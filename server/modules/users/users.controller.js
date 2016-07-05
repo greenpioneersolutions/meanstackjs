@@ -5,7 +5,8 @@ var nodemailer = require('nodemailer')
 var passport = require('passport')
 var mongoose = require('mongoose')
 var User = mongoose.model('users')
-
+var fs = require('fs')
+var path = require('path')
 var settings = require('../../../configs/settings.js').get()
 
 var secrets = {
@@ -511,4 +512,25 @@ exports.postForgot = function (req, res, next) {
     }
     res.status(200).send({ msg: 'Email has been sent' })
   })
+}
+
+exports.postPhoto = function (req, res, next) {
+  if (req.file) {
+    var filePath = path.resolve(__dirname, '../../../client/uploads/')
+    fs.readFile(req.file.path, function (err, data) {
+      if (err) {
+        return res.status(400).send(err)
+      }
+      var createDir = filePath + '/' + req.file.originalname
+      fs.writeFile(createDir, data, function (err) {
+        if (err) {
+          return res.status(400).send(err)
+        } else {
+          return res.status(201).send()
+        }
+      })
+    })
+  } else {
+    return res.status(400).send()
+  }
 }
