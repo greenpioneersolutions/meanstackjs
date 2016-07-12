@@ -118,6 +118,7 @@
     "pug": "^2.0.0-alpha8",
     "request": "^2.67.0",
     "run-auto": "^1.1.3",
+    "serial-concat-files": "^1.0.0",
     "shelljs": "^0.7.0",
     "socket.io": "^1.3.7",
     "swagger-node-express": "^2.1.3",
