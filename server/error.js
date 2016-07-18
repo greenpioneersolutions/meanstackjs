@@ -1,13 +1,9 @@
 module.exports = errorMiddleware
 
 var pug = require('pug')
-// var errorHandler = require('errorhandler')
 var httpStatus = require('http-status-codes')
 
 function errorMiddleware (self) {
-  // if (self.environment === 'development') {
-  //   self.app.use(errorHandler())
-  // }
   self.app.use(function (err, req, res, next) {
     var code = 500
     var message = err
