@@ -9,17 +9,18 @@ function build (options) {
   }
   throw new TypeError(console.log('Expected object for argument options but got ' + options))
 }
-var path = require('path')
 var _ = require('lodash')
-var fs = require('fs')
+var babel = require('babel-core')
 var chalk = require('chalk')
-var sass = require('node-sass')
+var concat = require('serial-concat-files')
+var debug = require('debug')('meanstackjs:register')
+var fs = require('fs')
 var less = require('less')
+var mongoose = require('mongoose')
 var uglify = require('uglify-js')
 var uglifycss = require('uglifycss')
-var mongoose = require('mongoose')
-var debug = require('debug')('meanstackjs:register')
-var babel = require('babel-core')
+var sass = require('node-sass')
+var path = require('path')
 
 function Register (opts, done) {
   var self = this
@@ -419,16 +420,4 @@ Register.prototype.env = function () {
     self.app.locals.frontendFilesFinal = self.frontendFilesFinal
   }
   debug('end env')
-}
-
-function concat (files, dest, callback) {
-  fs.writeFile(dest, '', function (error) {
-    if (error) return callback(error)
-    _.forEach(files, function (n) {
-      fs.readFile(n, function (error, buffer) {
-        if (error) throw error
-        fs.appendFile(dest, buffer)
-      })
-    })
-  })
 }

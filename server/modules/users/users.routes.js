@@ -1,28 +1,9 @@
 var user = require('./users.controller.js')
-var fs = require('fs')
-var path = require('path')
 var multer = require('multer')
 var upload = multer({ dest: 'client/uploads/' })
 
 module.exports = function (app, auth, mail, settings) {
-  app.post('/api/photos/upload', upload.single('file'), function (req, res, next) {
-    if (req.file) {
-      var filePath = path.resolve(__dirname, '../../../client/uploads/')
-      fs.readFile(req.file.path, function (err, data) {
-        if (err) {
-          return res.status(400).send(err)
-        }
-        var createDir = filePath + '/' + req.file.originalname
-        fs.writeFile(createDir, data, function (err) {
-          if (err) {
-            return res.status(400).send(err)
-          } else {
-            return res.status(201).send()
-          }
-        })
-      })
-    }
-  })
+  app.post('/api/photos/upload', upload.single('file'), user.postPhoto)
   app.post('/api/authenticate', user.postAuthenticate)
   app.get('/api/authenticate', user.getAuthenticate)
   app.post('/api/login', user.postLogin)

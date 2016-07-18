@@ -14,9 +14,6 @@ function findUser (id, cb) {
   })
 }
 
-/**
- * Login Required middleware.
- */
 function isAuthenticated (req, res, next) {
   if (req.isAuthenticated()) {
     debug('middleware: isAuthenticated')
@@ -25,6 +22,22 @@ function isAuthenticated (req, res, next) {
     debug('middleware: is Not Authenticated ')
     return res.status(401).send({
       success: false, msg: 'User needs to re-authenticated'
+    })
+  }
+}
+function isAdmin (req, res, next) {
+  if (req.isAuthenticated()) {
+    debug('middleware: isAdmin')
+    findUser(req.user._id, function (user) {
+      if (!user) return res.status(401).send('User is not authorized')
+      if (user.roles.indexOf('admin') === -1) return res.status(401).send('User is not authorized')
+      req.user = user
+      return next()
+    })
+  } else {
+    debug('middleware: is Not Admin ')
+    return res.status(401).send({
+      success: false, msg: 'User is not authorized'
     })
   }
 }
@@ -96,6 +109,7 @@ function getToken (headers) {
 module.exports = exports = {
   findUser: findUser,
   isAuthenticated: isAuthenticated,
+  isAdmin: isAdmin,
   isMongoId: isMongoId,
   verify: verify,
   getToken: getToken

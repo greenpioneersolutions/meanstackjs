@@ -1,21 +1,13 @@
 module.exports = MongoExpress
 var express = require('express')
-var mongo = {
-  db: 'db',
-  host: 'localhost',
-  password: '',
-  port: 27017,
-  ssl: false,
-  url: 'mongodb://localhost:27017',
-  username: ''
-}
+var settings = require('./configs/settings.js').get()
 var mongoexpress = {
   mongodb: {
-    server: process.env.ME_CONFIG_MONGODB_SERVER || mongo.host,
-    port: process.env.ME_CONFIG_MONGODB_PORT || mongo.port,
+    server: process.env.MONGODB_SERVER || 'localhost' || settings.mongodb.host,
+    port: process.env.MONGODB_PORT || settings.mongodb.port,
 
     // useSSL: connect to the server using secure SSL
-    useSSL: process.env.ME_CONFIG_MONGODB_SSL || mongo.ssl,
+    useSSL: process.env.MONGODB_SSL || settings.mongodb.ssl,
 
     // autoReconnect: automatically reconnect if connection is lost
     autoReconnect: true,
@@ -26,7 +18,7 @@ var mongoexpress = {
     // set admin to true if you want to turn on admin features
     // if admin is true, the auth list below will be ignored
     // if admin is true, you will need to enter an admin username/password below (if it is needed)
-    admin: process.env.ME_CONFIG_MONGODB_ENABLE_ADMIN ? process.env.ME_CONFIG_MONGODB_ENABLE_ADMIN.toLowerCase() === 'true' : false,
+    admin: process.env.MONGODB_ENABLE_ADMIN ? process.env.MONGODB_ENABLE_ADMIN.toLowerCase() === 'true' : false,
 
     // >>>>  If you are using regular accounts, fill out auth details in the section below
     // >>>>  If you have admin auth, leave this section empty and skip to the next section
@@ -36,9 +28,9 @@ var mongoexpress = {
        * Add as many databases as you want!
        */
       {
-        database: process.env.ME_CONFIG_MONGODB_AUTH_DATABASE || mongo.db,
-        username: process.env.ME_CONFIG_MONGODB_AUTH_USERNAME || mongo.username,
-        password: process.env.ME_CONFIG_MONGODB_AUTH_PASSWORD || mongo.password
+        database: process.env.MONGODB_AUTH_DATABASE || settings.mongodb.db,
+        username: process.env.MONGODB_AUTH_USERNAME || settings.mongodb.username,
+        password: process.env.MONGODB_AUTH_PASSWORD || settings.mongodb.password
       }
     ],
 
@@ -46,8 +38,8 @@ var mongoexpress = {
     //  >>>>  Using an admin account allows you to view and edit all databases, and view stats
 
     // leave username and password empty if no admin account exists
-    adminUsername: process.env.ME_CONFIG_MONGODB_ADMINUSERNAME || '',
-    adminPassword: process.env.ME_CONFIG_MONGODB_ADMINPASSWORD || '',
+    adminUsername: process.env.MONGODB_ADMINUSERNAME || '',
+    adminPassword: process.env.MONGODB_ADMINPASSWORD || '',
 
     // whitelist: hide all databases except the ones in this list  (empty list for no whitelist)
     whitelist: [],
@@ -58,26 +50,26 @@ var mongoexpress = {
 
   site: {
     // baseUrl: the URL that mongo express will be located at - Remember to add the forward slash at the stard and end!
-    baseUrl: process.env.ME_CONFIG_SITE_BASEURL || '/',
+    baseUrl: process.env.SITE_BASEURL || '/',
     cookieKeyName: 'mongo-express',
-    cookieSecret: process.env.ME_CONFIG_SITE_COOKIESECRET || 'cookiesecret',
+    cookieSecret: process.env.SITE_COOKIESECRET || 'cookiesecret',
     host: process.env.VCAP_APP_HOST || 'localhost',
     port: process.env.VCAP_APP_PORT || 8081,
-    requestSizeLimit: process.env.ME_CONFIG_REQUEST_SIZE || '50mb',
-    sessionSecret: process.env.ME_CONFIG_SITE_SESSIONSECRET || 'sessionsecret',
-    sslCert: process.env.ME_CONFIG_SITE_SSL_CRT_PATH || '',
-    sslEnabled: process.env.ME_CONFIG_SITE_SSL_ENABLED || false,
-    sslKey: process.env.ME_CONFIG_SITE_SSL_KEY_PATH || ''
+    requestSizeLimit: process.env.REQUEST_SIZE || '50mb',
+    sessionSecret: process.env.SITE_SESSIONSECRET || 'sessionsecret',
+    sslCert: process.env.SITE_SSL_CRT_PATH || '',
+    sslEnabled: process.env.SITE_SSL_ENABLED || false,
+    sslKey: process.env.SITE_SSL_KEY_PATH || ''
   },
 
   // set useBasicAuth to true if you want to authehticate mongo-express loggins
   // if admin is false, the basicAuthInfo list below will be ignored
-  // this will be true unless ME_CONFIG_BASICAUTH_USERNAME is set and is the empty string
-  useBasicAuth: process.env.ME_CONFIG_BASICAUTH_USERNAME !== '',
+  // this will be true unless BASICAUTH_USERNAME is set and is the empty string
+  useBasicAuth: process.env.BASICAUTH_USERNAME !== '',
 
   basicAuth: {
-    username: process.env.ME_CONFIG_BASICAUTH_USERNAME || 'admin',
-    password: process.env.ME_CONFIG_BASICAUTH_PASSWORD || 'pass'
+    username: process.env.BASICAUTH_USERNAME || 'admin',
+    password: process.env.BASICAUTH_PASSWORD || 'pass'
   },
   console: false,
   options: {
@@ -86,7 +78,7 @@ var mongoexpress = {
 
     // editorTheme: Name of the theme you want to use for displaying documents
     // See http://codemirror.net/demo/theme.html for all examples
-    editorTheme: process.env.ME_CONFIG_OPTIONS_EDITORTHEME || 'rubyblue',
+    editorTheme: process.env.OPTIONS_EDITORTHEME || 'rubyblue',
 
     // Maximum size of a single property & single row
     // Reduces the risk of sending a huge amount of data when viewing collections
@@ -135,7 +127,7 @@ function MongoExpress (opts, done) {
   self.app = express()
   self.opts = opts
   self.debug = require('debug')('meanstackjs:mongoExpress')
-  self.app.set('port', 8081)
+  self.app.set('port', settings.mongoexpress.port)
   self.app.use('/', require('mongo-express/lib/middleware')(mongoexpress))
   self.app.listen(self.app.get('port'), function () {
     console.log('Mongo-Express server listening on port %d ', self.app.get('port'))

@@ -2,18 +2,21 @@ module.exports = SocketIO
 
 var express = require('express')
 var debug = require('debug')('meanstackjs:socketio')
-
+var settings = require('./configs/settings.js').get()
 function SocketIO (opts, done) {
-  var app = express()
-  var socketServer = require('http').createServer(app)
-  var io = require('socket.io')(socketServer)
-  io.on('connection', function (socket) {
+  var self = this
+  self.app = express()
+  self.socketServer = require('http').createServer(self.app)
+  self.io = require('socket.io')(self.socketServer)
+  self.io.on('connection', function (socket) {
     socket.on('message', function (msg) {
-      io.emit('message', msg)
+      self.io.emit('message', msg)
     })
   })
-  socketServer.listen(8282)
-  debug('socketio listening 8282')
+  self.app.set('port', settings.socketio.port)
+  self.socketServer.listen(self.app.get('port'))
+  debug('Socketio listening on port %d', self.app.get('port'))
+  console.log('Socketio listening on port %d', self.app.get('port'))
   done(null)
 }
 
