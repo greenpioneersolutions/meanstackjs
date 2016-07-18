@@ -1,31 +1,31 @@
 module.exports = Mean
-
-var express = require('express')
+var auth = require('./server/passport.js')
 var async = require('async')
+var bodyParser = require('body-parser')
+var chalk = require('chalk')
+var chokidar = require('chokidar')
 var cookieParser = require('cookie-parser')
 var compress = require('compression')
-var session = require('express-session')
-var bodyParser = require('body-parser')
-var Promise = require('bluebird')
-var logger = require('morgan')
-var errorHandler = require('errorhandler')
-var methodOverride = require('method-override')
-var sass = require('node-sass')
-var less = require('less')
-var chokidar = require('chokidar')
-var chalk = require('chalk')
-var fs = require('fs')
-var _ = require('lodash')
-var MongoStore = require('connect-mongo')(session)
-var flash = require('express-flash')
-var path = require('path')
-var mongoose = require('mongoose')
-var passport = require('passport')
-var auth = require('./server/passport.js')
+var express = require('express')
 var expressValidator = require('express-validator')
+var flash = require('express-flash')
+var fs = require('fs')
+var https = require('https')
+var less = require('less')
+var logger = require('morgan')
+var methodOverride = require('method-override')
+var mongoose = require('mongoose')
+var path = require('path')
+var passport = require('passport')
+var Promise = require('bluebird')
+var sass = require('node-sass')
+var sitemap = require('express-sitemap')()
+var session = require('express-session')
 var status = require('express-system-status')
-var Agenda = require('agenda')
-var Agendash = require('agendash')
+var _ = require('lodash')
+
+// Requires Something from Above
+var MongoStore = require('connect-mongo')(session)
 
 function Mean (opts, done) {
   var self = this
@@ -41,15 +41,15 @@ function Mean (opts, done) {
     self.nightwatch()
     self.plato()
   }
-  self.setupRoutesMiddleware()
-  self.setupStatic()
   self.livereload()
-
+  self.setupRoutesMiddleware()
+  self.setupErrorHandling()
+  self.setupStatic()
   async.parallel({
     connectMongoDb: function (callback) {
       mongoose.Promise = Promise
       mongoose.set('debug', self.environment === 'production')
-      mongoose.connect(self.settings.db, self.settings.dbOptions)
+      mongoose.connect(self.settings.mongodb.uri, self.settings.mongodb.options)
       mongoose.connection.on('error', function (err) {
         console.log('MongoDB Connection Error. Please make sure that MongoDB is running.')
         self.debug('MongoDB Connection Error ')
@@ -58,19 +58,31 @@ function Mean (opts, done) {
       mongoose.connection.on('open', function () {
         self.debug('MongoDB Connection Open ')
         callback(null, {
-          db: self.settings.db,
-          dbOptions: self.settings.dbOptions
+          db: self.settings.mongodb.uri,
+          dbOptions: self.settings.mongodb.options
         })
       })
     },
     server: function (callback) {
-      self.app.listen(self.app.get('port'), function () {
-        console.log('Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
-        self.debug('Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
-        callback(null, {
-          port: self.app.get('port'),
-          env: self.app.get('env')
+      if (self.settings.https.active) {
+        https.createServer({
+          key: fs.readFileSync(self.settings.https.key),
+          cert: fs.readFileSync(self.settings.https.cert)
+        }, self.app).listen(self.settings.https.port, function () {
+          console.log('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
+          self.debug('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
         })
+      }
+      // OR - check if you set both to false we default to turn on http
+      if (self.settings.http.active || (self.settings.https.active === false) === (self.settings.http.active === false)) {
+        self.app.listen(self.app.get('port'), function () {
+          console.log('HTTP Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
+          self.debug('HTTP Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
+        })
+      }
+      callback(null, {
+        port: self.app.get('port'),
+        env: self.app.get('env')
       })
     }
   },
@@ -121,7 +133,70 @@ Mean.prototype.setupExpressConfigs = function () {
   self.app.use(bodyParser.urlencoded({
     extended: true
   }))
-  self.app.use(expressValidator())
+  self.app.use(
+    expressValidator({ // https://github.com/chriso/validator.js#validators
+      customValidators: {
+        isArray: function (value) { // req.assert('param', 'Invalid Param').isArray()
+          return _.isObject(value)
+        },
+        isObject: function (value) { // req.assert('param', 'Invalid Param').isObject()
+          return _.isObject(value)
+        },
+        isString: function (value) { // req.assert('param', 'Invalid Param').isString()
+          return _.isString(value)
+        },
+        isRegExp: function (value) { // req.assert('param', 'Invalid Param').isRegExp()
+          return _.isRegExp(value)
+        },
+        isEmpty: function (value) { // req.assert('param', 'Invalid Param').isEmpty()
+          return _.isEmpty(value)
+        },
+        gte: function (param, num) { // req.assert('param', 'Invalid Param').gte(5)
+          return _.gte(param, num)
+        },
+        lte: function (param, num) { // req.assert('param', 'Invalid Param').lte(5)
+          return _.lte(param, num)
+        },
+        gt: function (param, num) { // req.assert('param', 'Invalid Param').gt(5)
+          return _.gt(param, num)
+        },
+        lt: function (param, num) { // req.assert('param', 'Invalid Param').lt(5)
+          return _.lt(param, num)
+        }
+      },
+      customSanitizers: {
+        toArray: function (value) { // req.sanitize('postparam').toArray()
+          return _.toArray(value)
+        },
+        toFinite: function (value) { // req.sanitize('postparam').toFinite()
+          return _.toFinite(value)
+        },
+        toLength: function (value) { // req.sanitize('postparam').toLength()
+          return _.toLength(value)
+        },
+        toPlainObject: function (value) { // req.sanitize('postparam').toPlainObject()
+          return _.toPlainObject(value)
+        },
+        toString: function (value) { // req.sanitize('postparam').toString()
+          return _.toString(value)
+        }
+      },
+      errorFormatter: function (param, msg, value) {
+        var namespace = param.split('.')
+        var root = namespace.shift()
+        var formParam = root
+
+        while (namespace.length) {
+          formParam += '[' + namespace.shift() + ']'
+        }
+        return {
+          param: formParam,
+          msg: msg,
+          value: value
+        }
+      }
+    })
+  )
   self.app.use(methodOverride())
   self.app.use(cookieParser())
   self.app.use(session({
@@ -129,7 +204,7 @@ Mean.prototype.setupExpressConfigs = function () {
     saveUninitialized: true,
     secret: self.settings.sessionSecret,
     store: new MongoStore({
-      url: self.settings.db,
+      url: self.settings.mongodb.uri,
       autoReconnect: true
     })
   }))
@@ -138,22 +213,7 @@ Mean.prototype.setupExpressConfigs = function () {
   passport.serializeUser(auth.serializeUser)
   passport.deserializeUser(auth.deserializeUser)
   passport.use(auth.passportStrategy)
-
   self.app.use(flash())
-  self.app.use(function (req, res, next) {
-    res.locals.user = req.user
-    if (/api/i.test(req.path)) {
-      try {
-        if (req.body.redirect) {
-          req.session.returnTo = req.body.redirect
-        }
-      } catch (err) {
-        console.log(err)
-      }
-    }
-    next()
-  })
-  self.app.use(errorHandler())
 }
 
 Mean.prototype.setupHeaders = function () {
@@ -283,147 +343,47 @@ Mean.prototype.plato = function () {
   require('./reports/plato.js').report(self.settings.plato)
 }
 Mean.prototype.agenda = function () {
+  var Agenda = require('agenda')
+  var Agendash = require('agendash')
+  var backup = require('mongodb-backup')
+  var restore = require('mongodb-restore')
   var self = this
   self.agenda = new Agenda(self.settings.agendash.options)
-  // //async
-  // self.agenda.define('viewusers', function (job, done) {
-  //   console.log(job, 'viewAll Users')
-  //   done()
-  // })
-  // //sync
-  // self.agenda.define('sayhello', function (job) {
-  //   console.log(job, 'Hello!')
-  // })
+  if (!fs.existsSync(self.dir + '/backups/')) {
+    fs.mkdirSync(self.dir + '/backups/')
+  }
+  self.agenda.define('backup', function (job, done) {
+    var db = {}
+    if (!fs.statSync(path.join(__dirname, 'backups/'))) done('No Root Directory ')
+    if (job.attrs.data.uri) db.uri = job.attrs.data.uri
+    else done('No URI was passed')
+    if (job.attrs.data.collections) db.collections = job.attrs.data.collections
+    try {
+      backup(db)
+    } catch (err) {
+      done(err)
+    }
+    done()
+  })
+  self.agenda.define('restore', function (job, done) {
+    var db = {}
+    if (!fs.statSync(path.join(__dirname, 'backups/'))) done('No Root Directory ')
+    if (job.attrs.data.uri) db.uri = job.attrs.data.uri
+    else done('No URI was passed')
+    try {
+      restore(db)
+    } catch (err) {
+      done(err)
+    }
+    done()
+  })
   self.agenda.on('ready', function () {
     // //every 3 mins or every minute
-    // self.agenda.every('3 minutes', 'viewusers')
-    // self.agenda.every('*/1 * * * *', 'sayhello')
-
+    // self.agenda.every('3 minutes', 'restore')
+    // self.agenda.every('*/1 * * * *', 'backup')
     self.agenda.start()
   })
-
-  var auth = require('basic-auth')
-  var admins = {
-    'admin': { password: 'pass' }
-  }
-  function admin (req, res, next) {
-    var user = auth(req)
-    if (!user || !admins[user.name] || admins[user.name].password !== user.pass) {
-      res.set('WWW-Authenticate', 'Basic realm="example"')
-      return res.status(401).send()
-    }
-    return next()
-  }
-  self.app.use('/agendash', admin, Agendash(self.agenda))
-}
-Mean.prototype.setupStatic = function () {
-  var self = this
-
-  self.app.use(express.static(path.join(self.dir, 'client/'), {
-    maxAge: 31557600000
-  }))
-  if (self.environment === 'development') {
-    self.app.use('/api/v1/status', // middleware.verify  if you want the api to be behind token based
-      status({
-        app: self.app,
-        config: self.settings,
-        auth: true,
-        user: 'admin',
-        pass: 'pass',
-        extra: {
-          environment: self.environment
-        },
-        mongoose: mongoose // Now Supporting Mongoose
-      })
-    )
-  }
-  /**
-   * Primary Failover routes.
-   */
-  self.app.get('/api/*', function (req, res) {
-    res.status(400).send({
-      error: 'nothing found in api'
-    })
-  })
-  self.app.get('/bower_components/*', function (req, res) {
-    res.status(400).send({
-      error: 'nothing found in bower_components'
-    })
-  })
-  self.app.get('/images/*', function (req, res) {
-    res.status(400).send({
-      error: 'nothing found in images'
-    })
-  })
-  self.app.get('/scripts/*', function (req, res) {
-    res.status(400).send({
-      error: 'nothing found in scripts'
-    })
-  })
-  self.app.get('/styles/*', function (req, res) {
-    res.status(400).send({
-      error: 'nothing found in styles'
-    })
-  })
-  self.app.get('/uploads/*', function (req, res) {
-    res.status(400).send({
-      error: 'nothing found in uploads'
-    })
-  })
-  /**
-   * Primary app routes.
-   */
-  self.app.get('/*', function (req, res) {
-    if (_.isUndefined(req.user)) {
-      req.user = {}
-      req.user.authenticated = false
-    } else {
-      req.user.authenticated = true
-    }
-    // took out user
-    res.render(path.resolve('server') + '/layout/index.html', {
-      html: self.settings.html,
-      assets: self.app.locals.frontendFilesFinal,
-      environment: self.environment
-    })
-  })
-}
-Mean.prototype.setupRoutesMiddleware = function () {
-  var self = this
-  /**
-   * Middleware.
-   */
-  self.middleware = require('./server/middleware.js')
-  self.build = require('buildreq')(self.settings.buildreq)
-  self.app.use(self.build.queryMiddleware({mongoose: mongoose}))
-  /**
-   * Routes.
-   */
-  self.Register = require('./server/register.js')
-  self.app.use(self.build.responseMiddleware({mongoose: mongoose}))
-  self.fileStructure = self.Register({
-    app: self.app,
-    settings: self.settings,
-    middleware: self.middleware
-  })
-  /**
-   * Dynamic Routes / Manually enabling them . You can change it back to automatic in the settings
-   * build.routing(app, mongoose) - if reverting back to automatic
-   */
-
-  self.build.routing({
-    mongoose: mongoose,
-    remove: ['users'],
-    middleware: {
-      auth: [self.middleware.verify, self.middleware.isAuthenticated]
-    }
-  }, function (error, data) {
-    if (error) console.log(error)
-    _.forEach(data, function (m) {
-      self.debug('Route Built by NPM buildreq:', m.route)
-      self.app.use(m.route, m.app)
-    })
-  })
+  self.app.use('/agenda', /*require('./server/middleware.js').isAdmin,*/ Agendash(self.agenda))
 }
 Mean.prototype.livereload = function () {
   var self = this
@@ -509,6 +469,144 @@ Mean.prototype.livereload = function () {
     scssLessGlobalWatcher.add('./client/*/*.less')
     scssLessGlobalWatcher.add('./client/*/*.scss')
   }
+}
+
+Mean.prototype.setupRoutesMiddleware = function () {
+  var self = this
+  /**
+   * Middleware.
+   */
+  self.middleware = require('./server/middleware.js')
+  self.build = require('buildreq')(self.settings.buildreq)
+  self.app.use(self.build.queryMiddleware({mongoose: mongoose}))
+  /**
+   * Routes.
+   */
+  self.Register = require('./server/register.js')
+  self.app.use(self.build.responseMiddleware({mongoose: mongoose}))
+  self.fileStructure = self.Register({
+    app: self.app,
+    settings: self.settings,
+    middleware: self.middleware
+  })
+  /**
+   * Dynamic Routes / Manually enabling them . You can change it back to automatic in the settings
+   * build.routing(app, mongoose) - if reverting back to automatic
+   */
+
+  self.build.routing({
+    mongoose: mongoose,
+    remove: ['users'],
+    middleware: {
+      auth: [self.middleware.verify, self.middleware.isAuthenticated]
+    }
+  }, function (error, data) {
+    if (error) console.log(error)
+    _.forEach(data, function (m) {
+      self.debug('Route Built by NPM buildreq:', m.route)
+      self.app.use(m.route, m.app)
+    })
+  })
+
+  self.app.use(function (req, res, next) {
+    res.locals.user = req.user
+    if (/api/i.test(req.path)) {
+      try {
+        if (req.body.redirect) {
+          req.session.returnTo = req.body.redirect
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    next()
+  })
+}
+
+Mean.prototype.setupErrorHandling = function () {
+  var self = this
+  require('./server/error.js')(self)
+}
+Mean.prototype.setupStatic = function () {
+  var self = this
+
+  self.app.use(express.static(path.join(self.dir, 'client/'), {
+    maxAge: 31557600000
+  }))
+  if (self.environment === 'development') {
+    self.app.use('/api/v1/status', // middleware.verify  if you want the api to be behind token based
+      status({
+        app: self.app,
+        config: self.settings,
+        auth: true,
+        user: 'admin',
+        pass: 'pass',
+        extra: {
+          environment: self.environment
+        },
+        mongoose: mongoose // Now Supporting Mongoose
+      })
+    )
+  }
+  /**
+   * Primary Failover routes.
+   */
+  self.app.get('/api/*', function (req, res) {
+    res.status(400).send({
+      error: 'nothing found in api'
+    })
+  })
+  self.app.get('/bower_components/*', function (req, res) {
+    res.status(400).send({
+      error: 'nothing found in bower_components'
+    })
+  })
+  self.app.get('/images/*', function (req, res) {
+    res.status(400).send({
+      error: 'nothing found in images'
+    })
+  })
+  self.app.get('/scripts/*', function (req, res) {
+    res.status(400).send({
+      error: 'nothing found in scripts'
+    })
+  })
+  self.app.get('/styles/*', function (req, res) {
+    res.status(400).send({
+      error: 'nothing found in styles'
+    })
+  })
+  self.app.get('/uploads/*', function (req, res) {
+    res.status(400).send({
+      error: 'nothing found in uploads'
+    })
+  })
+  self.app.get('/sitemap', function (req, res) {
+    res.send(sitemap.generate(self.app))
+  })
+  /**
+   * Primary app routes.
+   */
+  self.app.get('/*', function (req, res) {
+    if (_.isUndefined(req.user)) {
+      req.user = {}
+      req.user.authenticated = false
+    } else {
+      req.user.authenticated = true
+    }
+    // took out user
+    var html = self.settings.html
+    if (self.settings.seo[req.path]) {
+      if (self.settings.seo[req.path].title) html.title = self.settings.seo[req.path].title
+      if (self.settings.seo[req.path].description) html.description = self.settings.seo[req.path].description
+      if (self.settings.seo[req.path].keywords) html.keywords = self.settings.seo[req.path].keywords
+    }
+    res.render(path.resolve('server') + '/layout/index.html', {
+      html: html,
+      assets: self.app.locals.frontendFilesFinal,
+      environment: self.environment
+    })
+  })
 }
 
 var run = require('./run.js')

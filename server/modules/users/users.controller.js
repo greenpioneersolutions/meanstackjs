@@ -1,24 +1,14 @@
 var _ = require('lodash')
 var async = require('async')
 var crypto = require('crypto')
-var nodemailer = require('nodemailer')
 var passport = require('passport')
 var mongoose = require('mongoose')
 var User = mongoose.model('users')
-
+var fs = require('fs')
+var path = require('path')
 var settings = require('../../../configs/settings.js').get()
-
-var secrets = {
-  host: 'smtp.mandrillapp.com', // Gmail, SMTP
-  port: '587',
-  auth: {
-    user: 'hackathonstarterdemo',
-    pass: 'E1K950_ydLR4mHw12a0ldA'
-  }
-}
-
+var mail = require('../../mail.js')
 var jwt = require('jsonwebtoken')
-// res.cookie('token', token)
 
 /**
  * POST /authenticate
@@ -401,24 +391,12 @@ exports.postReset = function (req, res, next) {
           })
       },
       function (user, done) {
-        var transporter = nodemailer.createTransport({
-          host: secrets.host, // Gmail, SMTP
-          port: secrets.port,
-          auth: {
-            user: secrets.auth.user,
-            pass: secrets.auth.pass
-          }
-        })
-
-        var mailOptions = {
+        mail.send({
           to: user.email,
-          from: 'MEANSTACKJS@meanstackjs.com',
-          subject: 'Your Mean Stack JS password has been changed',
-          text: 'Hello,\n\n' +
-            'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
-        }
-        transporter.sendMail(mailOptions, function (err) {
-          done(err, user)
+          subject: settings.email.templates.reset.subject,
+          text: settings.email.templates.reset.text(user.email)
+        }, function (err) {
+          done(err, 'done')
         })
       }
     ], function (err, user) {
@@ -484,24 +462,11 @@ exports.postForgot = function (req, res, next) {
       })
     },
     function (token, user, done) {
-      var transporter = nodemailer.createTransport({
-        host: secrets.host, // Gmail, SMTP
-        port: secrets.port,
-        auth: {
-          user: secrets.auth.user,
-          pass: secrets.auth.pass
-        }
-      })
-      var mailOptions = {
+      mail.send({
         to: user.email,
-        from: 'MEANSTACKJS@MEANSTACKJS.com',
-        subject: 'Reset your password on MEANSTACKJS ',
-        text: 'You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n' +
-          'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-          'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-      }
-      transporter.sendMail(mailOptions, function (err) {
+        subject: settings.email.templates.forgot.subject,
+        text: settings.email.templates.forgot.text(req.headers.host, token)
+      }, function (err) {
         done(err, 'done')
       })
     }
@@ -511,4 +476,25 @@ exports.postForgot = function (req, res, next) {
     }
     res.status(200).send({ msg: 'Email has been sent' })
   })
+}
+
+exports.postPhoto = function (req, res, next) {
+  if (req.file) {
+    var filePath = path.resolve(__dirname, '../../../client/uploads/')
+    fs.readFile(req.file.path, function (err, data) {
+      if (err) {
+        return res.status(400).send(err)
+      }
+      var createDir = filePath + '/' + req.file.originalname
+      fs.writeFile(createDir, data, function (err) {
+        if (err) {
+          return res.status(400).send(err)
+        } else {
+          return res.status(201).send()
+        }
+      })
+    })
+  } else {
+    return res.status(400).send()
+  }
 }

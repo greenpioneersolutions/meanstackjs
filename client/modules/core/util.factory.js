@@ -25,7 +25,6 @@
     }
 
     return service
-    // ///////////////////
 
     function error (message, data, title) {
       toastr.error(message, title)

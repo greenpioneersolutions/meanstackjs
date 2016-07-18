@@ -34,14 +34,6 @@ var baseLine = {
       asi: true
     }
   },
-  agendash: {
-    active: true,
-    options: {
-      db: {
-        address: 'mongodb://localhost/agendaDb'
-      }
-    }
-  },
   // Template Engine
   templateEngine: 'swig',
   // JWT Object https://github.com/auth0/node-jsonwebtoken
@@ -74,7 +66,7 @@ var baseLine = {
     keywords: 'MEAN, MEANSTACKJS, mongodb, expressjs, angularjs,nodejs, javascript',
     description: 'The Meanstack js is a opensource framework that is made for and by developers'
   },
-
+  seo: require('./seo.js'),
   // The session cookie name
   sessionName: 'connect.meanstackjs',
   title: 'MEANSTACKJS',
@@ -152,18 +144,44 @@ var baseLine = {
     }
   },
   email: {
-    welcome: {
-      subject: 'Welcome to Mean Stack JS',
-      text: function (username) {
-        return 'Hi ' + username + ',\n\n' +
-        'Thanks for signing up for Mean Stack JS.\n\n' +
-        'If you have any questions about the site, you can reply to this ' +
-        'email.\n\n' +
-        '— Mean Stack JS'
+    templates: {
+      welcome: {
+        subject: 'Welcome to Mean Stack JS',
+        text: function (username) {
+          return 'Hi ' + username + ',\n\n' +
+          'Thanks for signing up for Mean Stack JS.\n\n' +
+          'If you have any questions about the site, you can reply to this ' +
+          'email.\n\n' +
+          '— Mean Stack JS'
+        }
+      },
+      reset: {
+        subject: 'Reset your password on MEANSTACKJS ',
+        text: function (email) {
+          return 'Hello,\n\n' +
+          'This is a confirmation that the password for your account ' + email + ' has just been changed.\n'
+        }
+      },
+      forgot: {
+        subject: 'Welcome to Mean Stack JS',
+        text: function (host, token) {
+          return 'You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n' +
+          'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+          'http://' + host + '/reset/' + token + '\n\n' +
+          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+        }
       }
     },
     from: 'MEANSTACKJS@localhost.com',
-    error: 'MEANSTACKJS@localhost.com'
+    error: 'MEANSTACKJS@localhost.com',
+    connect: {
+      host: 'smtp.mandrillapp.com', // Gmail, SMTP
+      port: '587',
+      auth: {
+        user: 'hackathonstarterdemo',
+        pass: 'E1K950_ydLR4mHw12a0ldA'
+      }
+    }
   }
 }
 if (environment === 'test') {

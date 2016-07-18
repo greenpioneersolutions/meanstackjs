@@ -9,9 +9,6 @@
     "test",
     "tests"
   ],
-  "devDependencies": {
-    "angular-mocks": "^1.5.3"
-  },
   "dependencies": {
     "angular": "^1.5.3",
     "angular-sanitize": "^1.5.3",
@@ -36,6 +33,6 @@
     "angular-jwt": "^0.0.9"
   },
   "resolutions": {
-    "angular": "1.5.5"
+    "angular": "1.5.7"
   }
 }

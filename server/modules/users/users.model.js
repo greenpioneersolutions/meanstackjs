@@ -115,8 +115,8 @@ userSchema.post('save', function (user) {
   if (user.wasNew && environment === 'production') {
     var message = {}
     message.to = user.email
-    message.subject = settings.email.welcome.subject
-    message.text = settings.email.welcome.text(user.profile.name.split(' ')[0])
+    message.subject = settings.email.templates.welcome.subject
+    message.text = settings.email.templates.welcome.text(user.profile.name.split(' ')[0])
     mail.send(message, function (err) {
       if (err) throw err
     })
@@ -126,12 +126,7 @@ userSchema.post('save', function (user) {
  * Helper method for validating user's password.
  */
 userSchema.methods.comparePassword = function (candidatePassword, cb) {
-  bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
-    if (err) {
-      return cb(err)
-    }
-    cb(null, isMatch)
-  })
+  bcrypt.compare(candidatePassword, this.password, cb)
 }
 userSchema.set('toObject', {
   virtuals: true,
