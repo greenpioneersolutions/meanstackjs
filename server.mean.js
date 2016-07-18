@@ -69,15 +69,15 @@ function Mean (opts, done) {
           key: fs.readFileSync(self.settings.https.key),
           cert: fs.readFileSync(self.settings.https.cert)
         }, self.app).listen(self.settings.https.port, function () {
-          console.log('Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
-          self.debug('Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
+          console.log('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
+          self.debug('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
         })
       }
       // OR - check if you set both to false we default to turn on http
       if (self.settings.http.active || (self.settings.https.active === false) === (self.settings.http.active === false)) {
         self.app.listen(self.app.get('port'), function () {
-          console.log('Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
-          self.debug('Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
+          console.log('HTTP Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
+          self.debug('HTTP Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
         })
       }
       callback(null, {

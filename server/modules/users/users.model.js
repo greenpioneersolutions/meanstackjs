@@ -115,8 +115,8 @@ userSchema.post('save', function (user) {
   if (user.wasNew && environment === 'production') {
     var message = {}
     message.to = user.email
-    message.subject = settings.email.welcome.subject
-    message.text = settings.email.welcome.text(user.profile.name.split(' ')[0])
+    message.subject = settings.email.templates.welcome.subject
+    message.text = settings.email.templates.welcome.text(user.profile.name.split(' ')[0])
     mail.send(message, function (err) {
       if (err) throw err
     })
