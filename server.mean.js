@@ -5,11 +5,15 @@ var bodyParser = require('body-parser')
 var chalk = require('chalk')
 var chokidar = require('chokidar')
 var cookieParser = require('cookie-parser')
+var cors = require('cors')
 var compress = require('compression')
+var contentLength = require('express-content-length-validator')
 var express = require('express')
 var expressValidator = require('express-validator')
 var flash = require('express-flash')
 var fs = require('fs')
+var helmet = require('helmet')
+var hpp = require('hpp')
 var https = require('https')
 var less = require('less')
 var logger = require('morgan')
@@ -19,8 +23,9 @@ var path = require('path')
 var passport = require('passport')
 var Promise = require('bluebird')
 var sass = require('node-sass')
-var sitemap = require('express-sitemap')()
+var seo = require('mean-seo')
 var session = require('express-session')
+var sitemap = require('express-sitemap')()
 var status = require('express-system-status')
 var _ = require('lodash')
 
@@ -33,6 +38,7 @@ function Mean (opts, done) {
   self.debug = require('debug')('meanstackjs:server')
   self.setupEnv()
   self.setupExpressConfigs()
+  self.setupExpressSecurity()
   self.setupHeaders()
   if (self.settings.logger)self.setupLogger()
   if (self.settings.swagger)self.swagger()
@@ -129,10 +135,8 @@ Mean.prototype.setupExpressConfigs = function () {
    */
   self.app.set('port', self.port)
   self.app.use(compress())
-  self.app.use(bodyParser.json())
-  self.app.use(bodyParser.urlencoded({
-    extended: true
-  }))
+  self.app.use(bodyParser.json(self.settings.bodyparser.json))
+  self.app.use(bodyParser.urlencoded(self.settings.bodyparser.urlencoded))
   self.app.use(
     expressValidator({ // https://github.com/chriso/validator.js#validators
       customValidators: {
@@ -214,6 +218,46 @@ Mean.prototype.setupExpressConfigs = function () {
   passport.deserializeUser(auth.deserializeUser)
   passport.use(auth.passportStrategy)
   self.app.use(flash())
+}
+Mean.prototype.setupExpressSecurity = function () {
+  var self = this
+  // 7 security middleware
+  self.app.use(helmet(self.settings.bodyparser.helmet))
+  // 3 security middleware
+  // self.app.use(helmet.contentSecurityPolicy())
+  // self.app.use(helmet.hpkp())
+  // self.app.use(helmet.noCache())
+  // HTTP Parameter Pollution attacks
+  self.app.use(hpp())
+  // CORS
+  // var whitelist = ['http://example1.com', 'http://example2.com']
+  // var corsOptions = {
+  //   origin: function (origin, callback) {
+  //     var originIsWhitelisted = whitelist.indexOf(origin) !== -1
+  //     callback(null, originIsWhitelisted)
+  //   }
+  // }
+  // self.app.use(cors(corsOptions))
+  self.app.use(cors())
+  // CORS PREFLIGHT OPTIONS
+  // app.options('*', cors()) // include before other routes
+  // Validate MAX_CONTENT_LENGTH_ACCEPTED
+  var MAX_CONTENT_LENGTH_ACCEPTED = 9999
+  self.app.use(contentLength.validateMax({max: MAX_CONTENT_LENGTH_ACCEPTED, status: 400, message: 'Please make a small payload'}))
+// ENFORCE SSL
+// var express_enforces_ssl = require('express-enforces-ssl')
+// self.app.use(express_enforces_ssl())
+// LIMIT CALLS
+// var client = require('redis').createClient()
+// var limiter = require('express-limiter')(self.app, client)
+// limiter({
+//   path: '/api/',
+//   method: 'get',
+//   lookup: ['connection.remoteAddress'],
+//   // 150 requests per hour
+//   total: 150,
+//   expire: 1000 * 60 * 60
+// })
 }
 
 Mean.prototype.setupHeaders = function () {
@@ -584,6 +628,7 @@ Mean.prototype.setupStatic = function () {
   self.app.get('/sitemap', function (req, res) {
     res.send(sitemap.generate(self.app))
   })
+  self.app.use(seo({cacheClient: 'disk',cacheDuration: 1 * 24 * 60 * 60 * 1000}))
   /**
    * Primary app routes.
    */

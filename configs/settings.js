@@ -105,6 +105,13 @@ var baseLine = {
     // '/bower_components/font-awesome/css/font-awesome.min.css'
     ]
   },
+  bodyparser: {
+    json: {limit: '100kb'},
+    urlencoded: {limit: '100kb', extended: true}
+  },
+  helmet: {
+    // https://github.com/helmetjs/helmet
+  },
   buildreq: {
     console: true,
     response: {
