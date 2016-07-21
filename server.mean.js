@@ -23,8 +23,9 @@ var path = require('path')
 var passport = require('passport')
 var Promise = require('bluebird')
 var sass = require('node-sass')
-var sitemap = require('express-sitemap')()
+var seo = require('mean-seo')
 var session = require('express-session')
+var sitemap = require('express-sitemap')()
 var status = require('express-system-status')
 var _ = require('lodash')
 
@@ -627,6 +628,7 @@ Mean.prototype.setupStatic = function () {
   self.app.get('/sitemap', function (req, res) {
     res.send(sitemap.generate(self.app))
   })
+  self.app.use(seo({cacheClient: 'disk',cacheDuration: 1 * 24 * 60 * 60 * 1000}))
   /**
    * Primary app routes.
    */
