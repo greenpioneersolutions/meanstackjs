@@ -12,7 +12,7 @@ var fs = require('fs')
 var path = require('path')
 var shell = require('shelljs')
 var multiline = require('multiline')
-mongoose.connect(settings.db, settings.dbOptions)
+mongoose.connect(settings.mongodb.uri, settings.mongodb.options)
 mongoose.connection.on('error', function () {
   console.log('MongoDB Connection Error. Please make sure that MongoDB is running.')
   process.exit(1)
