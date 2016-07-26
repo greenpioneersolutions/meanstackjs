@@ -27,12 +27,13 @@
     "jquery": "^3.1.0",
     "moment": "^2.14.1",
     "materialize": "^0.97.7",
-    "toastr": "^2.1.1",
+    "toastr": "^2.1.2",
     "ng-file-upload": "^12.0.4",
     "socket.io-client": "~1.4.5",
     "angular-jwt": "^0.0.9"
   },
   "resolutions": {
-    "angular": "1.5.9"
+    "angular": "1.5.9",
+    "jquery": "3.1.0"
   }
 }

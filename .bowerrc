@@ -1,4 +1,4 @@
 {
   "directory": "client/bower_components",
-  "interactive": true
+  "interactive": false
 }
