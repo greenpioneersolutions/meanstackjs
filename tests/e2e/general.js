@@ -7,6 +7,13 @@ module.exports = {
       .verify.visible('.container')
       .end()
   },
+  'Localhost Check:admin': function (browser) {
+    browser
+      .url(browser.launch_url + '/admin')
+      .waitForElementVisible('body', 1000)
+      .verify.visible('.container')
+      .end()
+  },
   'Localhost Check:blog list': function (browser) {
     browser
       .url(browser.launch_url + '/blog/list')

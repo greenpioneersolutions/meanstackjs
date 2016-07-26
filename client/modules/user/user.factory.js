@@ -216,7 +216,7 @@
 
     UserClass.prototype.checkAdmin = function () {
       getAuthenticate().then(function (data) {
-        if (data.authenticated !== true && data.user.roles.indexOf('admin') === -1) {
+        if (data.authenticated !== true || data.user.roles.indexOf('admin') === -1) {
           $location.url('/')
         }
       })
@@ -224,4 +224,3 @@
     return UserFactory
   }
 }())
-

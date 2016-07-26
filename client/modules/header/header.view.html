@@ -48,7 +48,12 @@
                         <ul class="uib-dropdown-menu" aria-labelledby="simple-dropdown">
                             <li>
                                 <a id="account" href='/account'>
-                                    Your Account
+                                    Account View
+                                </a>
+                            </li>
+                            <li ng-show="vm.UserFactory.isAdmin">
+                                <a id="admin" href='/admin'>
+                                    Admin View
                                 </a>
                             </li>
                             <li>

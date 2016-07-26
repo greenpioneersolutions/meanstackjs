@@ -90,7 +90,7 @@ module.exports = {
       .setValue('input[type=email]', 'jason@greenpioneersolutions.com')
       .setValue('input[type=password]', 'truetr1!')
       .click('button[type=submit]')
-      .pause(2000)
+      .pause(1000)
       .waitForElementVisible('#toast-container', 2000)
       .assert.containsText('#toast-container', 'Invalid email or password.')
       .end()
