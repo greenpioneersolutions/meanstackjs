@@ -54,7 +54,7 @@ function Mean (opts, done) {
   async.parallel({
     connectMongoDb: function (callback) {
       mongoose.Promise = Promise
-      mongoose.set('debug', self.environment === 'production')
+      mongoose.set('debug', self.environment !== 'production')
       mongoose.connect(self.settings.mongodb.uri, self.settings.mongodb.options)
       mongoose.connection.on('error', function (err) {
         console.log('MongoDB Connection Error. Please make sure that MongoDB is running.')
@@ -628,7 +628,7 @@ Mean.prototype.setupStatic = function () {
   self.app.get('/sitemap', function (req, res) {
     res.send(sitemap.generate(self.app))
   })
-  self.app.use(seo({cacheClient: 'disk',cacheDuration: 1 * 24 * 60 * 60 * 1000}))
+  self.app.use(seo({cacheClient: 'disk', cacheDuration: 1 * 24 * 60 * 60 * 1000}))
   /**
    * Primary app routes.
    */
