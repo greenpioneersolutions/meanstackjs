@@ -108,6 +108,62 @@ Register.prototype.info = function () {
   debug('end Info')
 }
 
+Register.prototype.directories = function () {
+  debug('started directories')
+
+  var self = this
+  function rmdirAsync (url) {
+    if (fs.existsSync(url)) {
+      fs.readdirSync(url).forEach(function (file, index) {
+        var curPath = path.resolve(url + '/' + file)
+        if (fs.lstatSync(curPath).isDirectory()) { // recurse
+          //
+        } else { // delete file
+          fs.unlinkSync(curPath)
+        }
+      })
+    // fs.rmdirSync(url)
+    }
+  }
+  // CHECK AND MAKE DIRECTORY
+  if (self.settings.babel.active) {
+    debug('checking babel directories')
+    // if (!fs.existsSync(self.dir + '/../client/' + self.settings.babel.folder + '/')) {
+    //   fs.mkdirSync(self.dir + '/../client/' + self.settings.babel.folder + '/')
+    // }
+    // rmdirAsync(self.dir + '/../client/' + self.settings.babel.folder + '/')
+    if (!fs.existsSync(self.dir + '/' + self.settings.babel.folder + '/')) {
+      fs.mkdirSync(self.dir + '/' + self.settings.babel.folder + '/')
+    } else {
+      rmdirAsync(self.dir + '/' + self.settings.babel.folder + '/')
+    }
+    _.forEach(_.uniq(self.transformFolders), function (n) {
+      if (!fs.existsSync(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')) {
+        fs.mkdirSync(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')
+      } else {
+        rmdirAsync(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')
+      }
+    })
+  }
+  // added in sytels comipeld  like line 200
+  if (!fs.existsSync(self.dir + '/../client/scripts/')) {
+    fs.mkdirSync(self.dir + '/../client/scripts/')
+  }
+  if (!fs.existsSync(self.dir + '/../client/styles/compiled/')) {
+    fs.mkdirSync(self.dir + '/../client/styles/compiled/')
+  }
+  if (!fs.existsSync(self.dir + '/../client/scripts/compiled/')) {
+    fs.mkdirSync(self.dir + '/../client/scripts/compiled/')
+  }
+  if (!fs.existsSync(self.dir + '/../client/uploads/')) {
+    fs.mkdirSync(self.dir + '/../client/uploads/')
+  }
+  // DELETE ALL PREVIOUSLY COMPILED
+  rmdirAsync(self.dir + '/../client/styles/compiled/')
+  rmdirAsync(self.dir + '/../client/scripts/compiled/')
+  debug('end directories')
+}
+
 Register.prototype.config = function (opts) {
   debug('started config')
 
@@ -255,61 +311,6 @@ Register.prototype.config = function (opts) {
   })
 
   debug('end config')
-}
-Register.prototype.directories = function () {
-  debug('started directories')
-
-  var self = this
-  function rmdirAsync (url) {
-    if (fs.existsSync(url)) {
-      fs.readdirSync(url).forEach(function (file, index) {
-        var curPath = path.resolve(url + '/' + file)
-        if (fs.lstatSync(curPath).isDirectory()) { // recurse
-          //
-        } else { // delete file
-          fs.unlinkSync(curPath)
-        }
-      })
-    // fs.rmdirSync(url)
-    }
-  }
-  // CHECK AND MAKE DIRECTORY
-  if (self.settings.babel.active) {
-    debug('checking babel directories')
-    // if (!fs.existsSync(self.dir + '/../client/' + self.settings.babel.folder + '/')) {
-    //   fs.mkdirSync(self.dir + '/../client/' + self.settings.babel.folder + '/')
-    // }
-    // rmdirAsync(self.dir + '/../client/' + self.settings.babel.folder + '/')
-    if (!fs.existsSync(self.dir + '/' + self.settings.babel.folder + '/')) {
-      fs.mkdirSync(self.dir + '/' + self.settings.babel.folder + '/')
-    } else {
-      rmdirAsync(self.dir + '/' + self.settings.babel.folder + '/')
-    }
-    _.forEach(_.uniq(self.transformFolders), function (n) {
-      if (!fs.existsSync(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')) {
-        fs.mkdirSync(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')
-      } else {
-        rmdirAsync(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')
-      }
-    })
-  }
-  // added in sytels comipeld  like line 200
-  if (!fs.existsSync(self.dir + '/../client/scripts/')) {
-    fs.mkdirSync(self.dir + '/../client/scripts/')
-  }
-  if (!fs.existsSync(self.dir + '/../client/styles/compiled/')) {
-    fs.mkdirSync(self.dir + '/../client/styles/compiled/')
-  }
-  if (!fs.existsSync(self.dir + '/../client/scripts/compiled/')) {
-    fs.mkdirSync(self.dir + '/../client/scripts/compiled/')
-  }
-  if (!fs.existsSync(self.dir + '/../client/uploads/')) {
-    fs.mkdirSync(self.dir + '/../client/uploads/')
-  }
-  // DELETE ALL PREVIOUSLY COMPILED
-  rmdirAsync(self.dir + '/../client/styles/compiled/')
-  rmdirAsync(self.dir + '/../client/scripts/compiled/')
-  debug('end directories')
 }
 
 Register.prototype.transform = function () {

@@ -3,6 +3,9 @@ var multer = require('multer')
 var upload = multer({ dest: 'client/uploads/' })
 
 module.exports = function (app, auth, mail, settings) {
+  // ADMIN
+  app.get('/api/users', auth.isAdmin, user.getUsers)
+  // USER
   app.post('/api/photos/upload', upload.single('file'), user.postPhoto)
   app.post('/api/authenticate', user.postAuthenticate)
   app.get('/api/authenticate', user.getAuthenticate)

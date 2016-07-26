@@ -10,6 +10,16 @@ var settings = require('../../../configs/settings.js').get()
 var mail = require('../../mail.js')
 var jwt = require('jsonwebtoken')
 
+exports.getUsers = function (req, res, next) {
+  User
+    .find({})
+    .select('-password')
+    .exec(function (err, users) {
+      if (err)next(err)
+      res.send(users)
+    })
+}
+
 /**
  * POST /authenticate
  * Authenticate Token.
