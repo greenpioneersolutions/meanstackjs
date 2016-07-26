@@ -1,9 +1,7 @@
-module.exports = {report: Plato}
-
 var plato = require('plato')
 var path = require('path')
 
-function Plato (opts) {
+exports.report = function (opts) {
   var files = [
     path.join(__dirname, '../*.js'),
     path.join(__dirname, '../client/*.js'),

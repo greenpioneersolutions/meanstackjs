@@ -201,14 +201,10 @@ if (environment === 'test') {
   baseLine = _.merge(baseLine, require('./environments/development.js'))
 }
 
-module.exports = {
-  set: set,
-  get: get
-}
-function get (env) {
+exports.get = function (env) {
   return baseLine
 }
-function set (identifer, value) {
+exports.set = function (identifer, value) {
   baseLine[identifer] = value
   return baseLine
 }
