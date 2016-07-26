@@ -19,4 +19,4 @@ var __name__Schema = mongoose.Schema({
   }
 })
 
-module.exports = __name__
+module.exports = __name__Schema

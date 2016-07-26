@@ -28,6 +28,7 @@ function seed (cb) {
       User.create([{
         email: 'jason@greenpioneersolutions.com',
         password: 'truetrue1!',
+        roles: ['admin'],
         profile: {
           name: 'jason greenpioneer'
         }

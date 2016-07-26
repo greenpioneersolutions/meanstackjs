@@ -1,8 +1,17 @@
-'use strict'
+#[Check Most Recent Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
 
-var path = require('path')
-var _ = require('lodash')
-var environment = require('../server/environment.js').get()
+### Settings.js
+
+``` javascript
+self.settings = require('./configs/settings.js').get()
+self.settings = require('./configs/settings.js').set({
+  'swagger':false
+})
+```
+
+Note: assets are in reverse order of which there loaded
+
+``` javascript
 var baseLine = {
   env: environment,
   // Root path of server
@@ -191,20 +200,86 @@ var baseLine = {
     }
   }
 }
-if (environment === 'test') {
-  baseLine = _.merge(baseLine, require('./environments/test.js'))
-} else if (environment === 'production') {
-  baseLine = _.merge(baseLine, require('./environments/production.js'))
-} else if (environment === 'nightwatch') {
-  baseLine = _.merge(baseLine, require('./environments/nightwatch.js'))
-} else {
-  baseLine = _.merge(baseLine, require('./environments/development.js'))
+```
+
+
+### Environment.js
+
+``` javascript
+self.environment = require('./server/environment.js').get()
+self.environment = require('./server/environment.js').set('development')
+// or by CMD
+export NODE_ENV=test // LINUX
+set NODE_ENE=test // WINDOWS
+```
+
+### Configs are based off env
+
+``` javascript
+// Production example
+module.exports = {
+  html: {
+    title: 'MEANSTACKJS'
+  },
+  logger: 'combined',
+  buildreq: {
+    console: false
+  },
+  mongoexpress: {
+    port: process.env.MONGOEXPRESSPORT || 8081
+  },
+  socketio: {
+    port: process.env.SOCKETIOPORT || 8282
+  },
+  http: {
+    active: true,
+    port: process.env.PORT || 80
+  },
+  https: {
+    active: true,
+    port: process.env.HTTPSPORT || 843,
+    key: './configs/certificates/keyExample.pem',
+    cert: './configs/certificates/certExample.pem'
+  },
+  mongodb: {
+    uri: 'mongodb://' + (process.env.DB_PORT_27017_TCP_ADDR || process.env.MONGODB || process.env.MONGOLAB_URI || 'localhost') + '/prod',
+    db: 'dev',
+    host: process.env.DB_HOST || 'localhost',
+    password: process.env.DB_PASSWORD || '',
+    port: process.env.DB_PORT_27017 || 27017,
+    ssl: false,
+    username: process.env.DB_USERNAME || '',
+    /**
+   * Database options that will be passed directly to mongoose.connect
+   * Below are some examples.
+   * See http://mongodb.github.io/node-mongodb-native/driver-articles/mongoclient.html#mongoclient-connect-options
+   * and http://mongoosejs.com/docs/connections.html for more information
+   */
+    options: {
+      // server: {
+      //   socketOptions: {
+      //     keepAlive: 1
+      //   },
+      //   poolSize: 5
+      // },
+      // replset: {
+      //   rs_name: 'myReplicaSet',
+      //   poolSize: 5
+      // },
+      db: {
+        w: 1,
+        numberOfRetries: 2
+      }
+    }
+  },
+  agendash: {
+    active: true,
+    options: {
+      db: {
+        address: 'mongodb://' + (process.env.DB_PORT_27017_TCP_ADDR || process.env.MONGODB || process.env.MONGOLAB_URI || 'localhost') + '/prod'
+      }
+    }
+  }
 }
 
-exports.get = function (env) {
-  return baseLine
-}
-exports.set = function (identifer, value) {
-  baseLine[identifer] = value
-  return baseLine
-}
+```

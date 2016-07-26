@@ -14,7 +14,7 @@ function findUser (id, cb) {
   })
 }
 
-function isAuthenticated (req, res, next) {
+exports.isAuthenticated = function (req, res, next) {
   if (req.isAuthenticated()) {
     debug('middleware: isAuthenticated')
     return next()
@@ -25,7 +25,7 @@ function isAuthenticated (req, res, next) {
     })
   }
 }
-function isAdmin (req, res, next) {
+exports.isAdmin = function (req, res, next) {
   if (req.isAuthenticated()) {
     debug('middleware: isAdmin')
     findUser(req.user._id, function (user) {
@@ -41,7 +41,7 @@ function isAdmin (req, res, next) {
     })
   }
 }
-function isMongoId (req, res, next) {
+exports.isMongoId = function (req, res, next) {
   if ((_.size(req.params) === 1) && (!mongoose.Types.ObjectId.isValid(_.values(req.params)[0]))) {
     debug('middleware Not Mongo ID: ' + _.values(req.params)[0])
     return res.status(500).send({success: false, msg: 'Parameter passed is not a valid Mongo ObjectId'})
@@ -49,7 +49,7 @@ function isMongoId (req, res, next) {
   next()
 }
 
-function verify (req, res, next) {
+exports.verify = function (req, res, next) {
   var User = mongoose.model('users')
   try {
     var token = getToken(req.headers)
@@ -104,13 +104,4 @@ function getToken (headers) {
   } else {
     return null
   }
-}
-
-module.exports = exports = {
-  findUser: findUser,
-  isAuthenticated: isAuthenticated,
-  isAdmin: isAdmin,
-  isMongoId: isMongoId,
-  verify: verify,
-  getToken: getToken
 }
