@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>Users</h4>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Roles</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="(key, value) in vm.admins | limitTo:10">
+                            <th scope="row">{{$index + 1}}</th>
+                            <td>
+                                <img width="50" ng-src="{{value.gravatar}}">
+                                <span>{{value.profile.name}}</span>                            
+                            </td>
+                            <td> 
+                                <div ng-repeat="role in value.roles">{{role}}</div>
+                            </td>
+                            
+                            <td>
+                                <span>{{value.email}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

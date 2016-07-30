@@ -1,37 +1,63 @@
-<div class="container" ng-init="vm.list()">
-	<div class="row">
-        <div class="col-md-12">
-            <h1>Admin View</h1>
+<div class="container-fluid" ng-init="vm.list()">
+    <div class="row">
+
+
+        
+
+        <br>
+        <div class="col-sm-3">
+            <!-- Left column -->
+
+            <ul class="nav nav-stacked">
+                <li class="nav-header"> <a href="#" data-toggle="collapse" data-target="#userMenu">Settings <i class="glyphicon glyphicon-chevron-down"></i></a>
+                    <ul class="nav nav-stacked collapse in" id="userMenu">
+                        <li class="active"> 
+                            <a ng-click="vm.include ='modules/admin/home.view.html'"><i class="glyphicon glyphicon-home"></i> Home</a>
+                        </li>
+                        <li>
+                            <a ng-click="vm.include ='modules/admin/messages.view.html'"><i class="glyphicon glyphicon-envelope"></i> Messages <span class="badge badge-info">4</span></a>
+                        </li>
+                        <li>
+                            <a ng-click="vm.include ='modules/admin/options.view.html'"><i class="glyphicon glyphicon-cog"></i> Options</a>
+                        </li>
+                        <li>
+                            <a ng-click="vm.include ='modules/admin/users.view.html'"><i class="glyphicon glyphicon-user"></i> Users</a>
+                        </li>
+                        <li>
+                            <a ng-click="vm.include ='modules/admin/transactions.view.html'"><i class="glyphicon glyphicon-flag"></i> Transactions</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-header"> <a href="#" data-toggle="collapse" data-target="#menu2"> Reports <i class="glyphicon glyphicon-chevron-right"></i></a>
+
+                    <ul class="nav nav-stacked collapse" id="menu2">
+                        <li><a href="#">Information &amp; Stats</a>
+                        </li>
+                        <li><a href="#">Views</a>
+                        </li>
+                        <li><a href="#">Requests</a>
+                        </li>
+                        <li><a href="#">Timetable</a>
+                        </li>
+                        <li><a href="#">Alerts</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-header">
+                    <a href="#" data-toggle="collapse" data-target="#menu3"> Social Media <i class="glyphicon glyphicon-chevron-right"></i></a>
+                    <ul class="nav nav-stacked collapse" id="menu3">
+                        <li><a href=""><i class="glyphicon glyphicon-circle"></i> Facebook</a></li>
+                        <li><a href=""><i class="glyphicon glyphicon-circle"></i> Twitter</a></li>
+                    </ul>
+                </li>
+            </ul>
+
         </div>
+        <!-- /col-3 -->
+        <div class="col-sm-9">
+            <div ng-init="vm.include = 'modules/admin/home.view.html' " ng-include="vm.include"></div>
+        </div>
+        <!--/col-span-9-->
     </div>
-	<div class="row">
-	    <div class="col-md-12 ">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Roles</th>
-                        <th>Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="(key, value) in vm.admins">
-                        <th scope="row">{{$index + 1}}</th>
-                        <td>
-                            <img width="50" ng-src="{{value.gravatar}}">
-                            <span>{{value.profile.name}}</span>                            
-                        </td>
-                        <td> 
-                            <div ng-repeat="role in value.roles">{{role}}</div>
-                        </td>
-                        
-                        <td>
-                            <span>{{value.email}}</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-	    </div>
-	 </div>
 </div>
+<!-- /Main -->
