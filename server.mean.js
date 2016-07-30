@@ -1,6 +1,6 @@
 module.exports = Mean
 var auth = require('./server/passport.js')
-var async = require('async')
+var auto = require('run-auto')
 var bodyParser = require('body-parser')
 var chalk = require('chalk')
 var chokidar = require('chokidar')
@@ -51,7 +51,7 @@ function Mean (opts, done) {
   self.setupRoutesMiddleware()
   self.setupErrorHandling()
   self.setupStatic()
-  async.parallel({
+  auto({
     connectMongoDb: function (callback) {
       mongoose.Promise = Promise
       mongoose.set('debug', self.settings.mongodb.debug)

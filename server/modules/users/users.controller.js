@@ -1,5 +1,5 @@
 var _ = require('lodash')
-var async = require('async')
+var auto = require('run-auto')
 var crypto = require('crypto')
 var passport = require('passport')
 var mongoose = require('mongoose')
@@ -375,8 +375,8 @@ exports.postReset = function (req, res, next) {
     // req.flash('errors', errors)
     return res.status(400).send({msg: errors})
   } else {
-    async.waterfall([
-      function (done) {
+    auto({
+      user: function (callback) {
         User
           .findOne({ resetPasswordToken: req.params.token })
           .where('resetPasswordExpires').gt(Date.now())
@@ -395,21 +395,21 @@ exports.postReset = function (req, res, next) {
                 return next(err)
               }
               req.logIn(user, function (err) {
-                done(err, user)
+                callback(err, user)
               })
             })
           })
       },
-      function (user, done) {
+      sendEmail: ['user', function (results, callback) {
         mail.send({
-          to: user.email,
+          to: results.user.email,
           subject: settings.email.templates.reset.subject,
-          text: settings.email.templates.reset.text(user.email)
+          text: settings.email.templates.reset.text(results.user.email)
         }, function (err) {
-          done(err, 'done')
+          callback(err, true)
         })
-      }
-    ], function (err, user) {
+      }]
+    }, function (err, user) {
       if (err) {
         return next(err)
       }
@@ -449,14 +449,14 @@ exports.postForgot = function (req, res, next) {
     return res.status(400).send(errors)
   }
 
-  async.waterfall([
-    function (done) {
+  auto({
+    token: function (done) {
       crypto.randomBytes(16, function (err, buf) {
         var token = buf.toString('hex')
         done(err, token)
       })
     },
-    function (token, done) {
+    user: ['token', function (results, callback) {
       User.findOne({ email: req.body.email.toLowerCase() }, function (err, user) {
         if (err) {
           return res.status(400).send(err)
@@ -464,23 +464,23 @@ exports.postForgot = function (req, res, next) {
         if (!user) {
           return res.status(200).send('/forgot')
         }
-        user.resetPasswordToken = token
+        user.resetPasswordToken = results.token
         user.resetPasswordExpires = Date.now() + 3600000 // 1 hour
         user.save(function (err) {
-          done(err, token, user)
+          callback(err, user)
         })
       })
-    },
-    function (token, user, done) {
+    }],
+    sendEmail: ['user', function (results, callback) {
       mail.send({
-        to: user.email,
+        to: results.user.email,
         subject: settings.email.templates.forgot.subject,
-        text: settings.email.templates.forgot.text(req.headers.host, token)
+        text: settings.email.templates.forgot.text(req.headers.host, results.token)
       }, function (err) {
-        done(err, 'done')
+        callback(err, true)
       })
-    }
-  ], function (err) {
+    }]
+  }, function (err) {
     if (err) {
       return next(err)
     }
