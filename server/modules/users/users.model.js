@@ -5,6 +5,7 @@ var settings = require('../../../configs/settings.js').get()
 var environment = require('../../environment.js').get()
 var mail = require('../../mail.js')
 var validate = require('mongoose-validator')
+var timestamps = require('mongoose-timestamp')
 
 var userSchema = new mongoose.Schema({
   email: {
@@ -160,5 +161,5 @@ userSchema.pre('validate', function (next) {
   if (typeof self.profile.name === 'string') self.profile.name = self.profile.name.trim()
   next()
 })
-
+userSchema.plugin(timestamps)
 module.exports = userSchema

@@ -108,6 +108,7 @@
     "mongodb-backup": "^1.6.1",
     "mongodb-restore": "^1.5.3",
     "mongoose": "^4.2.7",
+    "mongoose-timestamp": "^0.6.0",
     "mongoose-validator": "^1.2.4",
     "morgan": "^1.6.1",
     "multer": "^1.1.0",
