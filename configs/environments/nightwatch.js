@@ -17,7 +17,7 @@ module.exports = {
     port: process.env.PORT || 3002
   },
   https: {
-    active: true,
+    active: false,
     port: process.env.HTTPSPORT || 3243,
     key: './configs/certificates/keyExample.pem',
     cert: './configs/certificates/certExample.pem'
@@ -31,6 +31,7 @@ module.exports = {
     port: process.env.DB_PORT_27017 || 27017,
     ssl: false,
     username: process.env.DB_USERNAME || '',
+    debug: false,
     /**
    * Database options that will be passed directly to mongoose.connect
    * Below are some examples.
