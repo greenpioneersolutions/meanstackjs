@@ -3,6 +3,7 @@ module.exports = {
     title: 'Nightwatch E2E MEANSTACKJS'
   },
   logger: false,
+  cdn: process.env.CDN || false,
   buildreq: {
     console: false
   },

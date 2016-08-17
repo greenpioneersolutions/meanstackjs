@@ -196,6 +196,8 @@ Register.prototype.config = function (opts) {
     css: [],
     js: []
   }
+
+  fs.writeFileSync(path.join(self.dir, '/../client/styles/global-configs.styles.scss'), '$ENV: "' + self.environment + '" !default;\n' + '$CDN: "' + self.settings.cdn + '" !default;\n')
   _.forEach(self.frontendFolders, function (r) {
     _.forEach(r.files, function (j) {
       // Use for Babel when the front end is implemented

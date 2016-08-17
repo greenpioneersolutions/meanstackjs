@@ -3,6 +3,7 @@ module.exports = {
     title: 'MEANSTACKJS'
   },
   logger: 'combined',
+  cdn: process.env.CDN || false,
   buildreq: {
     console: false
   },
