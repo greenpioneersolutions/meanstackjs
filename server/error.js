@@ -10,6 +10,9 @@ function errorMiddleware (self) {
     if (err.message) {
       message = {message: err.message}
     }
+    if (err.name === 'ValidationError') {
+      err.status = 400
+    }
     if (typeof err.status === 'number') {
       code = err.status
     }

@@ -1,6 +1,6 @@
 module.exports = Mean
 var auth = require('./server/passport.js')
-var async = require('async')
+var auto = require('run-auto')
 var bodyParser = require('body-parser')
 var chalk = require('chalk')
 var chokidar = require('chokidar')
@@ -17,6 +17,7 @@ var hpp = require('hpp')
 var https = require('https')
 var less = require('less')
 var logger = require('morgan')
+var MaxCDN = require('maxcdn')
 var methodOverride = require('method-override')
 var mongoose = require('mongoose')
 var path = require('path')
@@ -51,10 +52,11 @@ function Mean (opts, done) {
   self.setupRoutesMiddleware()
   self.setupErrorHandling()
   self.setupStatic()
-  async.parallel({
+  if (self.settings.maxcdn.zoneId)self.purgeMaxCdn()
+  auto({
     connectMongoDb: function (callback) {
       mongoose.Promise = Promise
-      mongoose.set('debug', self.environment !== 'production')
+      mongoose.set('debug', self.settings.mongodb.debug)
       mongoose.connect(self.settings.mongodb.uri, self.settings.mongodb.options)
       mongoose.connection.on('error', function (err) {
         console.log('MongoDB Connection Error. Please make sure that MongoDB is running.')
@@ -651,6 +653,26 @@ Mean.prototype.setupStatic = function () {
       assets: self.app.locals.frontendFilesFinal,
       environment: self.environment
     })
+  })
+}
+Mean.prototype.purgeMaxCdn = function () {
+  var self = this
+  var maxcdn = new MaxCDN(
+    self.settings.maxcdn.companyAlias,
+    self.settings.maxcdn.consumerKey,
+    self.settings.maxcdn.consumerSecret
+  )
+  // secret.maxcdn.zoneId ||
+  maxcdn.del('zones/pull.json/' + self.settings.maxcdn.zoneId + '/cache', function (err, res) {
+    console.log('MAXCDN: STATUS')
+    if (err) {
+      console.error('PURGE ERROR: ', err.stack || err.message || err)
+      return
+    } else if (res.code !== 200) {
+      console.error('PURGE ERROR: ', res.code)
+      return
+    }
+    console.log('PURGE SUCCESS')
   })
 }
 

@@ -38,6 +38,7 @@ function Register (opts, done) {
   self.createGlobalStyle()
   self.createFrontend()
   self.env()
+  self.cdn()
   return self.frontendFiles
 }
 
@@ -196,6 +197,8 @@ Register.prototype.config = function (opts) {
     css: [],
     js: []
   }
+
+  fs.writeFileSync(path.join(self.dir, '/../client/styles/global-configs.styles.scss'), '$ENV: "' + self.environment + '" !default;\n' + '$CDN: "' + self.settings.cdn + '" !default;\n')
   _.forEach(self.frontendFolders, function (r) {
     _.forEach(r.files, function (j) {
       // Use for Babel when the front end is implemented
@@ -421,4 +424,24 @@ Register.prototype.env = function () {
     self.app.locals.frontendFilesFinal = self.frontendFilesFinal
   }
   debug('end env')
+}
+
+Register.prototype.cdn = function () {
+  debug('started cdn')
+
+  var self = this
+  if (self.settings.cdn) {
+    var FilesFinal = {
+      js: [],
+      css: []
+    }
+    _.forEach(self.app.locals.frontendFilesFinal, function (type, typeKey) {
+      _.forEach(type, function (n) {
+        FilesFinal[typeKey].push(self.settings.cdn + n)
+      })
+    })
+
+    self.app.locals.frontendFilesFinal = FilesFinal
+  }
+  debug('end cdn')
 }

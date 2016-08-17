@@ -2,7 +2,20 @@ describe('USER Testing', function () {
   var UserFactory
   var $httpBackend
   var authResponse = {
-    user: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwcm9maWxlIjp7ImdlbmRlciI6Ik1hbGUiLCJsb2NhdGlvbiI6IkludGVybmF0aW9uYWwiLCJ3ZWJzaXRlIjoiZ29vZ2xlLmNvbSIsInBpY3R1cmUiOiIiLCJuYW1lIjoiVGVzdCBVc2VyIn0sInJvbGVzIjpbXSwiZ3JhdmF0YXIiOiJodHRwczovL2dyYXZhdGFyLmNvbS9hdmF0YXIvZDViYjRmZmZmYTZhMzI0MjhjN2UzMTBjMzQxYjRmN2I_cz0yMDAmZD1yZXRybyIsImVtYWlsIjoidGVzdEB1c2VyLmNvbSIsIl9pZCI6IjU3MTdhMmQ1MGI1ZTQ0YWE1ZTU0NjQ4YiIsImlhdCI6MTQ2MTE2NzQ5NSwiZXhwIjoxNDYxMTc0Njk1fQ.tsAiRGB-lUhnD70XXtliNsTzQj3gKLA0a28yTJWoo8c'
+    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Nzk2ZDYyYzUyNDA4ZWRjMDRjYTM4ZTciLCJpYXQiOjE0NzE0MDg3MDgsImV4cCI6MTQ3MTQxNTkwOH0.hBZqRf7fapH74H9FAfb3GC0IHHNYe6lV_ydd-SrmUe4',
+    user: {
+      'profile': {
+        'gender': 'Male',
+        'location': 'International',
+        'website': 'google.com',
+        'picture': '',
+        'name': 'Test User'
+      },
+      'roles': [],
+      'gravatar': 'https://gravatar.com/avatar/d5bb4ffffa6a32428c7e310c341b4f7b?s=200&d=retro',
+      'email': 'test@user.com',
+      '_id': '5717a2d50b5e44aa5e54648b'
+    }
   }
   var credentials = {
     loginCred: {

@@ -73,7 +73,7 @@
             var msg = 'Error routing to ' + destination + '. '
             if (error.data && error.statusText) {
               msg += (error.data || '') + '. \n' + (error.statusText || '') +
-              ': ' + (error.status || '')
+                ': ' + (error.status || '')
             }
 
             logger.warning(msg, [toState])
@@ -126,11 +126,12 @@
   extendExceptionHandler.$inject = ['$delegate', 'exceptionHandler', 'logger']
   function extendExceptionHandler ($delegate, exceptionHandler, logger) {
     return function (exception, cause) {
+      var exceptions = exception
       var appErrorPrefix = exceptionHandler.config.appErrorPrefix || ''
-      var errorData = {exception: exception, cause: cause}
-      exception.message = appErrorPrefix + exception.message
-      $delegate(exception, cause)
-      logger.error(exception.message, errorData)
+      var errorData = {exception: exceptions, cause: cause}
+      exceptions.message = appErrorPrefix + exceptions.message
+      $delegate(exceptions, cause)
+      logger.error(exceptions.message, errorData)
     }
   }
 })()

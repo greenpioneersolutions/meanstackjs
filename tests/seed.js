@@ -1,5 +1,6 @@
 module.exports = seed
 var mongoose = require('mongoose')
+var auto = require('run-auto')
 var async = require('async')
 var User = mongoose.model('users')
 var Blog = mongoose.model('blog')
@@ -7,7 +8,7 @@ var Blog = mongoose.model('blog')
 function seed (cb) {
   async.waterfall([
     function (callback) {
-      async.parallel({
+      auto({
         User: function (callback) {
           User.find({}).remove().exec(function () {
             callback(null, true)

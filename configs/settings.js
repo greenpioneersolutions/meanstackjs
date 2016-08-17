@@ -61,6 +61,11 @@ var baseLine = {
     // at all. The cookie will expunge when the browser is closed.
     maxAge: null
   },
+  maxcdn: {
+    companyAlias: process.env.MAXCDN_COMPANY_ALIAS || '',
+    consumerKey: process.env.MAXCDN_CONSUMER_KEY || '',
+    consumerSecret: process.env.MAXCDN_CONSUMER_SECRET || ''
+  },
   html: {
     googleAnalytics: 'UA-71654331-1',
     keywords: 'MEAN, MEANSTACKJS, mongodb, expressjs, angularjs,nodejs, javascript',

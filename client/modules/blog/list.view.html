@@ -17,7 +17,7 @@
         </span>
         
         <p class="blog-post-meta">
-          by {{value.user.firstName}} {{value.user.lastName}} - {{value.created |date:'medium'}}
+          by {{value.user.profile.name}} - {{value.created |date:'medium'}}
         </p>
         
         <div>{{value.content}}</div>

@@ -5,6 +5,7 @@ var settings = require('../../../configs/settings.js').get()
 var environment = require('../../environment.js').get()
 var mail = require('../../mail.js')
 var validate = require('mongoose-validator')
+var timestamps = require('mongoose-timestamp')
 
 var userSchema = new mongoose.Schema({
   email: {
@@ -77,6 +78,10 @@ var userSchema = new mongoose.Schema({
       default: ''
     }
   },
+  lastLoggedIn: {
+    type: Date,
+    default: Date.now
+  },
   resetPasswordToken: {
     type: String
   },
@@ -126,7 +131,16 @@ userSchema.post('save', function (user) {
  * Helper method for validating user's password.
  */
 userSchema.methods.comparePassword = function (candidatePassword, cb) {
-  bcrypt.compare(candidatePassword, this.password, cb)
+  var user = this
+  bcrypt.compare(candidatePassword, this.password, function (err, res) {
+    if (res) {
+      user.lastLoggedIn = Date.now()
+      user.save(function (err) {
+        console.log(err, 'err')
+      })
+    }
+    cb(err, res)
+  })
 }
 userSchema.set('toObject', {
   virtuals: true,
@@ -160,5 +174,5 @@ userSchema.pre('validate', function (next) {
   if (typeof self.profile.name === 'string') self.profile.name = self.profile.name.trim()
   next()
 })
-
+userSchema.plugin(timestamps)
 module.exports = userSchema

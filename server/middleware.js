@@ -73,7 +73,7 @@ exports.verify = function (req, res, next) {
           }
         } else {
           User.findOne({
-            email: decoded.email
+            _id: decoded._id
           }, function (err, user) {
             if (err) throw err
             if (!user) {
