@@ -7,8 +7,6 @@ function errorMiddleware (self) {
   self.app.use(function (err, req, res, next) {
     var code = 500
     var message = err
-    console.log(typeof err)
-    console.log(err)
     if (err.message) {
       message = {message: err.message}
     }
