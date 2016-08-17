@@ -3,8 +3,11 @@
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![Build Status](https://travis-ci.org/greenpioneersolutions/meanstackjs.svg?branch=master)](https://travis-ci.org/greenpioneersolutions/meanstackjs)
 [![Join the chat at https://gitter.im/greenpioneersolutions/meanstackjs](https://badges.gitter.im/greenpioneersolutions/meanstackjs.svg)](https://gitter.im/greenpioneersolutions/meanstackjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Codewake](https://www.codewake.com/badges/codewake2.svg)](https://www.codewake.com/p/meanstackjs)
+[![Get help on Codementor](https://cdn.codementor.io/badges/get_help_github.svg)](https://www.codementor.io/jasonhumphrey?utm_source=github&utm_medium=button&utm_term=jasonhumphrey&utm_campaign=github)
+[![Donatee](https://img.shields.io/badge/paypal-donate-blue.svg)](https://paypal.me/greenpioneer)
 [![meanstackjs Logo](http://meanstackjs.com/images/logo/header3x.png)](http://meanstackjs.com/)
------------------
+
 
 #[Check Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
 

@@ -1,5 +1,5 @@
 var _ = require('lodash')
-var async = require('async')
+var auto = require('run-auto')
 var crypto = require('crypto')
 var passport = require('passport')
 var mongoose = require('mongoose')
@@ -34,7 +34,7 @@ exports.postAuthenticate = function (req, res, next) {
       success: false,
       authenticated: false,
       msg: errors[0].msg,
-      redirect: redirect
+      redirect: '/signin'
     })
   } else {
     User.findOne({
@@ -57,16 +57,19 @@ exports.postAuthenticate = function (req, res, next) {
               }
               delete user['password']
               var token = jwt.sign({
-                profile: user.profile,
-                roles: user.roles,
-                gravatar: user.gravatar,
-                email: user.email,
                 _id: user._id
               }, settings.jwt.secret, settings.jwt.options) // good for two hours
               res.cookie('token', token)
               res.json({
                 success: true,
                 authenticated: true,
+                user: {
+                  profile: user.profile,
+                  roles: user.roles,
+                  gravatar: user.gravatar,
+                  email: user.email,
+                  _id: user._id
+                },
                 token: 'JWT ' + token,
                 redirect: redirect
               })
@@ -93,14 +96,17 @@ exports.getAuthenticate = function (req, res) {
   var redirect = req.body.redirect || false
   if (req.user) {
     var token = jwt.sign({
-      profile: req.user.profile,
-      roles: req.user.roles,
-      gravatar: req.user.gravatar,
-      email: req.user.email,
       _id: req.user._id
     }, settings.jwt.secret, settings.jwt.options)
     return res.status(200).send({
-      user: token,
+      user: {
+        profile: req.user.profile,
+        roles: req.user.roles,
+        gravatar: req.user.gravatar,
+        email: req.user.email,
+        _id: req.user._id
+      },
+      token: token,
       success: true,
       authenticated: true,
       redirect: redirect
@@ -110,7 +116,7 @@ exports.getAuthenticate = function (req, res) {
       user: {},
       success: false,
       authenticated: false,
-      redirect: false
+      redirect: redirect
     })
   }
 }
@@ -125,7 +131,12 @@ exports.postLogin = function (req, res, next) {
   var errors = req.validationErrors()
   var redirect = req.body.redirect || false
   if (errors) {
-    return res.status(200).send('/signin')
+    return res.status(400).send({
+      success: false,
+      authenticated: false,
+      msg: errors[0].msg,
+      redirect: '/signin'
+    })
   }
   passport.authenticate('local', function (err, user, info) {
     if (err) {
@@ -145,17 +156,20 @@ exports.postLogin = function (req, res, next) {
       }
       delete user['password']
       var token = jwt.sign({
-        profile: user.profile,
-        roles: user.roles,
-        gravatar: user.gravatar,
-        email: user.email,
         _id: user._id
       }, settings.jwt.secret, settings.jwt.options) // good for two hours
       res.cookie('token', token)
       res.json({
         success: true,
         authenticated: true,
-        user: 'JWT ' + token,
+        user: {
+          profile: user.profile,
+          roles: user.roles,
+          gravatar: user.gravatar,
+          email: user.email,
+          _id: user._id
+        },
+        token: 'JWT ' + token,
         redirect: redirect
       })
     })
@@ -195,10 +209,13 @@ exports.postSignup = function (req, res, next) {
   var errors = req.validationErrors()
   var redirect = req.body.redirect || false
   if (errors) {
-    // req.flash('errors', errors)
-    return res.status(400).send(errors)
+    return res.status(400).send({
+      success: false,
+      authenticated: false,
+      msg: errors[0].msg,
+      redirect: '/signup'
+    })
   }
-
   var user = new User({
     email: req.body.email,
     password: req.body.password,
@@ -229,17 +246,20 @@ exports.postSignup = function (req, res, next) {
           } else {
             delete user['password']
             var token = jwt.sign({
-              profile: user.profile,
-              roles: user.roles,
-              gravatar: user.gravatar,
-              email: user.email,
               _id: user._id
             }, settings.jwt.secret, settings.jwt.options) // good for two hours
             res.cookie('token', token)
             res.json({
               success: true,
               authenticated: true,
-              user: 'JWT ' + token,
+              user: {
+                profile: user.profile,
+                roles: user.roles,
+                gravatar: user.gravatar,
+                email: user.email,
+                _id: user._id
+              },
+              token: 'JWT ' + token,
               redirect: redirect
             })
           }
@@ -375,8 +395,8 @@ exports.postReset = function (req, res, next) {
     // req.flash('errors', errors)
     return res.status(400).send({msg: errors})
   } else {
-    async.waterfall([
-      function (done) {
+    auto({
+      user: function (callback) {
         User
           .findOne({ resetPasswordToken: req.params.token })
           .where('resetPasswordExpires').gt(Date.now())
@@ -395,21 +415,21 @@ exports.postReset = function (req, res, next) {
                 return next(err)
               }
               req.logIn(user, function (err) {
-                done(err, user)
+                callback(err, user)
               })
             })
           })
       },
-      function (user, done) {
+      sendEmail: ['user', function (results, callback) {
         mail.send({
-          to: user.email,
+          to: results.user.email,
           subject: settings.email.templates.reset.subject,
-          text: settings.email.templates.reset.text(user.email)
+          text: settings.email.templates.reset.text(results.user.email)
         }, function (err) {
-          done(err, 'done')
+          callback(err, true)
         })
-      }
-    ], function (err, user) {
+      }]
+    }, function (err, user) {
       if (err) {
         return next(err)
       }
@@ -449,14 +469,14 @@ exports.postForgot = function (req, res, next) {
     return res.status(400).send(errors)
   }
 
-  async.waterfall([
-    function (done) {
+  auto({
+    token: function (done) {
       crypto.randomBytes(16, function (err, buf) {
         var token = buf.toString('hex')
         done(err, token)
       })
     },
-    function (token, done) {
+    user: ['token', function (results, callback) {
       User.findOne({ email: req.body.email.toLowerCase() }, function (err, user) {
         if (err) {
           return res.status(400).send(err)
@@ -464,23 +484,23 @@ exports.postForgot = function (req, res, next) {
         if (!user) {
           return res.status(200).send('/forgot')
         }
-        user.resetPasswordToken = token
+        user.resetPasswordToken = results.token
         user.resetPasswordExpires = Date.now() + 3600000 // 1 hour
         user.save(function (err) {
-          done(err, token, user)
+          callback(err, user)
         })
       })
-    },
-    function (token, user, done) {
+    }],
+    sendEmail: ['user', function (results, callback) {
       mail.send({
-        to: user.email,
+        to: results.user.email,
         subject: settings.email.templates.forgot.subject,
-        text: settings.email.templates.forgot.text(req.headers.host, token)
+        text: settings.email.templates.forgot.text(req.headers.host, results.token)
       }, function (err) {
-        done(err, 'done')
+        callback(err, true)
       })
-    }
-  ], function (err) {
+    }]
+  }, function (err) {
     if (err) {
       return next(err)
     }

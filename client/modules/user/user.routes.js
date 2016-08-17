@@ -16,7 +16,7 @@
       {
         state: 'signin',
         config: {
-          url: '/signin',
+          url: '/signin?redirect',
           templateUrl: 'modules/user/signin.view.html',
           controller: 'UserController',
           controllerAs: 'vm',
@@ -30,7 +30,7 @@
       {
         state: 'signup',
         config: {
-          url: '/signup',
+          url: '/signup?redirect',
           templateUrl: 'modules/user/signup.view.html',
           controller: 'UserController',
           controllerAs: 'vm',

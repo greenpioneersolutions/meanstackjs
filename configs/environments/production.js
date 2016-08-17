@@ -3,8 +3,12 @@ module.exports = {
     title: 'MEANSTACKJS'
   },
   logger: 'combined',
+  cdn: process.env.CDN || false,
   buildreq: {
     console: false
+  },
+  maxcdn: {
+    zoneId: process.env.MAXCDN_ZONE_ID || false
   },
   mongoexpress: {
     port: process.env.MONGOEXPRESSPORT || 8081
@@ -17,7 +21,7 @@ module.exports = {
     port: process.env.PORT || 80
   },
   https: {
-    active: true,
+    active: false,
     port: process.env.HTTPSPORT || 843,
     key: './configs/certificates/keyExample.pem',
     cert: './configs/certificates/certExample.pem'
@@ -30,6 +34,7 @@ module.exports = {
     port: process.env.DB_PORT_27017 || 27017,
     ssl: false,
     username: process.env.DB_USERNAME || '',
+    debug: false,
     /**
    * Database options that will be passed directly to mongoose.connect
    * Below are some examples.
