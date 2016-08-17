@@ -6,6 +6,9 @@ module.exports = {
   buildreq: {
     console: false
   },
+  maxcdn: {
+    zoneId: process.env.MAXCDN_ZONE_ID || false
+  },
   mongoexpress: {
     port: process.env.MONGOEXPRESSPORT || 8081
   },

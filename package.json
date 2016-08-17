@@ -102,6 +102,7 @@
     "livereload": "^0.4.1",
     "lob": "^3.6.0",
     "lodash": "^4.11.1",
+    "maxcdn": "^0.2.0",
     "mean-seo": "0.0.8",
     "method-override": "^2.3.5",
     "minimist": "^1.2.0",
