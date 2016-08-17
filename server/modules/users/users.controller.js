@@ -131,7 +131,12 @@ exports.postLogin = function (req, res, next) {
   var errors = req.validationErrors()
   var redirect = req.body.redirect || false
   if (errors) {
-    return res.status(200).send('/signin')
+    return res.status(400).send({
+      success: false,
+      authenticated: false,
+      msg: errors[0].msg,
+      redirect: '/signin'
+    })
   }
   passport.authenticate('local', function (err, user, info) {
     if (err) {
@@ -204,10 +209,13 @@ exports.postSignup = function (req, res, next) {
   var errors = req.validationErrors()
   var redirect = req.body.redirect || false
   if (errors) {
-    // req.flash('errors', errors)
-    return res.status(400).send(errors)
+    return res.status(400).send({
+      success: false,
+      authenticated: false,
+      msg: errors[0].msg,
+      redirect: '/signup'
+    })
   }
-
   var user = new User({
     email: req.body.email,
     password: req.body.password,

@@ -73,7 +73,7 @@
       $http.post('/api/login', {
         email: vm.loginCred.email,
         password: vm.loginCred.password,
-        redirect: '/'
+        redirect: $stateParams.redirect || '/'
       }).then(function (success) {
         if (!_.isEmpty(success.data.user)) {
           localStorage.setItem('JWT', success.data.token)
@@ -135,6 +135,7 @@
     }
     UserClass.prototype.signup = function (vm) {
       if (vm.loginCred.password === vm.loginCred.confirmPassword) {
+        if ($stateParams.redirect)vm.loginCred.redirect = $stateParams.redirect
         $http.post('/api/signup', vm.loginCred)
           .then(function (success) {
             if (!_.isEmpty(success.data.user)) {
@@ -199,7 +200,7 @@
     UserClass.prototype.checkLoggedin = function () {
       getAuthenticate().then(function (data) {
         if (data.authenticated === false) {
-          $location.url('/signin')
+          $location.url('/signin?redirect=' + $location.path())
           logger.error('please sign in', {user: 'No User'}, 'Unauthenticated')
         }
       })
