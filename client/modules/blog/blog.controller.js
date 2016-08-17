@@ -21,7 +21,7 @@
       var blog = new BlogFactory(vm.blog)
       blog.user = vm.UserFactory.user
       blog.$save(function (response) {
-        vm.blog = response.data.data
+        vm.blog = response
         //  window.location.href
         $location.url('/blog/list')
       }, function (error) {
@@ -32,14 +32,14 @@
       BlogFactory.get({
         id: $stateParams.id
       }, function (success) {
-        vm.blog = success.data
+        vm.blog = success
       }, function (error) {
         logger.error(error)
       })
     }
     vm.list = function () {
-      BlogFactory.get(function (success) {
-        vm.blogs = success.data
+      BlogFactory.query(function (success) {
+        vm.blogs = success
       }, function (error) {
         logger.error(error)
       })

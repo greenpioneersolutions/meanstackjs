@@ -540,19 +540,19 @@ Mean.prototype.setupRoutesMiddleware = function () {
    * build.routing(app, mongoose) - if reverting back to automatic
    */
 
-  self.build.routing({
-    mongoose: mongoose,
-    remove: ['users'],
-    middleware: {
-      auth: [self.middleware.verify, self.middleware.isAuthenticated]
-    }
-  }, function (error, data) {
-    if (error) console.log(error)
-    _.forEach(data, function (m) {
-      self.debug('Route Built by NPM buildreq:', m.route)
-      self.app.use(m.route, m.app)
-    })
-  })
+  // self.build.routing({
+  //   mongoose: mongoose,
+  //   remove: ['users'],
+  //   middleware: {
+  //     auth: [self.middleware.verify, self.middleware.isAuthenticated]
+  //   }
+  // }, function (error, data) {
+  //   if (error) console.log(error)
+  //   _.forEach(data, function (m) {
+  //     self.debug('Route Built by NPM buildreq:', m.route)
+  //     self.app.use(m.route, m.app)
+  //   })
+  // })
 
   self.app.use(function (req, res, next) {
     res.locals.user = req.user
