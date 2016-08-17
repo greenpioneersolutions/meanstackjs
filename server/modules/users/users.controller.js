@@ -34,7 +34,7 @@ exports.postAuthenticate = function (req, res, next) {
       success: false,
       authenticated: false,
       msg: errors[0].msg,
-      redirect: redirect
+      redirect: '/signin'
     })
   } else {
     User.findOne({
@@ -116,7 +116,7 @@ exports.getAuthenticate = function (req, res) {
       user: {},
       success: false,
       authenticated: false,
-      redirect: false
+      redirect: redirect
     })
   }
 }

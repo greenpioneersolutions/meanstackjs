@@ -109,7 +109,7 @@
     }
 
     UserClass.prototype.onIdFail = function (error) {
-      logger.error(error.data.msg, error, 'Login/Signup')
+      logger.error(error.data.msg || error.data.message, error, 'Login/Signup')
       this.loginError = 'Authentication failed.'
       this.registerError = error
       $rootScope.$emit('loginfailed')
