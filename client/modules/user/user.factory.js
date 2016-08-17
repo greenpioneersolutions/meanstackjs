@@ -12,17 +12,17 @@
     var self
     var UserFactory = new UserClass()
 
-    function getToken (token) {
-      return jwtHelper.decodeToken(token)
-    }
+    // function getToken (token) {
+    //   return jwtHelper.decodeToken(token)
+    // }
     function getAuthenticate () {
       var deferred = $q.defer()
 
       $http.get('/api/authenticate').then(function (success) {
         if (success.data) {
           if (!_.isEmpty(success.data.user)) {
-            localStorage.setItem('JWT', success.data.user)
-            success.data.user = getToken(success.data.user)
+            localStorage.setItem('JWT', success.data.token)
+            success.data.user = success.data.user
           }
           $timeout(deferred.resolve(success.data))
         } else {
@@ -76,8 +76,8 @@
         redirect: '/'
       }).then(function (success) {
         if (!_.isEmpty(success.data.user)) {
-          localStorage.setItem('JWT', success.data.user)
-          success.data.user = getToken(success.data.user)
+          localStorage.setItem('JWT', success.data.token)
+          success.data.user = success.data.user
         }
         self.onIdentity.bind(self)(success.data)
       }, function (error) {
@@ -138,8 +138,8 @@
         $http.post('/api/signup', vm.loginCred)
           .then(function (success) {
             if (!_.isEmpty(success.data.user)) {
-              localStorage.setItem('JWT', success.data.user)
-              success.data.user = getToken(success.data.user)
+              localStorage.setItem('JWT', success.data.token)
+              success.data.user = success.data.user
             }
             success.data.redirect = '/'
             self.onIdentity.bind(self)(success.data)

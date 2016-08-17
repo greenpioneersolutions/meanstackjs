@@ -57,16 +57,19 @@ exports.postAuthenticate = function (req, res, next) {
               }
               delete user['password']
               var token = jwt.sign({
-                profile: user.profile,
-                roles: user.roles,
-                gravatar: user.gravatar,
-                email: user.email,
                 _id: user._id
               }, settings.jwt.secret, settings.jwt.options) // good for two hours
               res.cookie('token', token)
               res.json({
                 success: true,
                 authenticated: true,
+                user: {
+                  profile: user.profile,
+                  roles: user.roles,
+                  gravatar: user.gravatar,
+                  email: user.email,
+                  _id: user._id
+                },
                 token: 'JWT ' + token,
                 redirect: redirect
               })
@@ -93,14 +96,17 @@ exports.getAuthenticate = function (req, res) {
   var redirect = req.body.redirect || false
   if (req.user) {
     var token = jwt.sign({
-      profile: req.user.profile,
-      roles: req.user.roles,
-      gravatar: req.user.gravatar,
-      email: req.user.email,
       _id: req.user._id
     }, settings.jwt.secret, settings.jwt.options)
     return res.status(200).send({
-      user: token,
+      user: {
+        profile: req.user.profile,
+        roles: req.user.roles,
+        gravatar: req.user.gravatar,
+        email: req.user.email,
+        _id: req.user._id
+      },
+      token: token,
       success: true,
       authenticated: true,
       redirect: redirect
@@ -145,17 +151,20 @@ exports.postLogin = function (req, res, next) {
       }
       delete user['password']
       var token = jwt.sign({
-        profile: user.profile,
-        roles: user.roles,
-        gravatar: user.gravatar,
-        email: user.email,
         _id: user._id
       }, settings.jwt.secret, settings.jwt.options) // good for two hours
       res.cookie('token', token)
       res.json({
         success: true,
         authenticated: true,
-        user: 'JWT ' + token,
+        user: {
+          profile: user.profile,
+          roles: user.roles,
+          gravatar: user.gravatar,
+          email: user.email,
+          _id: user._id
+        },
+        token: 'JWT ' + token,
         redirect: redirect
       })
     })
@@ -229,17 +238,20 @@ exports.postSignup = function (req, res, next) {
           } else {
             delete user['password']
             var token = jwt.sign({
-              profile: user.profile,
-              roles: user.roles,
-              gravatar: user.gravatar,
-              email: user.email,
               _id: user._id
             }, settings.jwt.secret, settings.jwt.options) // good for two hours
             res.cookie('token', token)
             res.json({
               success: true,
               authenticated: true,
-              user: 'JWT ' + token,
+              user: {
+                profile: user.profile,
+                roles: user.roles,
+                gravatar: user.gravatar,
+                email: user.email,
+                _id: user._id
+              },
+              token: 'JWT ' + token,
               redirect: redirect
             })
           }
