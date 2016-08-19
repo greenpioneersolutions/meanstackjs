@@ -186,17 +186,6 @@ exports.logout = function (req, res) {
 }
 
 /**
- * GET /signup
- * Signup page.
- */
-exports.getSignup = function (req, res) {
-  if (req.user) {
-    return res.status(200).send('/')
-  }
-  res.status(200).send('/account/signup')
-}
-
-/**
  * POST /signup
  * Create a new local account.
  */
@@ -267,14 +256,6 @@ exports.postSignup = function (req, res, next) {
       }
     })
   })
-}
-
-/**
- * GET /account
- * Profile page.
- */
-exports.getAccount = function (req, res) {
-  res.status(200).send('/account/profile')
 }
 
 /**
@@ -443,17 +424,6 @@ exports.postReset = function (req, res, next) {
       })
     })
   }
-}
-
-/**
- * GET /forgot
- * Forgot Password page.
- */
-exports.getForgot = function (req, res) {
-  if (req.isAuthenticated()) {
-    return res.status(200).send('/')
-  }
-  res.status(200).send('/account/forgot')
 }
 
 /**
