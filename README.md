@@ -60,9 +60,9 @@ npm install
 # Start up the server
 npm start
 # or
-node server.js
+node index.js
 # or
-nodemon server.js
+nodemon index.js
 ```
 
 **Note:** We highly recommend installing [Nodemon](https://github.com/remy/nodemon).
