@@ -16,7 +16,7 @@
       {
         state: 'adminDashboard',
         config: {
-          url: '/admin',
+          url: '/admin?view',
           templateUrl: 'modules/admin/view.view.html',
           controller: 'AdminController',
           controllerAs: 'vm',
