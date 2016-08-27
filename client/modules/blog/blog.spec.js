@@ -104,17 +104,20 @@ describe('BLOG Testing', function () {
     })
 
     it('vm.list() should return an array of blog posts from GET request and store it in vm', function () {
-      $httpBackend.whenGET(/\/api\/blog\?noCache=\d+/).respond([
-        {
-          title: 'Nodejs',
-          content: 'Try it out',
-          created: timestamp
-        }, {
-          title: 'Angularjs',
-          content: 'v2 stable coming soon',
-          created: timestamp
-        }
-      ])
+      $httpBackend.whenGET(/\/api\/blog\?noCache=\d+/).respond({
+        blogs: [
+          {
+            title: 'Nodejs',
+            content: 'Try it out',
+            created: timestamp
+          }, {
+            title: 'Angularjs',
+            content: 'v2 stable coming soon',
+            created: timestamp
+          }
+        ],
+        count: 2
+      })
 
       BlogController.list()
       $httpBackend.flush()
