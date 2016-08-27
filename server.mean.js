@@ -26,7 +26,7 @@ var Promise = require('bluebird')
 var sass = require('node-sass')
 var seo = require('mean-seo')
 var session = require('express-session')
-var sitemap = require('express-sitemap')()
+// var sitemap = require('express-sitemap')()
 var status = require('express-system-status')
 var _ = require('lodash')
 
@@ -540,33 +540,19 @@ Mean.prototype.setupRoutesMiddleware = function () {
    * build.routing(app, mongoose) - if reverting back to automatic
    */
 
-  // self.build.routing({
-  //   mongoose: mongoose,
-  //   remove: ['users'],
-  //   middleware: {
-  //     auth: [self.middleware.verify, self.middleware.isAuthenticated]
-  //   }
-  // }, function (error, data) {
-  //   if (error) console.log(error)
-  //   _.forEach(data, function (m) {
-  //     self.debug('Route Built by NPM buildreq:', m.route)
-  //     self.app.use(m.route, m.app)
-  //   })
-  // })
-
-  self.app.use(function (req, res, next) {
-    res.locals.user = req.user
-    if (/api/i.test(req.path)) {
-      try {
-        if (req.body.redirect) {
-          req.session.returnTo = req.body.redirect
-        }
-      } catch (err) {
-        console.log(err)
-      }
-    }
-    next()
-  })
+// self.build.routing({
+//   mongoose: mongoose,
+//   remove: ['users'],
+//   middleware: {
+//     auth: [self.middleware.verify, self.middleware.isAuthenticated]
+//   }
+// }, function (error, data) {
+//   if (error) console.log(error)
+//   _.forEach(data, function (m) {
+//     self.debug('Route Built by NPM buildreq:', m.route)
+//     self.app.use(m.route, m.app)
+//   })
+// })
 }
 
 Mean.prototype.setupErrorHandling = function () {
@@ -627,9 +613,11 @@ Mean.prototype.setupStatic = function () {
       error: 'nothing found in uploads'
     })
   })
-  self.app.get('/sitemap', function (req, res) {
-    res.send(sitemap.generate(self.app))
-  })
+  // Turning off sitemap unless you want it back on
+  // self.app.get('/sitemap', function (req, res) {
+  //   res.send(sitemap.generate(self.app))
+  // })
+
   self.app.use(seo({cacheClient: 'disk', cacheDuration: 1 * 24 * 60 * 60 * 1000}))
   /**
    * Primary app routes.
