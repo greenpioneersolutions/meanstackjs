@@ -13,6 +13,10 @@ function errorMiddleware (self) {
     if (err.name === 'ValidationError') {
       err.status = 400
     }
+    if (err.message === 'MongoError') {
+      err.status = 400
+      if (err.code === 11000) message.message = 'duplicate key error '
+    }
     if (typeof err.status === 'number') {
       code = err.status
     }
