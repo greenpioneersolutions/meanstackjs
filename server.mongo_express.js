@@ -3,7 +3,7 @@ var express = require('express')
 var settings = require('./configs/settings.js').get()
 var mongoexpress = {
   mongodb: {
-    server: process.env.MONGODB_SERVER || 'localhost' || settings.mongodb.host,
+    server: process.env.MONGODB_SERVER || settings.mongodb.host,
     port: process.env.MONGODB_PORT || settings.mongodb.port,
 
     // useSSL: connect to the server using secure SSL
@@ -13,7 +13,7 @@ var mongoexpress = {
     autoReconnect: true,
 
     // poolSize: size of connection pool (number of connections to use)
-    poolSize: 4,
+    poolSize: settings.mongodb.size || 1,
 
     // set admin to true if you want to turn on admin features
     // if admin is true, the auth list below will be ignored
