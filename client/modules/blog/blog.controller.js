@@ -38,8 +38,9 @@
       })
     }
     vm.list = function () {
-      BlogFactory.query(function (success) {
-        vm.blogs = success
+      BlogFactory.get(function (success) {
+        vm.blogs = success.blogs
+        vm.count = success.count
       }, function (error) {
         logger.error(error)
       })

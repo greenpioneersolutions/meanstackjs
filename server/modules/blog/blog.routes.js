@@ -5,11 +5,11 @@ module.exports = function (app, auth, mail, settings) {
   app.get('/api/blog/', blog.getBlog)
   app.get('/api/blog/:blogId', blog.getBlogById)
   // POST
-  app.post('/api/blog', blog.postBlog)
+  app.post('/api/blog', auth.isAuthenticated, blog.postBlog)
   // PUT
-  app.put('/api/blog/:blogId', blog.putBlog)
+  app.put('/api/blog/:blogId', auth.isAuthenticated, blog.putBlog)
   // DELETE
-  app.delete('/api/blog/:blogId', blog.deleteBlog)
+  app.delete('/api/blog/:blogId', auth.isAuthenticated, blog.deleteBlog)
   // PARAM
   app.param('blogId', blog.paramBlog)
 }
