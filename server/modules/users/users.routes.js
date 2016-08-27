@@ -15,7 +15,7 @@ module.exports = function (app, auth, mail, settings) {
   app.get('/api/reset/:token', user.getReset)
   app.post('/api/reset/:token', user.postReset)
   app.post('/api/signup', user.postSignup)
-  app.post('/api/account/profile', auth.isAuthenticated, user.postUpdateProfile)
-  app.post('/api/account/password', auth.isAuthenticated, user.postUpdatePassword)
-  app.del('/api/account/delete', auth.isAuthenticated, user.postDeleteAccount)
+  app.put('/api/account/profile', auth.isAuthenticated, user.putUpdateProfile)
+  app.put('/api/account/password', auth.isAuthenticated, user.putUpdatePassword)
+  app.delete('/api/account/delete', auth.isAuthenticated, user.deleteDeleteAccount)
 }

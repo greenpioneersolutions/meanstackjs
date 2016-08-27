@@ -129,7 +129,7 @@
       logger.error(error.data, error, 'User Error')
     }
     UserClass.prototype.update = function (vm) {
-      $http.post('/api/account/profile', vm.editProfile)
+      $http.put('/api/account/profile', vm.editProfile)
         .then(this.updateProfile.bind(this), this.error.bind(this))
     // logger.error(error.data, error, 'Login')
     }

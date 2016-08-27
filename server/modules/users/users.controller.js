@@ -262,7 +262,7 @@ exports.postSignup = function (req, res, next) {
  * POST /account/profile
  * Update profile information.
  */
-exports.postUpdateProfile = function (req, res, next) {
+exports.putUpdateProfile = function (req, res, next) {
   var redirect = req.body.redirect || false
   User.findById(req.user.id, function (err, user) {
     if (err) {
@@ -291,7 +291,7 @@ exports.postUpdateProfile = function (req, res, next) {
  * POST /account/password
  * Update current password.
  */
-exports.postUpdatePassword = function (req, res, next) {
+exports.putUpdatePassword = function (req, res, next) {
   req.assert('password', 'Password must be at least 4 characters long').len(4)
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password)
 
@@ -320,7 +320,7 @@ exports.postUpdatePassword = function (req, res, next) {
  * POST /account/delete
  * Delete user account.
  */
-exports.postDeleteAccount = function (req, res, next) {
+exports.deleteDeleteAccount = function (req, res, next) {
   User.remove({ _id: req.user.id }, function (err) {
     if (err) {
       return next(err)

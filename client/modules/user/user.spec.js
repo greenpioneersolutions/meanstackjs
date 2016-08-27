@@ -233,7 +233,7 @@ describe('USER Testing', function () {
       UserController.editProfile.profile.gender = 'Male'
       UserController.editProfile.profile.location = 'New York'
 
-      $httpBackend.when('POST', '/api/account/profile')
+      $httpBackend.when('PUT', '/api/account/profile')
         .respond({
           user: {
             email: 'test@user.com',
