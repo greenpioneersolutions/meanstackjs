@@ -5,10 +5,10 @@
     .module('app.user')
     .factory('UserFactory', UserFactory)
 
-  UserFactory.$inject = ['$rootScope', '$http', '$location', '$stateParams', '$cookies', '$q', '$timeout', 'logger', 'jwtHelper']
+  UserFactory.$inject = ['$rootScope', '$http', '$location', '$stateParams', '$cookies', '$q', '$timeout', 'logger', 'jwtHelper', '$state']
 
   /* @ngInject */
-  function UserFactory ($rootScope, $http, $location, $stateParams, $cookies, $q, $timeout, logger, jwtHelper) {
+  function UserFactory ($rootScope, $http, $location, $stateParams, $cookies, $q, $timeout, logger, jwtHelper, $state) {
     var self
     var UserFactory = new UserClass()
 
@@ -64,7 +64,7 @@
         if (data !== '0') {
           vm.editProfile = data
         } else { // Not Authenticated
-          $location.url('/login')
+          $state.go('signin')
           logger.error('Not Authenticated', data, 'Login')
         }
       })
@@ -83,11 +83,6 @@
       }, function (error) {
         self.onIdFail.bind(self)(error)
       })
-    // .then(function (response) {
-    //   if (!response.error) {
-    //     logger.success(vm.loginCred.email, vm.loginCred, ' successfully logged in')
-    //   }
-    // })
     }
     UserClass.prototype.onIdentity = function (data) {
       if (!data) return ({error: true})
@@ -131,7 +126,6 @@
     UserClass.prototype.update = function (vm) {
       $http.put('/api/account/profile', vm.editProfile)
         .then(this.updateProfile.bind(this), this.error.bind(this))
-    // logger.error(error.data, error, 'Login')
     }
     UserClass.prototype.signup = function (vm) {
       if (vm.loginCred.password === vm.loginCred.confirmPassword) {
@@ -191,7 +185,7 @@
       $http.get('/api/logout').success(function (data) {
         localStorage.removeItem('JWT')
         $rootScope.$emit('logout')
-        $location.url('/')
+        $state.go('index')
         self.user = {}
         self.loggedin = false
       })
@@ -200,7 +194,7 @@
     UserClass.prototype.checkLoggedin = function () {
       getAuthenticate().then(function (data) {
         if (data.authenticated === false) {
-          $location.url('/signin?redirect=' + $location.path())
+          $state.go('signin', {'redirect': $location.path()})
           logger.error('please sign in', {user: 'No User'}, 'Unauthenticated')
         }
       })
@@ -210,15 +204,17 @@
       getAuthenticate().then(function (data) {
         if (data.authenticated !== false) {
           logger.error(data.user.profile.name + ' You are already signed in', data.user, 'Authenticated Already')
-          $location.url('/')
+          $state.go('index')
         }
       })
     }
 
     UserClass.prototype.checkAdmin = function () {
       getAuthenticate().then(function (data) {
-        if (data.authenticated !== true || data.user.roles.indexOf('admin') === -1) {
-          $location.url('/')
+        var roles = data.user.roles === {} ? data.user.roles.indexOf('admin') : -1 === -1
+        if (data.authenticated !== true || roles) {
+          $state.go('index')
+          logger.error('requires access', {user: 'No User'}, 'Unauthorized')
         }
       })
     }
