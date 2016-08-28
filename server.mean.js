@@ -429,7 +429,7 @@ Mean.prototype.agenda = function () {
     // self.agenda.every('*/1 * * * *', 'backup')
     self.agenda.start()
   })
-  self.app.use('/agenda', /*  require('./server/middleware.js').isAdmin,*/ Agendash(self.agenda))
+  self.app.use('/agenda', /*  require('./server/middleware.js').isAdmin, */ Agendash(self.agenda))
 }
 Mean.prototype.livereload = function () {
   var self = this
