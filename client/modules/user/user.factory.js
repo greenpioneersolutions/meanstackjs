@@ -211,7 +211,8 @@
 
     UserClass.prototype.checkAdmin = function () {
       getAuthenticate().then(function (data) {
-        var roles = data.user.roles === {} ? data.user.roles.indexOf('admin') : -1 === -1
+        var roles = true
+        if (data.user.roles && _.isArray(data.user.roles))roles = data.user.roles.indexOf('admin') === -1
         if (data.authenticated !== true || roles) {
           $state.go('index')
           logger.error('requires access', {user: 'No User'}, 'Unauthorized')

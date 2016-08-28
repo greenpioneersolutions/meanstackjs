@@ -25,12 +25,15 @@ describe('USER Testing', function () {
   }
 
   beforeEach(module('app.core'))
+  beforeEach(module('app.index'))
   beforeEach(module('app.user'))
   beforeEach(inject(function (_$httpBackend_, _$location_, _UserFactory_) {
     $httpBackend = _$httpBackend_
     $httpBackend.when('GET', /\/api\/authenticate\?noCache=\d+/)
       .respond(200, authResponse)
     $httpBackend.when('GET', /modules\/[\d\w]+\/[\d\w]+\.view\.html\?noCache=\d+/)
+      .respond(200, '')
+    $httpBackend.when('GET', /modules\/index\/[\d\w]+\.view\.html\?noCache=\d+/)
       .respond(200, '')
     $httpBackend.when('GET', /\/api\/logout\?noCache=\d+/)
       .respond(200, '')

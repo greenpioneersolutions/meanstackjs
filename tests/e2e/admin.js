@@ -18,7 +18,7 @@ module.exports = {
       .click('#admin')
       .pause(2000)
       .click('#Users')
-      .pause(2000)
+      .pause(16000)
       .assert.containsText('body', 'jason@greenpioneersolutions.com')
       .end()
   },
