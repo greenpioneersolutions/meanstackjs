@@ -107,7 +107,7 @@ function Mean (opts, done) {
 
 Mean.prototype.setupEnv = function () {
   var self = this
-  self.environment = require('./server/environment.js').get()
+  self.environment = require('./configs/environment.js').get()
   self.settings = require('./configs/settings.js').get()
   self.dir = __dirname
 }

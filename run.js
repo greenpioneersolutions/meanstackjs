@@ -7,7 +7,7 @@ var SocketIO = require('./server.socketio.js')
 var Livereload = require('./server.livereload.js')
 var MongoExpress = require('./server.mongo_express.js')
 var mail = require('./server/mail.js')
-var environment = require('./server/environment.js').get()
+var environment = require('./configs/environment.js').get()
 var settings = require('./configs/settings.js').get()
 var argv = minimist(process.argv.slice(2))
 
