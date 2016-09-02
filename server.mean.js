@@ -7,6 +7,7 @@ var chokidar = require('chokidar')
 var cookieParser = require('cookie-parser')
 var cors = require('cors')
 var compress = require('compression')
+var ejs = require('ejs')
 var contentLength = require('express-content-length-validator')
 var express = require('express')
 var expressValidator = require('express-validator')
@@ -26,7 +27,6 @@ var Promise = require('bluebird')
 var sass = require('node-sass')
 var seo = require('mean-seo')
 var session = require('express-session')
-// var sitemap = require('express-sitemap')()
 var status = require('express-system-status')
 var _ = require('lodash')
 
@@ -125,10 +125,6 @@ Mean.prototype.setupExpressConfigs = function () {
   // Disable "powered by express" header
   self.app.disable('x-powered-by')
 
-  // cache=memory or swig dies in NODE_ENV=production
-  self.app.locals.cache = 'memory'
-  var swig = require('swig')
-  self.app.engine('html', swig.renderFile)
   self.app.set('view engine', 'html')
   self.app.set('views', path.join(self.dir, '/client'))
 
@@ -614,6 +610,7 @@ Mean.prototype.setupStatic = function () {
     })
   })
   // Turning off sitemap unless you want it back on
+  // var sitemap = require('express-sitemap')()
   // self.app.get('/sitemap', function (req, res) {
   //   res.send(sitemap.generate(self.app))
   // })
@@ -636,10 +633,15 @@ Mean.prototype.setupStatic = function () {
       if (self.settings.seo[req.path].description) html.description = self.settings.seo[req.path].description
       if (self.settings.seo[req.path].keywords) html.keywords = self.settings.seo[req.path].keywords
     }
-    res.render(path.resolve('server') + '/layout/index.html', {
+    ejs.renderFile(path.join(__dirname, './server/layout/index.html'), {
       html: html,
       assets: self.app.locals.frontendFilesFinal,
       environment: self.environment
+    }, {
+      cache: true
+    }, function (err, str) {
+      if (err)console.log(err)
+      res.send(str)
     })
   })
 }
