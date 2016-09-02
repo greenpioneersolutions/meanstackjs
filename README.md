@@ -11,7 +11,12 @@
 
 [Watch MeanStackJs - How to series](https://www.youtube.com/playlist?list=PLhJ-Q2setTdqgwW6U39s_oMAehgtXa15O)
 
+[Watch MeanStackJs - Error series](https://www.youtube.com/playlist?list=PLhJ-Q2setTdr19ha6bx7jt6Bu2RCM5c5_)
+
+[Check out the Lite Version of MeanStackJS](https://github.com/greenpioneersolutions/meanstackjs-lite)
+
 [![meanstackjs Logo](http://meanstackjs.com/images/logo/header3x.png)](http://meanstackjs.com/)
+
 
 
 #[Check Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
