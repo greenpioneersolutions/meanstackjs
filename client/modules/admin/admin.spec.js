@@ -10,7 +10,7 @@ describe('Generated Admin Testing', function () {
     }))
     describe('view', function () {
       it('should have the correct url', function () {
-        expect(states.view.url).to.equal('/admin')
+        expect(states.view.url).to.equal('/admin?view')
       })
 
       it('should have the correct templateUrl', function () {

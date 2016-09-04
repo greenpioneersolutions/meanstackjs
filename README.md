@@ -6,7 +6,17 @@
 [![Codewake](https://www.codewake.com/badges/codewake2.svg)](https://www.codewake.com/p/meanstackjs)
 [![Get help on Codementor](https://cdn.codementor.io/badges/get_help_github.svg)](https://www.codementor.io/jasonhumphrey?utm_source=github&utm_medium=button&utm_term=jasonhumphrey&utm_campaign=github)
 [![Donatee](https://img.shields.io/badge/paypal-donate-blue.svg)](https://paypal.me/greenpioneer)
+
+[Subscribe to our Youtube Channel - MeanStackJs](https://www.youtube.com/channel/UC5lpSv5tNowgWxC9crTl97g)
+
+[Watch MeanStackJs - How to series](https://www.youtube.com/playlist?list=PLhJ-Q2setTdqgwW6U39s_oMAehgtXa15O)
+
+[Watch MeanStackJs - Error series](https://www.youtube.com/playlist?list=PLhJ-Q2setTdr19ha6bx7jt6Bu2RCM5c5_)
+
+[Check out the Lite Version of MeanStackJS](https://github.com/greenpioneersolutions/meanstackjs-lite)
+
 [![meanstackjs Logo](http://meanstackjs.com/images/logo/header3x.png)](http://meanstackjs.com/)
+
 
 
 #[Check Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
@@ -60,14 +70,14 @@ npm install
 # Start up the server
 npm start
 # or
-node server.js
+node index.js
 # or
-nodemon server.js
+nodemon index.js
 ```
 
 **Note:** We highly recommend installing [Nodemon](https://github.com/remy/nodemon).
 It watches for any changes in your  node.js app and automatically restarts the
-server. Once installed, instead of `node server.js` use `nodemon server.js`. It will
+server. Once installed, instead of `node index.js` use `nodemon index.js`. It will
 save you a lot of time in the long run, because you won't need to manually
 restart the server each time you make a small change in code. To install, run
 `sudo npm install -g nodemon`.

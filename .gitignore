@@ -47,6 +47,7 @@ node_modules/
 # SASS Files
 # --------------------
 .sass-cache/
+client/styles/global-configs.styles.scss
 
 
 # --------------------
