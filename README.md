@@ -24,8 +24,9 @@ Start learning with documentation:
 
 Check out this YouTube channel that has content to help you:
 * [Subscribe to our Youtube Channel - MeanStackJs](https://www.youtube.com/channel/UC5lpSv5tNowgWxC9crTl97g)
-* [Watch MeanStackJs - How to series](https://www.youtube.com/playlist?list=PLhJ-Q2setTdqgwW6U39s_oMAehgtXa15O)
-* [Watch MeanStackJs - Error series](https://www.youtube.com/playlist?list=PLhJ-Q2setTdr19ha6bx7jt6Bu2RCM5c5_)
+* [Watch MeanStackJS - How to series](https://www.youtube.com/playlist?list=PLhJ-Q2setTdqgwW6U39s_oMAehgtXa15O)
+* [Watch MeanStackJS - Error series](https://www.youtube.com/playlist?list=PLhJ-Q2setTdr19ha6bx7jt6Bu2RCM5c5_)
+* [Watch MeanStackJS - What is series](https://www.youtube.com/playlist?list=PLhJ-Q2setTdpkHfA-mDMSjl4Wv-trKlY8)
 
 For more control or something more basic, start here instead:
 * [Lite Version of MeanStackJS](https://github.com/greenpioneersolutions/meanstackjs-lite)
