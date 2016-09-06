@@ -25,6 +25,35 @@ exports.isAuthenticated = function (req, res, next) {
     })
   }
 }
+exports.isAuthorized = function (name, extra) {
+  return function (req, res, next) {
+    var user
+    try {
+      if (extra) user = req[name][extra].user
+      else user = req[name].user
+    } catch (err) {
+      next(err)
+    }
+    if (req.isAuthenticated()) {
+      if (user._id.toString() !== req.user._id.toString()) {
+        debug('middleware: is Not Authorized')
+        return next({
+          status: 401,
+          msg: 'User is not Authorized'
+        })
+      } else {
+        debug('middleware: isAuthenticated')
+        return next()
+      }
+    } else {
+      debug('middleware: is Not Authorized ')
+      return res.status(401).send({
+        success: false,
+        msg: 'User needs to re-authenticated'
+      })
+    }
+  }
+}
 exports.isAdmin = function (req, res, next) {
   if (req.isAuthenticated()) {
     debug('middleware: isAdmin')

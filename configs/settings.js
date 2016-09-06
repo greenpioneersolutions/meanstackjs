@@ -2,7 +2,7 @@
 
 var path = require('path')
 var _ = require('lodash')
-var environment = require('../server/environment.js').get()
+var environment = require('./environment.js').get()
 var baseLine = {
   env: environment,
   // Root path of server

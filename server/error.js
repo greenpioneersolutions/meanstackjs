@@ -7,11 +7,15 @@ function errorMiddleware (self) {
   self.app.use(function (err, req, res, next) {
     var code = 500
     var message = err
-    if (err.message) {
-      message = {message: err.message}
+    if (err.message || err.msg) {
+      message = {message: err.message || err.msg}
     }
     if (err.name === 'ValidationError') {
       err.status = 400
+    }
+    if (err.message === 'MongoError') {
+      err.status = 400
+      if (err.code === 11000) message.message = 'duplicate key error '
     }
     if (typeof err.status === 'number') {
       code = err.status

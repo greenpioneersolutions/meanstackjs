@@ -8,6 +8,7 @@ describe('HEADER Testing', function () {
     var HeaderController
 
     beforeEach(module('app.header'))
+    beforeEach(module('app.index'))
     beforeEach(module('app.user'))
     beforeEach(inject(function (_$httpBackend_, $controller, $rootScope, _UserFactory_) {
       UserFactory = _UserFactory_
@@ -17,6 +18,8 @@ describe('HEADER Testing', function () {
       $httpBackend.whenGET(/\/api\/authenticate\?noCache=\d+/)
         .respond(200, authResponse)
       $httpBackend.when('GET', /modules\/core\/[\d\w]+\.view\.html\?noCache=\d+/)
+        .respond(200, '')
+      $httpBackend.when('GET', /modules\/index\/[\d\w]+\.view\.html\?noCache=\d+/)
         .respond(200, '')
       // Authenticate in UserFactory class constructor
       $httpBackend.flush()

@@ -24,7 +24,7 @@ var path = require('path')
 
 function Register (opts, done) {
   var self = this
-  self.environment = require('./environment.js').get()
+  self.environment = require('../configs/environment.js').get()
   self.mail = require('./mail.js')
   self.app = opts.app
   self.settings = opts.settings
@@ -379,8 +379,8 @@ Register.prototype.createFrontend = function () {
 }
 Register.prototype.env = function () {
   debug('started env')
-
   var self = this
+
   if (self.environment === 'test') {
     concat(self.frontendFilesAggregate.css, path.join(self.dir, '../client/styles/compiled/concat.css'), function (error) {
       if (error)debug(error, 'concat')

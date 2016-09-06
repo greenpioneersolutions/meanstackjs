@@ -10,6 +10,7 @@
   function AdminController ($http, $stateParams, AdminFactory, logger, $location, UserFactory) {
     var vm = this
     vm.title = 'System'
+    vm.view = $stateParams.view ? 'modules/admin/' + $stateParams.view + '.view.html' : 'modules/admin/home.view.html'
     vm.admin = {}
     vm.UserFactory = UserFactory
     activate()

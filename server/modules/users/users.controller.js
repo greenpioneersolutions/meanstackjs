@@ -186,17 +186,6 @@ exports.logout = function (req, res) {
 }
 
 /**
- * GET /signup
- * Signup page.
- */
-exports.getSignup = function (req, res) {
-  if (req.user) {
-    return res.status(200).send('/')
-  }
-  res.status(200).send('/account/signup')
-}
-
-/**
  * POST /signup
  * Create a new local account.
  */
@@ -270,18 +259,10 @@ exports.postSignup = function (req, res, next) {
 }
 
 /**
- * GET /account
- * Profile page.
- */
-exports.getAccount = function (req, res) {
-  res.status(200).send('/account/profile')
-}
-
-/**
  * POST /account/profile
  * Update profile information.
  */
-exports.postUpdateProfile = function (req, res, next) {
+exports.putUpdateProfile = function (req, res, next) {
   var redirect = req.body.redirect || false
   User.findById(req.user.id, function (err, user) {
     if (err) {
@@ -310,7 +291,7 @@ exports.postUpdateProfile = function (req, res, next) {
  * POST /account/password
  * Update current password.
  */
-exports.postUpdatePassword = function (req, res, next) {
+exports.putUpdatePassword = function (req, res, next) {
   req.assert('password', 'Password must be at least 4 characters long').len(4)
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password)
 
@@ -339,7 +320,7 @@ exports.postUpdatePassword = function (req, res, next) {
  * POST /account/delete
  * Delete user account.
  */
-exports.postDeleteAccount = function (req, res, next) {
+exports.deleteDeleteAccount = function (req, res, next) {
   User.remove({ _id: req.user.id }, function (err) {
     if (err) {
       return next(err)
@@ -443,17 +424,6 @@ exports.postReset = function (req, res, next) {
       })
     })
   }
-}
-
-/**
- * GET /forgot
- * Forgot Password page.
- */
-exports.getForgot = function (req, res) {
-  if (req.isAuthenticated()) {
-    return res.status(200).send('/')
-  }
-  res.status(200).send('/account/forgot')
 }
 
 /**

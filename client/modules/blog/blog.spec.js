@@ -104,8 +104,8 @@ describe('BLOG Testing', function () {
     })
 
     it('vm.list() should return an array of blog posts from GET request and store it in vm', function () {
-      $httpBackend.whenGET(/\/api\/v1\/Blog\?noCache=\d+/).respond({
-        data: [
+      $httpBackend.whenGET(/\/api\/blog\?noCache=\d+/).respond({
+        blogs: [
           {
             title: 'Nodejs',
             content: 'Try it out',
@@ -115,7 +115,8 @@ describe('BLOG Testing', function () {
             content: 'v2 stable coming soon',
             created: timestamp
           }
-        ]
+        ],
+        count: 2
       })
 
       BlogController.list()
@@ -139,8 +140,8 @@ describe('BLOG Testing', function () {
     })
 
     it('vm.find() should return a blog post from GET request and store it in vm', function () {
-      $httpBackend.whenGET(/\/api\/v1\/Blog\/[\w\d]+\?noCache=\d+/)
-        .respond({data: getMockBlogData()})
+      $httpBackend.whenGET(/\/api\/blog\/[\w\d]+\?noCache=\d+/)
+        .respond(getMockBlogData())
 
       // find() relies on id state param being present
       $stateParams.id = blogId
@@ -153,12 +154,8 @@ describe('BLOG Testing', function () {
     })
 
     it('vm.create() should return a blog post from POST request and redirect to blog list', function () {
-      $httpBackend.whenPOST(/api\/v1\/Blog/)
-        .respond({
-          data: {
-            data: getMockBlogData()
-          }
-        })
+      $httpBackend.whenPOST(/api\/blog/)
+        .respond(getMockBlogData())
 
       // Mimic form inputs
       BlogController.blog.title = getMockBlogData().title
@@ -174,7 +171,7 @@ describe('BLOG Testing', function () {
     })
 
     it('vm.update() should return a blog post from PUT request and redirect to blog post view', function () {
-      $httpBackend.whenPUT(/\/api\/v1\/Blog\/[\w\d]+/)
+      $httpBackend.whenPUT(/\/api\/blog\/[\w\d]+/)
         .respond({
           data: getMockBlogData()
         })
@@ -197,7 +194,7 @@ describe('BLOG Testing', function () {
     })
 
     it('vm.delete() should send a DELETE request with a valid blog id and delete the blog from the vm', function () {
-      $httpBackend.whenDELETE(/api\/v1\/Blog\/([0-9a-fA-F]{24})$/)
+      $httpBackend.whenDELETE(/api\/blog\/([0-9a-fA-F]{24})$/)
         .respond(204)
 
       // Initialize blog posts as in the blog list view

@@ -7,6 +7,7 @@ var chokidar = require('chokidar')
 var cookieParser = require('cookie-parser')
 var cors = require('cors')
 var compress = require('compression')
+var ejs = require('ejs')
 var contentLength = require('express-content-length-validator')
 var express = require('express')
 var expressValidator = require('express-validator')
@@ -26,7 +27,6 @@ var Promise = require('bluebird')
 var sass = require('node-sass')
 var seo = require('mean-seo')
 var session = require('express-session')
-var sitemap = require('express-sitemap')()
 var status = require('express-system-status')
 var _ = require('lodash')
 
@@ -107,7 +107,7 @@ function Mean (opts, done) {
 
 Mean.prototype.setupEnv = function () {
   var self = this
-  self.environment = require('./server/environment.js').get()
+  self.environment = require('./configs/environment.js').get()
   self.settings = require('./configs/settings.js').get()
   self.dir = __dirname
 }
@@ -125,10 +125,6 @@ Mean.prototype.setupExpressConfigs = function () {
   // Disable "powered by express" header
   self.app.disable('x-powered-by')
 
-  // cache=memory or swig dies in NODE_ENV=production
-  self.app.locals.cache = 'memory'
-  var swig = require('swig')
-  self.app.engine('html', swig.renderFile)
   self.app.set('view engine', 'html')
   self.app.set('views', path.join(self.dir, '/client'))
 
@@ -429,7 +425,7 @@ Mean.prototype.agenda = function () {
     // self.agenda.every('*/1 * * * *', 'backup')
     self.agenda.start()
   })
-  self.app.use('/agenda', /*  require('./server/middleware.js').isAdmin,*/ Agendash(self.agenda))
+  self.app.use('/agenda', /*  require('./server/middleware.js').isAdmin, */ Agendash(self.agenda))
 }
 Mean.prototype.livereload = function () {
   var self = this
@@ -540,33 +536,19 @@ Mean.prototype.setupRoutesMiddleware = function () {
    * build.routing(app, mongoose) - if reverting back to automatic
    */
 
-  self.build.routing({
-    mongoose: mongoose,
-    remove: ['users'],
-    middleware: {
-      auth: [self.middleware.verify, self.middleware.isAuthenticated]
-    }
-  }, function (error, data) {
-    if (error) console.log(error)
-    _.forEach(data, function (m) {
-      self.debug('Route Built by NPM buildreq:', m.route)
-      self.app.use(m.route, m.app)
-    })
-  })
-
-  self.app.use(function (req, res, next) {
-    res.locals.user = req.user
-    if (/api/i.test(req.path)) {
-      try {
-        if (req.body.redirect) {
-          req.session.returnTo = req.body.redirect
-        }
-      } catch (err) {
-        console.log(err)
-      }
-    }
-    next()
-  })
+// self.build.routing({
+//   mongoose: mongoose,
+//   remove: ['users'],
+//   middleware: {
+//     auth: [self.middleware.verify, self.middleware.isAuthenticated]
+//   }
+// }, function (error, data) {
+//   if (error) console.log(error)
+//   _.forEach(data, function (m) {
+//     self.debug('Route Built by NPM buildreq:', m.route)
+//     self.app.use(m.route, m.app)
+//   })
+// })
 }
 
 Mean.prototype.setupErrorHandling = function () {
@@ -627,9 +609,12 @@ Mean.prototype.setupStatic = function () {
       error: 'nothing found in uploads'
     })
   })
-  self.app.get('/sitemap', function (req, res) {
-    res.send(sitemap.generate(self.app))
-  })
+  // Turning off sitemap unless you want it back on
+  // var sitemap = require('express-sitemap')()
+  // self.app.get('/sitemap', function (req, res) {
+  //   res.send(sitemap.generate(self.app))
+  // })
+
   self.app.use(seo({cacheClient: 'disk', cacheDuration: 1 * 24 * 60 * 60 * 1000}))
   /**
    * Primary app routes.
@@ -648,10 +633,15 @@ Mean.prototype.setupStatic = function () {
       if (self.settings.seo[req.path].description) html.description = self.settings.seo[req.path].description
       if (self.settings.seo[req.path].keywords) html.keywords = self.settings.seo[req.path].keywords
     }
-    res.render(path.resolve('server') + '/layout/index.html', {
+    ejs.renderFile(path.join(__dirname, './server/layout/index.html'), {
       html: html,
       assets: self.app.locals.frontendFilesFinal,
       environment: self.environment
+    }, {
+      cache: true
+    }, function (err, str) {
+      if (err)console.log(err)
+      res.send(str)
     })
   })
 }

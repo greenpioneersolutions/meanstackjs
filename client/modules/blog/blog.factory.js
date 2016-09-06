@@ -8,7 +8,7 @@
   BlogFactory.$inject = ['$resource']
   /* @ngInject */
   function BlogFactory ($resource) {
-    return $resource('/api/v1/Blog/:id', {
+    return $resource('/api/blog/:id', {
       id: '@id'
     }, {
       update: {

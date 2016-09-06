@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="fragment" content="!">
-    <title>{{html.title}}</title>
+    <title><%= html.title %></title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
     <meta name="keywords" content="{{html.keywords}}">
     <meta name="description" content="{{html.description}}">
@@ -20,21 +20,28 @@
         }
     </style>
     <link rel="shortcut icon" href="images/logo/icon.png" type="image/x-icon">
-    <link rel="icon" href="images/logo/icon.png" type="image/x-icon"> {% for file in assets.css %}
-    <link rel="stylesheet" href="{{file}}"> {% endfor %}
+    <link rel="icon" href="images/logo/icon.png" type="image/x-icon"> 
+    <% for(var i=0; i<assets.css.length; i++) { %>
+        <link rel="stylesheet" href="<%= assets.css[i] %>">
+    <% } %>
+    
+    
 </head>
 
 <body ng-app="app">
+    
     <div ng-include="'modules/core/core.view.html'">
     </div>
-    {% for file in assets.js %}
-    <script type="text/javascript" src="{{file}}"></script>
-    {% endfor %} {% if environment == 'development'%}
+    <% for(var i=0; i<assets.js.length; i++) { %>
+        <script type="text/javascript" src="<%= assets.js[i] %>"></script>
+    <% } %>
+    <% if (environment == 'development') { %>
     <script>
         document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] +
             ':35729/livereload.js?snipver=1"></' + 'script>')
     </script>
-    {% endif %}
+    <%  } %>
+    
     <script>
         (function(i, s, o, g, r, a, m) {
             i['GoogleAnalyticsObject'] = r;
@@ -47,9 +54,11 @@
             a.src = g;
             m.parentNode.insertBefore(a, m)
         })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-        ga('create', '{{html.googleAnalytics}}', 'auto');
+        ga('create', '<%= html.googleAnalytics %>', 'auto');
         ga('send', 'pageview');
     </script>
 </body>
 
 </html>
+
+

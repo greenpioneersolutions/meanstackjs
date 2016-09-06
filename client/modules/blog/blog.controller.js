@@ -21,27 +21,28 @@
       var blog = new BlogFactory(vm.blog)
       blog.user = vm.UserFactory.user
       blog.$save(function (response) {
-        vm.blog = response.data.data
+        vm.blog = response
         //  window.location.href
         $location.url('/blog/list')
       }, function (error) {
-        logger.error(error)
+        logger.error(error.data.msg || error.data.message, error, 'Blog')
       })
     }
     vm.find = function () {
       BlogFactory.get({
         id: $stateParams.id
       }, function (success) {
-        vm.blog = success.data
+        vm.blog = success
       }, function (error) {
-        logger.error(error)
+        logger.error(error.data.msg || error.data.message, error, 'Blog')
       })
     }
     vm.list = function () {
       BlogFactory.get(function (success) {
-        vm.blogs = success.data
+        vm.blogs = success.blogs
+        vm.count = success.count
       }, function (error) {
-        logger.error(error)
+        logger.error(error.data.msg || error.data.message, error, 'Blog')
       })
     }
     vm.update = function (validated) {
@@ -56,7 +57,7 @@
           $location.url('/blog/view/' + $stateParams.id)
         },
         function (error) {
-          logger.error(error)
+          logger.error(error.data.msg || error.data.message, error, 'Blog')
         })
     }
     vm.delete = function (blogId) {
@@ -75,7 +76,7 @@
             }
           },
           function (error) {
-            logger.error(error)
+            logger.error(error.data.msg || error.data.message, error, 'Blog')
           })
       }
     }
