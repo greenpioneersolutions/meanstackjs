@@ -79,6 +79,12 @@ function Mean (opts, done) {
         }, self.app).listen(self.settings.https.port, function () {
           console.log('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
           self.debug('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
+          if (!self.settings.http.active) {
+            callback(null, {
+              port: self.app.get('port'),
+              env: self.app.get('env')
+            })
+          }
         })
       }
       // OR - check if you set both to false we default to turn on http
@@ -86,16 +92,17 @@ function Mean (opts, done) {
         self.app.listen(self.app.get('port'), function () {
           console.log('HTTP Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
           self.debug('HTTP Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
+          callback(null, {
+            port: self.app.get('port'),
+            env: self.app.get('env')
+          })
         })
       }
-      callback(null, {
-        port: self.app.get('port'),
-        env: self.app.get('env')
-      })
     }
   },
     function (err, results) {
       if (err) {
+        console.log('Exiting because of error %d', err)
         self.debug('Exiting because of error %d', err)
         process.exit(1)
       }

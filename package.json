@@ -17,7 +17,10 @@
       "io",
       "expect",
       "inject",
-      "beforeEach"
+      "beforeEach",
+      "before",
+      "afterEach",
+      "after"
     ],
     "ignore": [
       "commands/template/"
