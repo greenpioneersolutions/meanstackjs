@@ -2,6 +2,7 @@ module.exports = errorMiddleware
 
 var pug = require('pug')
 var httpStatus = require('http-status-codes')
+var debug = require('debug')('meanstackjs:error')
 
 function errorMiddleware (self) {
   self.app.use(function (err, req, res, next) {
@@ -56,6 +57,7 @@ function errorMiddleware (self) {
       }
       return res.send(html)
     }
+    debug('error message & code:' + message.message + ' - ' + code)
     res.send(message)
   })
 }
