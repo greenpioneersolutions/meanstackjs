@@ -32,16 +32,25 @@ function Register (opts, done) {
   self.middleware = opts.middleware
   self.dir = __dirname
   // Start Build Process
+  // getFolderContents > Used to dynamically get all of the contents of all module folders.
   self.getFolderContents()
+  // setupFrontendDirectories > Used to set up all directories need & to remove the previously compiled files.
   self.setupFrontendDirectories()
+  // compileFrontendStylesScripts > Used to compile all of the info needed for styles & scripts to render later.
   self.compileFrontendStylesScripts()
-  // self.transformBabel()
+  // compileBackendScripts > Used to compile all of the info need for all of the backend modules.
   self.compileBackendScripts()
+  // transformBabel > Used to transform files to es6 - commented out till the next release.
+  // self.transformBabel()
+  // setupServerModels > Used to set up the mongoose modules.
   self.setupServerModels()
+  // setupServerRoutes > Used to set up the module routes.
   self.setupServerRoutes()
+  // renderFrontendFiles > Used to render all of the frontend files based on all the information from above.
   self.renderFrontendFiles()
+  // updateFrontendCdn > Used to update the files based of if your using a cdn. We Support MAXCDN.
   self.updateFrontendCdn()
-
+  // frontendFiles > Returns the files to send to the frontend
   return self.frontendFiles
 }
 
