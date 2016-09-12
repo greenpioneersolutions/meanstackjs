@@ -1,5 +1,3 @@
-#[Check Most Recent Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
-
 ### Client Structure
 
 | Name                               | Description                                                  |
@@ -141,45 +139,3 @@ As you get to a solid code base. We want some optimized code and file size. Sett
 
 For development module.style files will be compliled and referenced independently. Making it easy debug and find where the styling code is.
 
-Framework Structure
------------------
-
-### Modules
-
-We have implemented modules with a specific file naming convention for server & client side coding. Each module has a unique such as `blog`. Inside of each module you specific files named as such `UNIQUE_NAME.FILE_TYPE_IDENTIFIER.FILE_EXTENSION` 
-
-Examples on the frontend  include :
-
-- `blog.controller.js`
-- `email.controller.js`
-- `blog.factory.js`
-- `auth.factory.js`
-- `blog.module.js`
-- `blog.routes.js.js`
-- `blog.style.css`
-- `blog.style.scss`
-- `list.style.less`
-- `create.view.html`
-
-Examples on the backend  include :
-
-- `blog.controller.js`
-- `blog.model.js`
-- `blog.routes.js`
-
-### Available Keywords to use for `FILE_TYPE_IDENTIFIER`
-
-| FRONTEND                                | BACKEND                                                  |
-| ----------------------------------  | ------------------------------------------------------------ |
-| `module` | `models` |
-| `controller` | `controller` |
-| `routes` | `routes` |
-| `config` | |
-| `service` | |
-| `provider` | |
-| `directive` | |
-| `style` | |
-| `json` | |
-| `view` | |
-
-Once everthing is set up properly we then register all modules and all of its content appropriately on `server.js` startup. 

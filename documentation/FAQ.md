@@ -1,5 +1,3 @@
-#[Check Most Recent Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
-
 ### Frequently Asked Questions
 
 #### 1. Error: listen EACCES 0.0.0.0
