@@ -40,7 +40,6 @@ function errorMiddleware (self) {
     } else if (code === 404) {
       self.debug('No notify for 404 error')
     } else {
-      // send mail?
       var html
       if (self.environment === 'production') {
         html = pug.renderFile('./server/error.pug', {

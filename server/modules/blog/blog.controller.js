@@ -21,7 +21,6 @@ exports.getBlog = function (req, res, next) {
     }
   }, function (err, results) {
     if (err) return next(err)
-    // You Can send back the count if you wish   results.count
     debug('end getBlog')
     return res.status(200).send(results)
   })
@@ -33,6 +32,7 @@ exports.deleteBlog = function (req, res, next) {
   })
 }
 exports.postBlog = function (req, res, next) {
+  // EX. of how to use express validator
   // req.assert('name', 'The name cannot be blank').notEmpty()
 
   var errors = req.validationErrors()

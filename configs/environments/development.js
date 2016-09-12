@@ -35,12 +35,12 @@ module.exports = {
     ssl: false,
     username: process.env.DB_USERNAME || '',
     debug: false,
-    /**
-   * Database options that will be passed directly to mongoose.connect
-   * Below are some examples.
-   * See http://mongodb.github.io/node-mongodb-native/driver-articles/mongoclient.html#mongoclient-connect-options
-   * and http://mongoosejs.com/docs/connections.html for more information
-   */
+
+    // Database options that will be passed directly to mongoose.connect
+    // Below are some examples.
+    // See http://mongodb.github.io/node-mongodb-native/driver-articles/mongoclient.html#mongoclient-connect-options
+    // and http://mongoosejs.com/docs/connections.html for more information
+
     options: {
       // server: {
       //   socketOptions: {

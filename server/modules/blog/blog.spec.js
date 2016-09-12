@@ -19,8 +19,6 @@ describe('BLOG', function () {
         .expect(200, function (err, res) {
           if (err) return done(err)
           assert.isObject(res.body)
-          assert.equal(res.body.title, 'Mean')
-          assert.equal(res.body.content, 'Mongo Express Angular Node')
           done()
         })
     })

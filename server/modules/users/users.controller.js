@@ -23,10 +23,6 @@ exports.getUsers = function (req, res, next) {
     })
 }
 
-/**
- * POST /authenticate
- * Authenticate Token.
- */
 exports.postAuthenticate = function (req, res, next) {
   debug('start postAuthenticate')
   var redirect = req.body.redirect || false
@@ -98,10 +94,6 @@ exports.postAuthenticate = function (req, res, next) {
   }
 }
 
-/**
- * GET /authenticate
- * Check Autherization of a user & return token.
- */
 exports.getAuthenticate = function (req, res) {
   debug('start getAuthenticate')
 
@@ -134,10 +126,7 @@ exports.getAuthenticate = function (req, res) {
     })
   }
 }
-/**
- * POST /login
- * Sign in using email and password.
- */
+
 exports.postLogin = function (req, res, next) {
   debug('start getAuthenticate')
 
@@ -195,10 +184,6 @@ exports.postLogin = function (req, res, next) {
   })(req, res, next)
 }
 
-/**
- * GET /logout
- * Log out.
- */
 exports.logout = function (req, res) {
   debug('start logout')
   req.logout()
@@ -206,10 +191,6 @@ exports.logout = function (req, res) {
   return res.status(200).send()
 }
 
-/**
- * POST /signup
- * Create a new local account.
- */
 exports.postSignup = function (req, res, next) {
   debug('start postSignup')
 
@@ -286,10 +267,6 @@ exports.postSignup = function (req, res, next) {
   })
 }
 
-/**
- * POST /account/profile
- * Update profile information.
- */
 exports.putUpdateProfile = function (req, res, next) {
   debug('start putUpdateProfile')
 
@@ -318,10 +295,6 @@ exports.putUpdateProfile = function (req, res, next) {
   })
 }
 
-/**
- * POST /account/password
- * Update current password.
- */
 exports.putUpdatePassword = function (req, res, next) {
   debug('start putUpdatePassword')
 
@@ -350,10 +323,6 @@ exports.putUpdatePassword = function (req, res, next) {
   })
 }
 
-/**
- * POST /account/delete
- * Delete user account.
- */
 exports.deleteDeleteAccount = function (req, res, next) {
   debug('start deleteDeleteAccount')
 
@@ -367,10 +336,6 @@ exports.deleteDeleteAccount = function (req, res, next) {
   })
 }
 
-/**
- * GET /reset/:token
- * Reset Password page.
- */
 exports.getReset = function (req, res) {
   debug('start getReset')
 
@@ -405,10 +370,6 @@ exports.getReset = function (req, res) {
   }
 }
 
-/**
- * POST /reset/:token
- * Process the reset password request.
- */
 exports.postReset = function (req, res, next) {
   debug('start postReset')
 
@@ -472,10 +433,6 @@ exports.postReset = function (req, res, next) {
   }
 }
 
-/**
- * POST /forgot
- * Create a random token, then the send user an email with a reset link.
- */
 exports.postForgot = function (req, res, next) {
   debug('start postForgot')
 

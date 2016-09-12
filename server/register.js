@@ -75,27 +75,17 @@ Register.prototype.getFolderContents = function () {
     })
     return returnConfigs
   }
-
-  /**
-   * BACKEND
-   */
   var backendPath = path.resolve(self.dir, './modules')
   if (!fs.existsSync(backendPath)) {
     throw new Error(chalk.red('Critical Folder Missing:' + chalk.red.underline.bold('Expected Server Modules Directory ./server/modules/')))
   }
-
   var backendConfigs = expandModules(_.filter(fs.readdirSync(backendPath), function (n) {
     return !_.startsWith(n, '.')
   }), backendPath)
-
-  /**
-   * FRONTEND
-   */
   var frontendPath = path.resolve(self.dir, '../client/modules')
   if (!fs.existsSync(frontendPath)) {
     throw new Error(chalk.red('Critical Folder Missing:' + chalk.red.underline.bold('Expected Server Modules Directory ./client/modules/')))
   }
-
   var frontendConfigs = _.filter(fs.readdirSync(frontendPath), function (n) {
     return !_.startsWith(n, '.')
   })
@@ -119,7 +109,7 @@ Register.prototype.setupFrontendDirectories = function () {
     if (fs.existsSync(url)) {
       fs.readdirSync(url).forEach(function (file, index) {
         var curPath = path.resolve(url + '/' + file)
-        if (fs.lstatSync(curPath).isDirectory()) { // recurse
+        if (fs.lstatSync(curPath).isDirectory()) {
           //
         } else { // delete file
           fs.unlinkSync(curPath)
@@ -148,7 +138,6 @@ Register.prototype.setupFrontendDirectories = function () {
   //   }
   // })
   }
-  // added in sytels comipeld  like line 200
   if (!fs.existsSync(self.dir + '/../client/scripts/')) {
     fs.mkdirSync(self.dir + '/../client/scripts/')
   }
@@ -170,9 +159,6 @@ Register.prototype.setupFrontendDirectories = function () {
 Register.prototype.compileFrontendStylesScripts = function () {
   debug('started config')
   var self = this
-  /**
-   * FRONTEND
-   */
   self.frontendFiles = {
     'controller': [],
     'module': [],

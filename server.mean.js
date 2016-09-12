@@ -27,7 +27,6 @@ var path = require('path')
 var passport = require('passport')
 var Promise = require('bluebird')
 var sass = require('node-sass')
-var seo = require('mean-seo')
 var session = require('express-session')
 var status = require('express-system-status')
 var _ = require('lodash')
@@ -36,7 +35,6 @@ var MongoStore = require('connect-mongo')(session)
 function Mean (opts, done) {
   var self = this
   self.opts = opts
-
   self.environment = require('./configs/environment.js').get()
   self.settings = require('./configs/settings.js').get()
   self.port = self.opts.port || self.settings.http.port
@@ -45,19 +43,33 @@ function Mean (opts, done) {
   self.dir = __dirname
   self.register = require('./server/register.js')
   // Start of the build process
+  // setupExpressConfigs > Used to set up expressjs initially, middleware & passport.
   self.setupExpressConfigs()
+  // setupExpressErrorHandler > Used to set up our customer error handler in the server folder.
   self.setupExpressErrorHandler()
+  // setupExpressSecurity > Used to set up helmet, hpp, cors & content length.
   self.setupExpressSecurity()
+  // setupExpressHeaders > Used to set up the headers that go out on every route.
   self.setupExpressHeaders()
+  // setupExpressLogger > Used to set up our morgan logger & debug statements on all routes.
   self.setupExpressLogger()
+  // setupServerRoutesModels > Used to set up the register function to dynamically build all of the models, routes & frontend files.
   self.setupServerRoutesModels()
-  self.setupStaticRoutes()
+  // setupToolSwagger - *** OPTIONAL *** >  Used to set up swagger.io to represent the api with a nice ui. http://localhost:3000/api/
   self.setupToolSwagger()
+  // setupToolAgenda - *** OPTIONAL *** >  Used to set up  agenda to manage light-weight job scheduling with a nice ui. http://localhost:3000/agenda
   self.setupToolAgenda()
+  // setupToolNightwatch - *** OPTIONAL *** >  Used to set up the view into the reporting of how e2e did . http://localhost:3000/e2e/
   self.setupToolNightwatch()
+  // setupToolPlato - *** OPTIONAL *** >  Used to set up the view into the reporting of how the analysis  . http://localhost:3000/plato/
   self.setupToolPlato()
+  // setupToolLivereload - *** OPTIONAL *** >  Used to set up livereload which allows you as the developer to develop faster due to not having to manually restarting the server after every change
   self.setupToolLivereload()
+  // setupStaticRoutes > Used to set up all system static routes including the main '/*' route with ejs templating.
+  self.setupStaticRoutes()
+  // purgeMaxCdn - *** OPTIONAL ***  > Used to purge the max cdn cache of the file. We Support MAXCDN
   self.purgeMaxCdn()
+  // auto  - connectMongoDb :  server > Used to finsh the final set up of the server. at the same time we start connecting to mongo and turning on the server.
   auto({
     connectMongoDb: function (callback) {
       mongoose.Promise = Promise
@@ -255,10 +267,10 @@ Mean.prototype.setupServerRoutesModels = function () {
     settings: self.settings,
     middleware: self.middleware
   })
-  /**
-   * Dynamic Routes / Manually enabling them . You can change it back to automatic in the settings
-   * build.routing(app, mongoose) - if reverting back to automatic
-   */
+
+  // Dynamic Routes / Manually enabling them . You can change it back to automatic in the settings
+  // build.routing(app, mongoose) - if reverting back to automatic
+
   // self.app.use(self.build.responseMiddleware({mongoose: mongoose}))
   // self.build.routing({
   //   mongoose: mongoose,
@@ -275,97 +287,7 @@ Mean.prototype.setupServerRoutesModels = function () {
   // })
   debug('end setupServerRoutesModels')
 }
-Mean.prototype.setupStaticRoutes = function () {
-  debug('started setupStaticRoutes')
-  var self = this
-  self.app.use(express.static(path.join(self.dir, 'client/'), {
-    maxAge: 31557600000
-  }))
-  if (self.environment === 'development') {
-    self.app.use('/api/v1/status', // middleware.verify  if you want the api to be behind token based
-      status({
-        app: self.app,
-        config: self.settings,
-        auth: true,
-        user: 'admin',
-        pass: 'pass',
-        extra: {
-          environment: self.environment
-        },
-        mongoose: mongoose // Now Supporting Mongoose
-      })
-    )
-  }
-  /**
-   * Primary Failover routes.
-   */
-  self.app.get('/api/*', function (req, res) {
-    res.status(400).send({
-      error: 'nothing found in api'
-    })
-  })
-  self.app.get('/bower_components/*', function (req, res) {
-    res.status(400).send({
-      error: 'nothing found in bower_components'
-    })
-  })
-  self.app.get('/images/*', function (req, res) {
-    res.status(400).send({
-      error: 'nothing found in images'
-    })
-  })
-  self.app.get('/scripts/*', function (req, res) {
-    res.status(400).send({
-      error: 'nothing found in scripts'
-    })
-  })
-  self.app.get('/styles/*', function (req, res) {
-    res.status(400).send({
-      error: 'nothing found in styles'
-    })
-  })
-  self.app.get('/uploads/*', function (req, res) {
-    res.status(400).send({
-      error: 'nothing found in uploads'
-    })
-  })
-  // Turning off sitemap unless you want it back on
-  // var sitemap = require('express-sitemap')()
-  // self.app.get('/sitemap', function (req, res) {
-  //   res.send(sitemap.generate(self.app))
-  // })
 
-  self.app.use(seo({cacheClient: 'disk', cacheDuration: 1 * 24 * 60 * 60 * 1000}))
-  /**
-   * Primary app routes.
-   */
-  self.app.get('/*', function (req, res) {
-    if (_.isUndefined(req.user)) {
-      req.user = {}
-      req.user.authenticated = false
-    } else {
-      req.user.authenticated = true
-    }
-    // took out user
-    var html = self.settings.html
-    if (self.settings.seo[req.path]) {
-      if (self.settings.seo[req.path].title) html.title = self.settings.seo[req.path].title
-      if (self.settings.seo[req.path].description) html.description = self.settings.seo[req.path].description
-      if (self.settings.seo[req.path].keywords) html.keywords = self.settings.seo[req.path].keywords
-    }
-    ejs.renderFile(path.join(__dirname, './server/layout/index.html'), {
-      html: html,
-      assets: self.app.locals.frontendFilesFinal,
-      environment: self.environment
-    }, {
-      cache: true
-    }, function (err, str) {
-      if (err)console.log(err)
-      res.send(str)
-    })
-  })
-  debug('end setupStaticRoutes')
-}
 Mean.prototype.setupToolSwagger = function () {
   debug('started setupToolSwagger')
   var self = this
@@ -514,9 +436,6 @@ Mean.prototype.setupToolPlato = function () {
 Mean.prototype.setupToolLivereload = function () {
   debug('started setupToolLivereload')
   var self = this
-  /**
-   * Livereload
-   */
   if (self.environment === 'development') {
     var scssLessWatcher = chokidar.watch('file, dir, glob, or array', {
       ignored: /[\/\\]\./,
@@ -598,6 +517,93 @@ Mean.prototype.setupToolLivereload = function () {
   }
   debug('end setupToolLivereload')
 }
+Mean.prototype.setupStaticRoutes = function () {
+  debug('started setupStaticRoutes')
+  var self = this
+  self.app.use(express.static(path.join(self.dir, 'client/'), {
+    maxAge: 31557600000
+  }))
+  if (self.environment === 'development') {
+    self.app.use('/api/v1/status',
+      status({
+        app: self.app,
+        config: self.settings,
+        auth: true,
+        user: 'admin',
+        pass: 'pass',
+        extra: {
+          environment: self.environment
+        },
+        mongoose: mongoose
+      })
+    )
+  }
+  self.app.get('/api/*', function (req, res) {
+    res.status(400).send({
+      error: 'nothing found in api'
+    })
+  })
+  self.app.get('/bower_components/*', function (req, res) {
+    res.status(400).send({
+      error: 'nothing found in bower_components'
+    })
+  })
+  self.app.get('/images/*', function (req, res) {
+    res.status(400).send({
+      error: 'nothing found in images'
+    })
+  })
+  self.app.get('/scripts/*', function (req, res) {
+    res.status(400).send({
+      error: 'nothing found in scripts'
+    })
+  })
+  self.app.get('/styles/*', function (req, res) {
+    res.status(400).send({
+      error: 'nothing found in styles'
+    })
+  })
+  self.app.get('/uploads/*', function (req, res) {
+    res.status(400).send({
+      error: 'nothing found in uploads'
+    })
+  })
+  // Turning off sitemap unless you want it back on
+  // var sitemap = require('express-sitemap')()
+  // self.app.get('/sitemap', function (req, res) {
+  //   res.send(sitemap.generate(self.app))
+  // })
+
+  // var seo = require('mean-seo')
+  // SEO > is from npm mean-seo and is ment purly for crawlers. Commented out for init release because it needs more testing
+  // self.app.use(seo({cacheClient: 'disk', cacheDuration: 1 * 24 * 60 * 60 * 1000}))
+
+  self.app.get('/*', function (req, res) {
+    if (_.isUndefined(req.user)) {
+      req.user = {}
+      req.user.authenticated = false
+    } else {
+      req.user.authenticated = true
+    }
+    var html = self.settings.html
+    if (self.settings.seo[req.path]) {
+      if (self.settings.seo[req.path].title) html.title = self.settings.seo[req.path].title
+      if (self.settings.seo[req.path].description) html.description = self.settings.seo[req.path].description
+      if (self.settings.seo[req.path].keywords) html.keywords = self.settings.seo[req.path].keywords
+    }
+    ejs.renderFile(path.join(__dirname, './server/layout/index.html'), {
+      html: html,
+      assets: self.app.locals.frontendFilesFinal,
+      environment: self.environment
+    }, {
+      cache: true
+    }, function (err, str) {
+      if (err)console.log(err)
+      res.send(str)
+    })
+  })
+  debug('end setupStaticRoutes')
+}
 Mean.prototype.purgeMaxCdn = function () {
   debug('started purgeMaxCdn')
   var self = this
@@ -607,7 +613,6 @@ Mean.prototype.purgeMaxCdn = function () {
       self.settings.maxcdn.consumerKey,
       self.settings.maxcdn.consumerSecret
     )
-    // secret.maxcdn.zoneId ||
     maxcdn.del('zones/pull.json/' + self.settings.maxcdn.zoneId + '/cache', function (err, res) {
       console.log('MAXCDN: STATUS')
       if (err) {

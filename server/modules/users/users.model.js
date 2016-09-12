@@ -91,9 +91,7 @@ var userSchema = new mongoose.Schema({
   }
 })
 
-/**
- * Password hash middleware.
- */
+// Password hash middleware.
 userSchema.pre('save', function (next) {
   var user = this
   user.wasNew = user.isNew // for post-save
@@ -129,9 +127,7 @@ userSchema.post('save', function (user) {
     })
   }
 })
-/**
- * Helper method for validating user's password.
- */
+// Helper method for validating user's password.
 userSchema.methods.comparePassword = function (candidatePassword, cb) {
   debug('start comparePassword')
   var user = this
