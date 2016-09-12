@@ -1,5 +1,3 @@
-#[Check Most Recent Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
-
 ### Agenda
 
 Agenda is a light-weight job scheduling library for Node.js.

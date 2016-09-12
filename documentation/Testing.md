@@ -1,4 +1,12 @@
-#[Check Most Recent Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
+## Testing
+
+### NPM Test / Everything
+
+```bash
+# Make sure you haves a selenium sever on 
+# https://www.npmjs.com/package/selenium-standalone
+npm test
+```
 
 ### Nightwatch / E2E
 

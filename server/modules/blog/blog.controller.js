@@ -2,8 +2,10 @@ var auto = require('run-auto')
 var mongoose = require('mongoose')
 var blogs = mongoose.model('blog')
 var _ = require('lodash')
+var debug = require('debug')('meanstackjs:blog')
 
 exports.getBlog = function (req, res, next) {
+  debug('start getBlog')
   auto({
     blogs: function (cb) {
       blogs
@@ -19,7 +21,7 @@ exports.getBlog = function (req, res, next) {
     }
   }, function (err, results) {
     if (err) return next(err)
-    // You Can send back the count if you wish   results.count
+    debug('end getBlog')
     return res.status(200).send(results)
   })
 }
@@ -30,6 +32,7 @@ exports.deleteBlog = function (req, res, next) {
   })
 }
 exports.postBlog = function (req, res, next) {
+  // EX. of how to use express validator
   // req.assert('name', 'The name cannot be blank').notEmpty()
 
   var errors = req.validationErrors()
@@ -55,9 +58,13 @@ exports.putBlog = function (req, res, next) {
 }
 
 exports.getBlogById = function (req, res, next) {
+  debug('start getBlogById')
   res.send(req.blog)
+  debug('end getBlogById')
 }
 exports.paramBlog = function (req, res, next, id) {
+  debug('start paramBlog')
+
   req.assert('blogId', 'Your Blog ID cannot be blank').notEmpty()
   req.assert('blogId', 'Your Blog ID has to be a real id').isMongoId()
 
@@ -66,7 +73,7 @@ exports.paramBlog = function (req, res, next, id) {
     return res.status(400).send({
       success: false,
       msg: errors[0].msg,
-      redirect: '/d'
+      redirect: '/'
     })
   }
   auto({
@@ -79,6 +86,7 @@ exports.paramBlog = function (req, res, next, id) {
   }, function (err, results) {
     if (err) return next(err)
     req.blog = results.blog
+    debug('end paramBlog')
     next()
   })
 }

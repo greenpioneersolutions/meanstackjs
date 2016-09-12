@@ -17,7 +17,10 @@
       "io",
       "expect",
       "inject",
-      "beforeEach"
+      "beforeEach",
+      "before",
+      "afterEach",
+      "after"
     ],
     "ignore": [
       "commands/template/"
@@ -114,7 +117,6 @@
     "mongoose-validator": "^1.2.4",
     "morgan": "^1.6.1",
     "multer": "^1.1.0",
-    "nightwatch": "^0.9.8",
     "node-sass": "^3.4.2",
     "node-uuid": "^1.4.7",
     "node-xlsx": "^0.7.2",
@@ -150,7 +152,7 @@
     "karma-mocha": "^1.0.1",
     "mocha": "^3.0.2",
     "multiline": "^1.0.2",
-    "nightwatch": "^0.8.18",
+    "nightwatch": "^0.9.8",
     "nightwatch-html-reporter": "^1.0.4",
     "nodemon": "^1.8.1",
     "phantomjs-prebuilt": "^2.1.7",

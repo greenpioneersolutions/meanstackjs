@@ -2,6 +2,7 @@ module.exports = errorMiddleware
 
 var pug = require('pug')
 var httpStatus = require('http-status-codes')
+var debug = require('debug')('meanstackjs:error')
 
 function errorMiddleware (self) {
   self.app.use(function (err, req, res, next) {
@@ -39,7 +40,6 @@ function errorMiddleware (self) {
     } else if (code === 404) {
       self.debug('No notify for 404 error')
     } else {
-      // send mail?
       var html
       if (self.environment === 'production') {
         html = pug.renderFile('./server/error.pug', {
@@ -56,6 +56,7 @@ function errorMiddleware (self) {
       }
       return res.send(html)
     }
+    debug('error message & code:' + message.message + ' - ' + code)
     res.send(message)
   })
 }

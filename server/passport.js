@@ -1,19 +1,13 @@
 var LocalStrategy = require('passport-local').Strategy
 var mongoose = require('mongoose')
 var debug = require('debug')('meanstackjs:passport')
-
-/**
- * Passport serialize user function.
- */
+// Passport serialize user function.
 exports.serializeUser = function (user, done) {
   process.nextTick(function () {
     done(null, user.id)
   })
 }
-
-/**
- * Passport deserialize user function.
- */
+// Passport deserialize user function.
 exports.deserializeUser = function (id, done) {
   var User = mongoose.model('users')
   User.findOne({
@@ -22,10 +16,7 @@ exports.deserializeUser = function (id, done) {
     done(err, user)
   })
 }
-
-/**
- * Sign in using Email and Password.
- */
+// Sign in using Email and Password.
 exports.passportStrategy = new LocalStrategy({ usernameField: 'email' }, function (email, password, done) {
   var User = mongoose.model('users')
   email = email.toLowerCase()
