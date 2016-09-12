@@ -10,7 +10,7 @@ function build (options) {
   throw new TypeError(console.log('Expected object for argument options but got ' + options))
 }
 var _ = require('lodash')
-var babel = require('babel-core')
+// var babel = require('babel-core')
 var chalk = require('chalk')
 var concat = require('serial-concat-files')
 var debug = require('debug')('meanstackjs:register')
@@ -24,28 +24,39 @@ var path = require('path')
 
 function Register (opts, done) {
   var self = this
-  self.environment = require('../configs/environment.js').get()
-  self.mail = require('./mail.js')
+
+  self.environment = opts.environment
+  self.mail = opts.mail
   self.app = opts.app
   self.settings = opts.settings
   self.middleware = opts.middleware
-  self.info()
-  self.directories()
-  self.config()
-  self.transform()
-  self.createBackendModels()
-  self.createBackendRoutes()
-  self.createGlobalStyle()
-  self.createFrontend()
-  self.env()
-  self.cdn()
+  self.dir = __dirname
+  // Start Build Process
+  // getFolderContents > Used to dynamically get all of the contents of all module folders.
+  self.getFolderContents()
+  // setupFrontendDirectories > Used to set up all directories need & to remove the previously compiled files.
+  self.setupFrontendDirectories()
+  // compileFrontendStylesScripts > Used to compile all of the info needed for styles & scripts to render later.
+  self.compileFrontendStylesScripts()
+  // compileBackendScripts > Used to compile all of the info need for all of the backend modules.
+  self.compileBackendScripts()
+  // transformBabel > Used to transform files to es6 - commented out till the next release.
+  // self.transformBabel()
+  // setupServerModels > Used to set up the mongoose modules.
+  self.setupServerModels()
+  // setupServerRoutes > Used to set up the module routes.
+  self.setupServerRoutes()
+  // renderFrontendFiles > Used to render all of the frontend files based on all the information from above.
+  self.renderFrontendFiles()
+  // updateFrontendCdn > Used to update the files based of if your using a cdn. We Support MAXCDN.
+  self.updateFrontendCdn()
+  // frontendFiles > Returns the files to send to the frontend
   return self.frontendFiles
 }
 
-Register.prototype.info = function () {
+Register.prototype.getFolderContents = function () {
   debug('started Info')
   var self = this
-  self.dir = __dirname
   self.transformFiles = []
   self.transformFolders = []
   function expandModules (arr, dir) {
@@ -73,27 +84,17 @@ Register.prototype.info = function () {
     })
     return returnConfigs
   }
-
-  /**
-   * BACKEND
-   */
   var backendPath = path.resolve(self.dir, './modules')
   if (!fs.existsSync(backendPath)) {
     throw new Error(chalk.red('Critical Folder Missing:' + chalk.red.underline.bold('Expected Server Modules Directory ./server/modules/')))
   }
-
   var backendConfigs = expandModules(_.filter(fs.readdirSync(backendPath), function (n) {
     return !_.startsWith(n, '.')
   }), backendPath)
-
-  /**
-   * FRONTEND
-   */
   var frontendPath = path.resolve(self.dir, '../client/modules')
   if (!fs.existsSync(frontendPath)) {
     throw new Error(chalk.red('Critical Folder Missing:' + chalk.red.underline.bold('Expected Server Modules Directory ./client/modules/')))
   }
-
   var frontendConfigs = _.filter(fs.readdirSync(frontendPath), function (n) {
     return !_.startsWith(n, '.')
   })
@@ -109,7 +110,7 @@ Register.prototype.info = function () {
   debug('end Info')
 }
 
-Register.prototype.directories = function () {
+Register.prototype.setupFrontendDirectories = function () {
   debug('started directories')
 
   var self = this
@@ -117,7 +118,7 @@ Register.prototype.directories = function () {
     if (fs.existsSync(url)) {
       fs.readdirSync(url).forEach(function (file, index) {
         var curPath = path.resolve(url + '/' + file)
-        if (fs.lstatSync(curPath).isDirectory()) { // recurse
+        if (fs.lstatSync(curPath).isDirectory()) {
           //
         } else { // delete file
           fs.unlinkSync(curPath)
@@ -126,27 +127,26 @@ Register.prototype.directories = function () {
     // fs.rmdirSync(url)
     }
   }
-  // CHECK AND MAKE DIRECTORY
   if (self.settings.babel.active) {
     debug('checking babel directories')
-    // if (!fs.existsSync(self.dir + '/../client/' + self.settings.babel.folder + '/')) {
-    //   fs.mkdirSync(self.dir + '/../client/' + self.settings.babel.folder + '/')
-    // }
-    // rmdirAsync(self.dir + '/../client/' + self.settings.babel.folder + '/')
-    if (!fs.existsSync(self.dir + '/' + self.settings.babel.folder + '/')) {
-      fs.mkdirSync(self.dir + '/' + self.settings.babel.folder + '/')
-    } else {
-      rmdirAsync(self.dir + '/' + self.settings.babel.folder + '/')
-    }
-    _.forEach(_.uniq(self.transformFolders), function (n) {
-      if (!fs.existsSync(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')) {
-        fs.mkdirSync(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')
-      } else {
-        rmdirAsync(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')
-      }
-    })
+    console.log(chalk.red('Babel Currently Removed \n\n Will be Integrated later in 1.x'))
+  // if (!fs.existsSync(self.dir + '/../client/' + self.settings.babel.folder + '/')) {
+  //   fs.mkdirSync(self.dir + '/../client/' + self.settings.babel.folder + '/')
+  // }
+  // rmdirAsync(self.dir + '/../client/' + self.settings.babel.folder + '/')
+  // if (!fs.existsSync(self.dir + '/' + self.settings.babel.folder + '/')) {
+  //   fs.mkdirSync(self.dir + '/' + self.settings.babel.folder + '/')
+  // } else {
+  //   rmdirAsync(self.dir + '/' + self.settings.babel.folder + '/')
+  // }
+  // _.forEach(_.uniq(self.transformFolders), function (n) {
+  //   if (!fs.existsSync(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')) {
+  //     fs.mkdirSync(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')
+  //   } else {
+  //     rmdirAsync(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')
+  //   }
+  // })
   }
-  // added in sytels comipeld  like line 200
   if (!fs.existsSync(self.dir + '/../client/scripts/')) {
     fs.mkdirSync(self.dir + '/../client/scripts/')
   }
@@ -165,13 +165,9 @@ Register.prototype.directories = function () {
   debug('end directories')
 }
 
-Register.prototype.config = function (opts) {
+Register.prototype.compileFrontendStylesScripts = function () {
   debug('started config')
-
   var self = this
-  /**
-   * FRONTEND
-   */
   self.frontendFiles = {
     'controller': [],
     'module': [],
@@ -287,7 +283,12 @@ Register.prototype.config = function (opts) {
       }
     })
   })
+  debug('end config')
+}
+Register.prototype.compileBackendScripts = function () {
+  debug('started compileBackendScripts')
 
+  var self = this
   self.backendFiles = {
     'model': [],
     'controllers': [],
@@ -296,11 +297,11 @@ Register.prototype.config = function (opts) {
   _.forEach(self.backendFolders, function (r) {
     _.forEach(r.files, function (j) {
       var baseDirectory = './modules/'
-      if (j.ext === 'js' && self.settings.babel.active && j.type !== 'spec') {
-        self.transformFiles.push('/' + r.name + '/' + j.orginal)
-        self.transformFolders.push(r.name)
-        baseDirectory = './' + self.settings.babel.folder + '/'
-      }
+      // if (j.ext === 'js' && self.settings.babel.active && j.type !== 'spec') {
+      //   self.transformFiles.push('/' + r.name + '/' + j.orginal)
+      //   self.transformFolders.push(r.name)
+      //   baseDirectory = './' + self.settings.babel.folder + '/'
+      // }
       if (j.type === 'controller') {
         self.backendFiles.controllers.push({name: r.name, url: baseDirectory + r.name + '/' + j.orginal})
       } else if (j.type === 'model') {
@@ -312,26 +313,11 @@ Register.prototype.config = function (opts) {
       }
     })
   })
-
-  debug('end config')
+  debug('end compileBackendScripts')
 }
-
-Register.prototype.transform = function () {
-  var self = this
-  debug('babel:' + self.settings.babel.active)
-  if (self.settings.babel.active) {
-    debug('started transform')
-    _.forEach(self.transformFiles, function (n) {
-      fs.writeFileSync(self.dir + '/' + self.settings.babel.folder + n, babel.transformFileSync(self.dir + '/modules/' + n, self.settings.babel.options).code)
-    })
-    debug('end transform')
-  }
-}
-Register.prototype.createBackendModels = function () {
+Register.prototype.setupServerModels = function () {
   debug('started createBackendModels')
-
   var self = this
-
   _.forEach(self.backendFiles.model, function (n) {
     debug('Model: %s - %s', n.name, n.url)
     var model = mongoose.model(n.name, require(n.url))
@@ -341,19 +327,32 @@ Register.prototype.createBackendModels = function () {
   })
   debug('end createBackendModels')
 }
-Register.prototype.createBackendRoutes = function () {
+Register.prototype.setupServerRoutes = function () {
   debug('started createBackendRoutes')
-
   var self = this
+
   _.forEach(self.backendFiles.routes, function (n) {
     debug('Route : %s', n.url)
     require(n.url)(self.app, self.middleware, self.mail, self.settings)
   })
   debug('end createBackendRoutes')
 }
-Register.prototype.createGlobalStyle = function () {
+Register.prototype.transformBabel = function () {
+  debug('babel:' + self.settings.babel.active)
+  var self = this
+
+// if (self.settings.babel.active) {
+//   debug('started transform')
+//   _.forEach(self.transformFiles, function (n) {
+//     fs.writeFileSync(self.dir + '/' + self.settings.babel.folder + n, babel.transformFileSync(self.dir + '/modules/' + n, self.settings.babel.options).code)
+//   })
+//   debug('end transform')
+// }
+}
+Register.prototype.renderFrontendFiles = function () {
   debug('started createGlobalStyle')
   var self = this
+
   var globalContents = fs.readFileSync(self.dir + '/../client/styles/global.style.scss', 'utf8')
   var result = sass.renderSync({
     includePaths: [path.join(self.dir, '../client/modules'), path.join(self.dir, '../client/styles'), path.join(self.dir, '../client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(self.dir, '../client/bower_components/Materialize/sass'), path.join(self.dir, '../client/bower_components/foundation/scss'), path.join(self.dir, '../client/bower_components/font-awesome/scss')],
@@ -361,10 +360,8 @@ Register.prototype.createGlobalStyle = function () {
   })
   fs.writeFileSync(self.dir + '/../client/styles/compiled/global.style.css', result.css)
   debug('end createGlobalStyle')
-}
-Register.prototype.createFrontend = function () {
+
   debug('started createFrontend')
-  var self = this
   self.frontendFilesFinal.js.unshift(/modules/ + self.mainFrontendFile)
   self.frontendFilesAggregate.js.unshift(path.join(self.dir, '../client/modules/' + self.mainFrontendFile))
   _.forEach(self.settings.assets.css, function (ms) {
@@ -376,11 +373,8 @@ Register.prototype.createFrontend = function () {
     self.frontendFilesAggregate.js.unshift(path.join(self.dir, '../client/' + ms))
   })
   debug('end createFrontend')
-}
-Register.prototype.env = function () {
-  debug('started env')
-  var self = this
 
+  debug('started env')
   if (self.environment === 'test') {
     concat(self.frontendFilesAggregate.css, path.join(self.dir, '../client/styles/compiled/concat.css'), function (error) {
       if (error)debug(error, 'concat')
@@ -425,11 +419,10 @@ Register.prototype.env = function () {
   }
   debug('end env')
 }
-
-Register.prototype.cdn = function () {
+Register.prototype.updateFrontendCdn = function () {
   debug('started cdn')
-
   var self = this
+
   if (self.settings.cdn) {
     var FilesFinal = {
       js: [],

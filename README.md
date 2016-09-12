@@ -35,7 +35,7 @@ For more control or something more basic, start here instead:
 Want more content?
 * [LiveCoding.TV](https://www.livecoding.tv/greenpioneer/)
 * [Style Guide](https://github.com/greenpioneersolutions/gps-style-guide)
-
+* [Roadmap](https://github.com/greenpioneersolutions/meanstackjs/wiki/Roadmap)
 
 What is Mean Stack JS?
 -----------------
@@ -99,6 +99,8 @@ restart the server each time you make a small change in code. To install, run
 `sudo npm install -g nodemon`.
 
 [Check Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
+
+[Check Roadmap Here](https://github.com/greenpioneersolutions/meanstackjs/wiki/Roadmap)
 
 [express]: <http://expressjs.com>
 [AngularJS]: <http://angularjs.org>

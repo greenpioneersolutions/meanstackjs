@@ -6,6 +6,7 @@ var environment = require('../../../configs/environment.js').get()
 var mail = require('../../mail.js')
 var validate = require('mongoose-validator')
 var timestamps = require('mongoose-timestamp')
+var debug = require('debug')('meanstackjs:users')
 
 var userSchema = new mongoose.Schema({
   email: {
@@ -90,9 +91,7 @@ var userSchema = new mongoose.Schema({
   }
 })
 
-/**
- * Password hash middleware.
- */
+// Password hash middleware.
 userSchema.pre('save', function (next) {
   var user = this
   user.wasNew = user.isNew // for post-save
@@ -118,6 +117,7 @@ userSchema.pre('save', function (next) {
 })
 userSchema.post('save', function (user) {
   if (user.wasNew && environment === 'production') {
+    debug('email a new user')
     var message = {}
     message.to = user.email
     message.subject = settings.email.templates.welcome.subject
@@ -127,18 +127,18 @@ userSchema.post('save', function (user) {
     })
   }
 })
-/**
- * Helper method for validating user's password.
- */
+// Helper method for validating user's password.
 userSchema.methods.comparePassword = function (candidatePassword, cb) {
+  debug('start comparePassword')
   var user = this
   bcrypt.compare(candidatePassword, this.password, function (err, res) {
     if (res) {
       user.lastLoggedIn = Date.now()
       user.save(function (err) {
-        console.log(err, 'err')
+        if (err)console.log(err, 'err')
       })
     }
+    debug('end comparePassword')
     cb(err, res)
   })
 }

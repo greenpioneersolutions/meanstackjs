@@ -63,9 +63,7 @@ var userSchema = new mongoose.Schema({
     type: Date
   }
 })
-/**
- * Password hash middleware.
- */
+// Password hash middleware.
 userSchema.pre('save', function (next) {
   var user = this
   if (!user.isModified('password')) {
@@ -416,12 +414,14 @@ function ask () {
         break
       case 'Create Schema':
         buildSchema(function (data) {
-          console.log(chalk.blue(
-            useTemplate(data.modelFile, {
-              name: 'example',
-              Name: 'Example'
-            })
-          ))
+          if (data.created) {
+            console.log(chalk.blue(
+              useTemplate(data.modelFile, {
+                name: 'example',
+                Name: 'Example'
+              })
+            ))
+          }
           ask()
         })
         break

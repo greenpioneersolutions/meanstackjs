@@ -1,5 +1,3 @@
-#[Check Most Recent Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
-
 ### Generate-ssl-certs.sh
 
 How to generate your own certs for https.
