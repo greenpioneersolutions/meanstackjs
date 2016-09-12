@@ -1,7 +1,7 @@
 {
   "name": "meanstackjs",
-  "version": "0.5.0",
-  "description": "We are building in this framework to make your life as a designer or developer easier. We believe in making this framework usable for User Experience Designers, Quality Assurance Engineers, Software Engineers, Frontend & Backend Developers & Full Stack Engineers...",
+  "version": "1.0.0",
+  "description": "Do you need a full stack solution that is easy to build and all JavaScript? Then you're in the right place with Mean Stack JS. There is no steep learning curve and it only takes an average of 10 minutes to get your base code up and running. We've made the development process as simple and scalable as possible. This is perfect for anyone involved in software development, including User Experience Designers, Quality Assurance Engineers, Software Engineers, Frontend Developers, Backend Developers and Full Stack Engineers.",
   "main": "index.js",
   "standard": {
     "globals": [
@@ -96,7 +96,6 @@
     "express-sitemap": "^1.6.3",
     "express-system-status": "^0.2.2",
     "express-validator": "^2.18.0",
-    "glob": "^7.0.3",
     "helmet": "^2.1.1",
     "hpp": "^0.2.1",
     "http-status-codes": "^1.0.6",
@@ -144,6 +143,7 @@
     "blessed": "^0.1.81",
     "bower": "^1.7.1",
     "chai": "^3.4.1",
+    "glob": "^7.0.6",
     "inquirer": "^1.0.2",
     "karma": "^1.2.0",
     "karma-chai": "^0.1.0",
