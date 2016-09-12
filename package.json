@@ -96,7 +96,6 @@
     "express-sitemap": "^1.6.3",
     "express-system-status": "^0.2.2",
     "express-validator": "^2.18.0",
-    "glob": "^7.0.3",
     "helmet": "^2.1.1",
     "hpp": "^0.2.1",
     "http-status-codes": "^1.0.6",
