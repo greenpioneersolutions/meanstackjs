@@ -33,7 +33,7 @@
     "angular-jwt": "^0.0.9"
   },
   "resolutions": {
-    "angular": "1.5.9",
-    "jquery": "3.1.0"
+    "angular": "^1.5.8",
+    "jquery": "^3.1.0"
   }
 }
