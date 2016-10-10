@@ -10,6 +10,7 @@ var uglify = require('uglify-js')
 var uglifycss = require('uglifycss')
 var sass = require('node-sass')
 var path = require('path')
+var pathExists = require("is-there")
 
 function Register (opts, done) {
   var self = this
@@ -80,8 +81,7 @@ Register.prototype.getFolderContents = function () {
   
   var backendPath = path.resolve(self.dir, './modules')
   
-  // TODO Replace with is-there
-  if (!fs.existsSync(backendPath)) {
+  if (!pathExists(backendPath)) {
     throw new Error(chalk.red('Critical Folder Missing:' + chalk.red.underline.bold('Expected Server Modules Directory ./server/modules/')))
   }
   
@@ -90,7 +90,7 @@ Register.prototype.getFolderContents = function () {
   }), backendPath)
   
   var frontendPath = path.resolve(self.dir, '../client/modules')
-  if (!fs.existsSync(frontendPath)) {
+  if (!pathExists(frontendPath)) {
     throw new Error(chalk.red('Critical Folder Missing:' + chalk.red.underline.bold('Expected Server Modules Directory ./client/modules/')))
   }
   
@@ -116,7 +116,7 @@ Register.prototype.setupFrontendDirectories = function () {
   var self = this
   
   function rmdirSync (url) {
-    if (fs.existsSync(url)) {
+    if (pathExists(url)) {
       fs.readdirSync(url).forEach(function (file, index) {
         var curPath = path.resolve(url + '/' + file)
         if (fs.lstatSync(curPath).isDirectory()) {
@@ -132,17 +132,17 @@ Register.prototype.setupFrontendDirectories = function () {
   if (self.settings.babel.active) {
     debug('checking babel directories')
     console.log(chalk.red('Babel Currently Removed \n\n Will be Integrated later in 1.x'))
-  // if (!fs.existsSync(self.dir + '/../client/' + self.settings.babel.folder + '/')) {
+  // if (!pathExists(self.dir + '/../client/' + self.settings.babel.folder + '/')) {
   //   fs.mkdirSync(self.dir + '/../client/' + self.settings.babel.folder + '/')
   // }
   // rmdirSync(self.dir + '/../client/' + self.settings.babel.folder + '/')
-  // if (!fs.existsSync(self.dir + '/' + self.settings.babel.folder + '/')) {
+  // if (!pathExists(self.dir + '/' + self.settings.babel.folder + '/')) {
   //   fs.mkdirSync(self.dir + '/' + self.settings.babel.folder + '/')
   // } else {
   //   rmdirSync(self.dir + '/' + self.settings.babel.folder + '/')
   // }
   // _.forEach(_.uniq(self.transformFolders), function (n) {
-  //   if (!fs.existsSync(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')) {
+  //   if (!pathExists(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')) {
   //     fs.mkdirSync(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')
   //   } else {
   //     rmdirSync(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')
@@ -150,16 +150,16 @@ Register.prototype.setupFrontendDirectories = function () {
   // })
   }
   
-  if (!fs.existsSync(self.dir + '/../client/scripts/')) {
+  if (!pathExists(self.dir + '/../client/scripts/')) {
     fs.mkdirSync(self.dir + '/../client/scripts/')
   }
-  if (!fs.existsSync(self.dir + '/../client/styles/compiled/')) {
+  if (!pathExists(self.dir + '/../client/styles/compiled/')) {
     fs.mkdirSync(self.dir + '/../client/styles/compiled/')
   }
-  if (!fs.existsSync(self.dir + '/../client/scripts/compiled/')) {
+  if (!pathExists(self.dir + '/../client/scripts/compiled/')) {
     fs.mkdirSync(self.dir + '/../client/scripts/compiled/')
   }
-  if (!fs.existsSync(self.dir + '/../client/uploads/')) {
+  if (!pathExists(self.dir + '/../client/uploads/')) {
     fs.mkdirSync(self.dir + '/../client/uploads/')
   }
   
