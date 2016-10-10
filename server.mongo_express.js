@@ -1,7 +1,7 @@
-module.exports = MongoExpress
 var express = require('express')
 var settings = require('./configs/settings.js').get()
 var debug = require('debug')('meanstackjs:mongoExpress')
+
 var mongoexpress = {
   mongodb: {
     server: process.env.MONGODB_SERVER || settings.mongodb.host,
@@ -123,6 +123,7 @@ var mongoexpress = {
 
   }
 }
+
 function MongoExpress (opts, done) {
   var self = this
   self.app = express()
@@ -140,3 +141,5 @@ var run = require('./run.js')
 if (!module.parent) {
   run(MongoExpress)
 }
+
+module.exports = MongoExpress
