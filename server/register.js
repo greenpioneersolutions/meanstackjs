@@ -472,7 +472,7 @@ function build (options) {
   if (_.isPlainObject(options)) {
     return new Register(options)
   }
-  throw new TypeError(console.log('Expected object for argument options but got ' + options))
+  throw new TypeError('Expected object for argument options but got ' + options)
 }
 
 module.exports = build
