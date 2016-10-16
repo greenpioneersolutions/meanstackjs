@@ -292,7 +292,7 @@ Mean.prototype.setupServerRoutesModels = function () {
   var self = this
   var queryParameters = require('express-query-parameters')({
     settings: {
-      schema: ['_id', 'id', '__v', 'created', 'title', 'content', 'user', 'email', 'roles'],
+      schema: ['_id', 'id', '__v', 'created', 'title', 'content', 'user', 'email', 'roles'], // the names people can search
       adapter: 'mongoose' // <object|string:supported adapter(MONGOOSE)>
     }
   })
