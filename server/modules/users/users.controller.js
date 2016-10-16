@@ -17,7 +17,7 @@ exports.getUsers = function (req, res, next) {
     .find({})
     .select('-password')
     .exec(function (err, users) {
-      if (err)next(err)
+      if (err) next(err)
       debug('end getUsers')
       return res.send(users)
     })
@@ -25,9 +25,11 @@ exports.getUsers = function (req, res, next) {
 
 exports.postAuthenticate = function (req, res, next) {
   debug('start postAuthenticate')
+
   var redirect = req.body.redirect || false
   req.assert('email', 'Email is not valid').isEmail()
   req.assert('password', 'Password cannot be blank').notEmpty()
+
   var errors = req.validationErrors()
   if (errors) {
     debug('end postAuthenticate - Authentication failed. ' + errors[0].msg)
