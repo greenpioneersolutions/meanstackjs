@@ -8,7 +8,12 @@ function findUser (id, cb) {
   var User = mongoose.model('users')
   User.findOne({
     _id: id
-  }, '-password', cb);
+  }, '-password', function (err, user) {
+    if (err || !user) cb(null)
+    else cb(user)
+    // http://goo.gl/rRqMUw - Satisfy bluebird warning
+    return null
+  })
 }
 
 exports.isAuthenticated = function (req, res, next) {
