@@ -7,15 +7,18 @@ var blogSchema = mongoose.Schema({
   },
   title: {
     type: String,
-    trim: true
+    trim: true,
+    required: true
   },
   content: {
     type: String,
-    trim: true
+    trim: true,
+    required: true
   },
   user: {
     type: mongoose.Schema.ObjectId,
-    ref: 'users'
+    ref: 'users',
+    required: true
   }
 })
 

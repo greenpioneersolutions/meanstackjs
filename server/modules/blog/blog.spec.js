@@ -1,6 +1,7 @@
 var assert = require('chai').assert
 var request = require('supertest')
 var blogid = ''
+
 describe('BLOG', function () {
   describe('GET /api/blog', function () {
     it('should be returning array', function (done) {
