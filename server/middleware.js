@@ -32,15 +32,15 @@ exports.isAuthenticated = function (req, res, next) {
 exports.isAuthorized = function (name, extra) {
   return function (req, res, next) {
     var user
-    
+
     if (extra) {
       var reqName = req[name]
       var reqExtra = reqName[extra]
-      reqExtra && reqExtra.user && (user = reqExtra.user);
+      reqExtra && reqExtra.user && (user = reqExtra.user)
     } else {
       user = reqName.user
     }
-    
+
     if (user && req.isAuthenticated()) {
       if (user._id.toString() !== req.user._id.toString()) {
         debug('middleware: is Not Authorized')
@@ -91,7 +91,7 @@ exports.isAdmin = function (req, res, next) {
       msg: 'User is not authorized'
     })
   }
-} 
+}
 
 exports.isMongoId = function (req, res, next) {
   if ((_.size(req.params) === 1) && (!mongoose.Types.ObjectId.isValid(_.values(req.params)[0]))) {
@@ -150,11 +150,11 @@ exports.verify = function (req, res, next) {
 }
 
 function getToken (headers) {
-  var auth = headers.authorization || "";
+  var auth = headers.authorization || ''
   var ret = null
-  if (auth && typeof auth === "string") {
+  if (auth && typeof auth === 'string') {
     var parted = auth.split(' ')
     ret = parted.length === 2 ? parted[1] : null
   }
-  return ret;
+  return ret
 }

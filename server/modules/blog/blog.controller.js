@@ -37,7 +37,7 @@ exports.postBlog = function (req, res, next) {
   // EX. of how to use express validator
   // req.assert('name', 'The name cannot be blank').notEmpty()
   var errors = req.validationErrors()
-  
+
   if (errors) {
     return res.status(400).send({
       success: false,
@@ -45,7 +45,7 @@ exports.postBlog = function (req, res, next) {
       redirect: '/'
     })
   }
-  
+
   req.body.user = req.user._id
   blogs.create(req.body, function (err, data) {
     if (err) return next(err)
@@ -81,7 +81,7 @@ exports.paramBlog = function (req, res, next, id) {
       redirect: '/'
     })
   }
-  
+
   auto({
     blog: function (cb) {
       blogs

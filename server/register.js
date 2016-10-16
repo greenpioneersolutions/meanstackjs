@@ -10,7 +10,7 @@ var uglify = require('uglify-js')
 var uglifycss = require('uglifycss')
 var sass = require('node-sass')
 var path = require('path')
-var pathExists = require("is-there")
+var pathExists = require('is-there')
 
 function Register (opts, done) {
   var self = this
@@ -21,7 +21,7 @@ function Register (opts, done) {
   self.settings = opts.settings
   self.middleware = opts.middleware
   self.dir = __dirname
-  
+
   // Start Build Process
   // getFolderContents > Used to dynamically get all of the contents of all module folders.
   self.getFolderContents()
@@ -41,18 +41,18 @@ function Register (opts, done) {
   self.renderFrontendFiles()
   // updateFrontendCdn > Used to update the files based of if your using a cdn. We Support MAXCDN.
   self.updateFrontendCdn()
-  
+
   // frontendFiles > Returns the files to send to the frontend
   return self.frontendFiles
 }
 
 Register.prototype.getFolderContents = function () {
   debug('started Info')
-  
+
   var self = this
   self.transformFiles = []
   self.transformFolders = []
-  
+
   function expandModules (arr, dir) {
     var returnConfigs = []
     _.forEach(arr, function (value, key) {
@@ -78,26 +78,26 @@ Register.prototype.getFolderContents = function () {
     })
     return returnConfigs
   }
-  
+
   var backendPath = path.resolve(self.dir, './modules')
-  
+
   if (!pathExists(backendPath)) {
     throw new Error(chalk.red('Critical Folder Missing:' + chalk.red.underline.bold('Expected Server Modules Directory ./server/modules/')))
   }
-  
+
   var backendConfigs = expandModules(_.filter(fs.readdirSync(backendPath), function (n) {
     return !_.startsWith(n, '.')
   }), backendPath)
-  
+
   var frontendPath = path.resolve(self.dir, '../client/modules')
   if (!pathExists(frontendPath)) {
     throw new Error(chalk.red('Critical Folder Missing:' + chalk.red.underline.bold('Expected Server Modules Directory ./client/modules/')))
   }
-  
+
   var frontendConfigs = _.filter(fs.readdirSync(frontendPath), function (n) {
     return !_.startsWith(n, '.')
   })
-  
+
   var mainFrontendFile = ''
   frontendConfigs = expandModules.bind(self)(_.filter(frontendConfigs, function (n) {
     if (path.extname(n) !== '') mainFrontendFile = n
@@ -114,7 +114,7 @@ Register.prototype.setupFrontendDirectories = function () {
   debug('started directories')
 
   var self = this
-  
+
   function rmdirSync (url) {
     if (pathExists(url)) {
       fs.readdirSync(url).forEach(function (file, index) {
@@ -128,7 +128,7 @@ Register.prototype.setupFrontendDirectories = function () {
     // fs.rmdirSync(url)
     }
   }
-  
+
   if (self.settings.babel.active) {
     debug('checking babel directories')
     console.log(chalk.red('Babel Currently Removed \n\n Will be Integrated later in 1.x'))
@@ -149,7 +149,7 @@ Register.prototype.setupFrontendDirectories = function () {
   //   }
   // })
   }
-  
+
   if (!pathExists(self.dir + '/../client/scripts/')) {
     fs.mkdirSync(self.dir + '/../client/scripts/')
   }
@@ -162,7 +162,7 @@ Register.prototype.setupFrontendDirectories = function () {
   if (!pathExists(self.dir + '/../client/uploads/')) {
     fs.mkdirSync(self.dir + '/../client/uploads/')
   }
-  
+
   // DELETE ALL PREVIOUSLY COMPILED
   rmdirSync(self.dir + '/../client/styles/compiled/')
   rmdirSync(self.dir + '/../client/scripts/compiled/')
@@ -171,9 +171,9 @@ Register.prototype.setupFrontendDirectories = function () {
 
 Register.prototype.compileFrontendStylesScripts = function () {
   debug('started config')
-  
+
   var self = this
-  
+
   self.frontendFiles = {
     'controller': [],
     'module': [],
@@ -191,12 +191,12 @@ Register.prototype.compileFrontendStylesScripts = function () {
     'provider': [],
     'else': []
   }
-  
+
   self.frontendFilesFinal = {
     css: [],
     js: []
   }
-  
+
   self.frontendFilesAggregate = {
     css: [],
     js: []
@@ -206,7 +206,7 @@ Register.prototype.compileFrontendStylesScripts = function () {
     path.join(self.dir, '/../client/styles/global-configs.styles.scss'),
     '$ENV: "' + self.environment + '" !default;\n' + '$CDN: "' + self.settings.cdn + '" !default;\n'
   )
-  
+
   _.forEach(self.frontendFolders, function (r) {
     _.forEach(r.files, function (j) {
       // Use for Babel when the front end is implemented
@@ -383,19 +383,19 @@ Register.prototype.renderFrontendFiles = function () {
     ],
     data: globalContents
   })
-  
+
   fs.writeFileSync(self.dir + '/../client/styles/compiled/global.style.css', result.css)
   debug('end createGlobalStyle')
 
   debug('started createFrontend')
   self.frontendFilesFinal.js.unshift(/modules/ + self.mainFrontendFile)
   self.frontendFilesAggregate.js.unshift(path.join(self.dir, '../client/modules/' + self.mainFrontendFile))
-  
+
   _.forEach(self.settings.assets.css, function (ms) {
     self.frontendFilesFinal.css.unshift(ms)
     self.frontendFilesAggregate.css.unshift(path.join(self.dir, '../client/' + ms))
   })
-  
+
   _.forEach(self.settings.assets.js, function (ms) {
     self.frontendFilesFinal.js.unshift(ms)
     self.frontendFilesAggregate.js.unshift(path.join(self.dir, '../client/' + ms))

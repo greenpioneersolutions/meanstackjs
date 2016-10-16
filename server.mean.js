@@ -32,7 +32,7 @@ var MongoStore = require('connect-mongo')(session)
 
 function Mean (opts, done) {
   var self = this
-  
+
   self.opts = opts
   self.environment = require('./configs/environment.js').get()
   self.settings = require('./configs/settings.js').get()
@@ -41,7 +41,7 @@ function Mean (opts, done) {
   self.mail = require('./server/mail.js')
   self.dir = __dirname
   self.register = require('./server/register.js')
-  
+
   // Start of the build process
   // setupExpressConfigs > Used to set up expressjs initially, middleware & passport.
   self.setupExpressConfigs()
@@ -69,21 +69,20 @@ function Mean (opts, done) {
   self.setupStaticRoutes()
   // purgeMaxCdn - *** OPTIONAL ***  > Used to purge the max cdn cache of the file. We Support MAXCDN
   self.purgeMaxCdn()
-  
+
   // auto  - connectMongoDb :  server > Used to finsh the final set up of the server. at the same time we start connecting to mongo and turning on the server.
   auto({
     connectMongoDb: function (callback) {
-      
       mongoose.Promise = Promise
       mongoose.set('debug', self.settings.mongodb.debug)
       mongoose.connect(self.settings.mongodb.uri, self.settings.mongodb.options)
-      
+
       mongoose.connection.on('error', function (err) {
         console.log('MongoDB Connection Error. Please make sure that MongoDB is running.')
         debug('MongoDB Connection Error ')
         callback(err, null)
       })
-      
+
       mongoose.connection.on('open', function () {
         debug('MongoDB Connection Open ')
         callback(null, {
@@ -93,7 +92,6 @@ function Mean (opts, done) {
       })
     },
     server: function (callback) {
-      
       if (self.settings.https.active) {
         https.createServer({
           key: fs.readFileSync(self.settings.https.key),
@@ -109,7 +107,7 @@ function Mean (opts, done) {
           }
         })
       }
-      
+
       // check if you set both to false we default to turn on http
       if (self.settings.http.active || (self.settings.https.active === false) === (self.settings.http.active === false)) {
         self.app.listen(self.app.get('port'), function () {
@@ -137,26 +135,26 @@ function Mean (opts, done) {
 Mean.prototype.setupExpressConfigs = function () {
   debug('started setupExpressConfigs')
   var self = this
-  
+
   self.app = express()
-  
+
   // Trust "X-Forwarded-For" and "X-Forwarded-Proto" nginx headers
   self.app.enable('trust proxy')
-  
+
   // Disable "powered by express" header
   self.app.disable('x-powered-by')
-  
+
   self.app.set('view engine', 'html')
   self.app.set('views', path.join(self.dir, '/client'))
   self.app.set('port', self.port)
-  
+
   self.app.use(compress())
   self.app.use(bodyParser.json(self.settings.bodyparser.json))
   self.app.use(bodyParser.urlencoded(self.settings.bodyparser.urlencoded))
   self.app.use(expressValidator(self.settings.expresValidator))
   self.app.use(methodOverride())
   self.app.use(cookieParser())
-  
+
   self.app.use(session({
     resave: true,
     saveUninitialized: true,
@@ -166,14 +164,14 @@ Mean.prototype.setupExpressConfigs = function () {
       autoReconnect: true
     })
   }))
-  
+
   self.app.use(passport.initialize())
   self.app.use(passport.session())
-  
+
   passport.serializeUser(auth.serializeUser)
   passport.deserializeUser(auth.deserializeUser)
   passport.use(auth.passportStrategy)
-  
+
   self.app.use(flash())
   debug('end setupExpressConfigs')
 }
@@ -186,20 +184,19 @@ Mean.prototype.setupExpressErrorHandler = function () {
 }
 
 Mean.prototype.setupExpressSecurity = function () {
-  
   debug('started setupExpressSecurity')
   var self = this
 
   // 7 security middleware
   self.app.use(helmet(self.settings.bodyparser.helmet))
-  
+
   // 3 security middleware
   // self.app.use(helmet.contentSecurityPolicy())
   // self.app.use(helmet.hpkp())
   // self.app.use(helmet.noCache())
   // HTTP Parameter Pollution attacks
   self.app.use(hpp())
-  
+
   // CORS
   // var whitelist = ['http://example1.com', 'http://example2.com']
   // var corsOptions = {
@@ -210,7 +207,7 @@ Mean.prototype.setupExpressSecurity = function () {
   // }
   // self.app.use(cors(corsOptions))
   self.app.use(cors())
-  
+
   // CORS PREFLIGHT OPTIONS
   // app.options('*', cors()) // include before other routes
   // Validate MAX_CONTENT_LENGTH_ACCEPTED
@@ -220,7 +217,7 @@ Mean.prototype.setupExpressSecurity = function () {
     status: 400,
     message: 'Please make a small payload'
   }))
-  
+
   // ENFORCE SSL
   // var express_enforces_ssl = require('express-enforces-ssl')
   // self.app.use(express_enforces_ssl())
@@ -319,20 +316,20 @@ Mean.prototype.setupServerRoutesModels = function () {
 Mean.prototype.setupToolSwagger = function () {
   debug('started setupToolSwagger')
   var self = this
-  
+
   function handleIndex (req, res, next) {
     if (req.url !== '/' && req.url !== '/index.html') {
       return next()
     }
-    
+
     if (req.originalUrl === '/api') {
       return res.redirect(301, '/api' + '/')
     }
-    
+
     if (html) {
       return res.send(html)
     }
-    
+
     fs.readFile(swaggerUI.dist + '/index.html', {
       encoding: 'utf8'
     }, function (err, data) {
@@ -340,12 +337,12 @@ Mean.prototype.setupToolSwagger = function () {
         console.error(err)
         return res.send(500)
       }
-      
+
       html = data.replace('http://petstore.swagger.io/v2/swagger.json', '/api-docs')
       res.send(html)
     })
   }
-  
+
   if (self.settings.swagger) {
     var Swagger = require('swagger-node-express')
     var swaggerUI = require('swagger-ui')
@@ -371,11 +368,11 @@ Mean.prototype.setupToolSwagger = function () {
     if (!fs.existsSync(swaggerPath)) {
       throw new Error('Critical Folder Missing:')
     }
-    
+
     var swaggerDir = _.filter(fs.readdirSync(swaggerPath), function (n) {
       return !_.startsWith(n, '.')
     })
-    
+
     _.forEach(swaggerDir, function (n) {
       var model = require(path.join(self.dir, '/server/swagger/', n, '/models'))
       swagger.addModels(model)
@@ -384,7 +381,7 @@ Mean.prototype.setupToolSwagger = function () {
           searchableOptions: defaultGetParams
         })
     })
-    
+
     swagger.configureSwaggerPaths('', '/api-docs', '')
     swagger.configureDeclaration('Meanstackjs', {
       description: 'Meanstackjs API',
@@ -417,12 +414,12 @@ Mean.prototype.setupToolAgenda = function () {
     var Agendash = require('agendash')
     var backup = require('mongodb-backup')
     var restore = require('mongodb-restore')
-    
+
     self.agenda = new Agenda(self.settings.agendash.options)
     if (!fs.existsSync(self.dir + '/backups/')) {
       fs.mkdirSync(self.dir + '/backups/')
     }
-    
+
     self.agenda.define('backup', function (job, done) {
       var db = {}
       if (!fs.statSync(path.join(__dirname, 'backups/'))) done('No Root Directory ')
@@ -436,7 +433,7 @@ Mean.prototype.setupToolAgenda = function () {
       }
       done()
     })
-    
+
     self.agenda.define('restore', function (job, done) {
       var db = {}
       if (!fs.statSync(path.join(__dirname, 'backups/'))) done('No Root Directory ')
@@ -449,14 +446,14 @@ Mean.prototype.setupToolAgenda = function () {
       }
       done()
     })
-    
+
     self.agenda.on('ready', function () {
       // //every 3 mins or every minute
       // self.agenda.every('3 minutes', 'restore')
       // self.agenda.every('*/1 * * * *', 'backup')
       self.agenda.start()
     })
-    
+
     self.app.use('/agenda', /*  require('./server/middleware.js').isAdmin, */ Agendash(self.agenda))
   }
   debug('end setupToolAgenda')
@@ -482,7 +479,7 @@ Mean.prototype.setupToolPlato = function () {
 Mean.prototype.setupToolLivereload = function () {
   debug('started setupToolLivereload')
   var self = this
-  
+
   if (self.environment === 'development') {
     var scssLessWatcher = chokidar.watch('file, dir, glob, or array', {
       ignored: /[\/\\]\./,
@@ -569,7 +566,7 @@ Mean.prototype.setupToolLivereload = function () {
     scssLessGlobalWatcher.add('./client/*/*.less')
     scssLessGlobalWatcher.add('./client/*/*.scss')
   }
-  
+
   debug('end setupToolLivereload')
 }
 
@@ -597,18 +594,18 @@ Mean.prototype.setupStaticRoutes = function () {
   function nothingFoundHandler (msg) {
     return function (req, res) {
       res.status(400).send({
-        error: msg 
+        error: msg
       })
     }
   }
-  
+
   self.app.get('/api/*', nothingFoundHandler('nothing found in api'))
   self.app.get('/bower_components/*', nothingFoundHandler('nothing found in bower_components'))
   self.app.get('/images/*', nothingFoundHandler('nothing found in images'))
   self.app.get('/scripts/*', nothingFoundHandler('nothing found in scripts'))
   self.app.get('/styles/*', nothingFoundHandler('nothing found in styles'))
   self.app.get('/uploads/*', nothingFoundHandler('nothing found in uploads'))
-  
+
   // Turning off sitemap unless you want it back on
   // var sitemap = require('express-sitemap')()
   // self.app.get('/sitemap', function (req, res) {
@@ -627,19 +624,14 @@ Mean.prototype.setupStaticRoutes = function () {
       req.user.authenticated = true
     }
     var html = self.settings.html
-    var seoSettings = self.settings.seo[req.path];
-    
+    var seoSettings = self.settings.seo[req.path]
+
     if (seoSettings) {
-      if (seoSettings.title)
-        html.title = seoSettings.title
-        
-      if (seoSettings.description)
-        html.description = seoSettings.description
-        
-      if (seoSettings.keywords)
-        html.keywords = seoSettings.keywords
+      if (seoSettings.title)html.title = seoSettings.title
+      if (seoSettings.description)html.description = seoSettings.description
+      if (seoSettings.keywords)html.keywords = seoSettings.keywords
     }
-    
+
     ejs.renderFile(path.join(__dirname, './server/layout/index.html'), {
       html: html,
       assets: self.app.locals.frontendFilesFinal,
@@ -651,13 +643,13 @@ Mean.prototype.setupStaticRoutes = function () {
       res.send(str)
     })
   })
-  
+
   debug('end setupStaticRoutes')
 }
 
 Mean.prototype.purgeMaxCdn = function () {
   debug('started purgeMaxCdn')
-  
+
   var self = this
   if (self.settings.maxcdn.zoneId) {
     var maxcdn = new MaxCDN(
@@ -677,7 +669,7 @@ Mean.prototype.purgeMaxCdn = function () {
       console.log('PURGE SUCCESS')
     })
   }
-  
+
   debug('end purgeMaxCdn')
 }
 

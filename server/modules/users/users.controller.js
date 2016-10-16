@@ -25,11 +25,11 @@ exports.getUsers = function (req, res, next) {
 
 exports.postAuthenticate = function (req, res, next) {
   debug('start postAuthenticate')
-  
+
   var redirect = req.body.redirect || false
   req.assert('email', 'Email is not valid').isEmail()
   req.assert('password', 'Password cannot be blank').notEmpty()
-  
+
   var errors = req.validationErrors()
   if (errors) {
     debug('end postAuthenticate - Authentication failed. ' + errors[0].msg)
