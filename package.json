@@ -114,6 +114,7 @@
     "method-override": "^2.3.5",
     "minimist": "^1.2.0",
     "mongo-express": "^0.31.1",
+    "mongo-throttle": "^1.0.3",
     "mongodb-backup": "^1.6.1",
     "mongodb-restore": "^1.5.3",
     "mongoose": "^4.2.7",

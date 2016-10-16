@@ -27,6 +27,7 @@ var Promise = require('bluebird')
 var sass = require('node-sass')
 var session = require('express-session')
 var status = require('express-system-status')
+var throttler = require('mongo-throttle')
 var _ = require('lodash')
 var MongoStore = require('connect-mongo')(session)
 
@@ -186,6 +187,11 @@ Mean.prototype.setupExpressErrorHandler = function () {
 Mean.prototype.setupExpressSecurity = function () {
   debug('started setupExpressSecurity')
   var self = this
+  // Mongo-Throttle
+  // Limit/Throttle the requests to your system
+  // You have multiple options with package \/
+  // only rate-limit requests that begin with /api/ , configure limits: & configure a custom limit handler
+  self.app.use(throttler(self.settings.throttle))
 
   // 7 security middleware
   self.app.use(helmet(self.settings.bodyparser.helmet))

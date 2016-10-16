@@ -26,6 +26,12 @@ module.exports = {
     key: './configs/certificates/keyExample.pem',
     cert: './configs/certificates/certExample.pem'
   },
+  throttle: {
+    rateLimit: {
+      ttl: 600,
+      max: 1000
+    }
+  },
   mongodb: {
     uri: 'mongodb://' + (process.env.DB_PORT_27017_TCP_ADDR || process.env.MONGODB || process.env.MONGOLAB_URI || 'localhost') + '/test',
     db: 'dev',
