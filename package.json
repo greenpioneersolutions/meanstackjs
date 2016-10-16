@@ -96,6 +96,7 @@
     "express-enforces-ssl": "^1.1.0",
     "express-flash": "^0.0.2",
     "express-limiter": "^1.6.0",
+    "express-query-parameters": "^1.0.0",
     "express-session": "^1.12.1",
     "express-sitemap": "^1.6.3",
     "express-system-status": "^0.2.2",

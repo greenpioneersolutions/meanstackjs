@@ -290,15 +290,18 @@ Mean.prototype.setupExpressLogger = function () {
 Mean.prototype.setupServerRoutesModels = function () {
   debug('started setupServerRoutesModels')
   var self = this
-
-  self.build = require('buildreq')(self.settings.buildreq)
-  self.app.use(self.build.queryMiddleware({mongoose: mongoose}))
+  var queryParameters = require('express-query-parameters')({
+    settings: {
+      schema: ['_id', 'id', '__v', 'created', 'title', 'content', 'user', 'email', 'roles'],
+      adapter: 'mongoose' // <object|string:supported adapter(MONGOOSE)>
+    }
+  })
+  self.app.use(queryParameters.middleware())
   self.fileStructure = self.register({
     app: self.app,
     settings: self.settings,
     middleware: self.middleware
   })
-
   // Dynamic Routes / Manually enabling them . You can change it back to automatic in the settings
   // build.routing(app, mongoose) - if reverting back to automatic
 

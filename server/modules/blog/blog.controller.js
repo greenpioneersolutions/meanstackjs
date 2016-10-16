@@ -8,14 +8,21 @@ exports.getBlog = function (req, res, next) {
   debug('start getBlog')
   auto({
     blogs: function (cb) {
+      console.log(req.queryParameters, 'ardffds')
       blogs
-        .find()
-        .populate('user')
+        .find(req.queryParameters.filter || '')
+        .where(req.queryParameters.where || '')
+        .sort(req.queryParameters.sort || '')
+        .select(req.queryParameters.select || '')
+        .limit(req.queryParameters.limit || '')
+        .skip(req.queryParameters.skip || '')
+        .populate(req.queryParameters.populateId || 'user', req.queryParameters.populateItems || '')
         .exec(cb)
     },
     count: function (cb) {
       blogs
-        .find()
+        .find(req.queryParameters.filter || '')
+        .where(req.queryParameters.where || '')
         .count()
         .exec(cb)
     }
