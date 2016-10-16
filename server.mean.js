@@ -346,8 +346,8 @@ Mean.prototype.setupToolSwagger = function () {
   if (self.settings.swagger) {
     var Swagger = require('swagger-node-express')
     var swaggerUI = require('swagger-ui')
-    self.app.use('/api' + '/index.html', handleIndex)
-    self.app.use('/api' + '/', handleIndex)
+    self.app.use('/api/index.html', handleIndex)
+    self.app.use('/api/', handleIndex)
     self.app.use('/api', express.static(swaggerUI.dist))
     var html
 
