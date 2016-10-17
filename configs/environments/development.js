@@ -1,3 +1,4 @@
+var uri = process.env.DB_PORT_27017_TCP_ADDR || process.env.MONGODB || process.env.MONGOLAB_URI || 'mongodb://localhost/dev'
 module.exports = {
   html: {
     title: 'Development MEANSTACKJS'
@@ -33,7 +34,7 @@ module.exports = {
     }
   },
   mongodb: {
-    uri: (process.env.DB_PORT_27017_TCP_ADDR || process.env.MONGODB || process.env.MONGOLAB_URI || 'mongodb://localhost/devzze'),
+    uri: uri,
     db: process.env.DB_COLLECTION || 'dev',
     host: process.env.DB_HOST || 'localhost',
     password: process.env.DB_PASSWORD || '',
@@ -68,7 +69,7 @@ module.exports = {
     active: true,
     options: {
       db: {
-        address: 'mongodb://' + (process.env.DB_PORT_27017_TCP_ADDR || process.env.MONGODB || process.env.MONGOLAB_URI || 'localhost') + '/dev'
+        address: uri
       }
     }
   }
