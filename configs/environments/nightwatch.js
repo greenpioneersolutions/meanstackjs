@@ -18,15 +18,20 @@ module.exports = {
   },
   http: {
     active: true,
-    port: process.env.PORT || 3002
+    port: process.env.PORT || 3000
   },
   https: {
     active: false,
-    port: process.env.HTTPSPORT || 3243,
+    port: process.env.HTTPSPORT || 3043,
     key: './configs/certificates/keyExample.pem',
     cert: './configs/certificates/certExample.pem'
   },
-
+  throttle: {
+    rateLimit: {
+      ttl: 600,
+      max: 10000
+    }
+  },
   mongodb: {
     uri: 'mongodb://' + (process.env.DB_PORT_27017_TCP_ADDR || process.env.MONGODB || process.env.MONGOLAB_URI || 'localhost') + '/nightwatch',
     db: 'dev',

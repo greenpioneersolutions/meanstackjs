@@ -1,7 +1,7 @@
 var auth = require('./server/passport.js')
 var auto = require('run-auto')
 var bodyParser = require('body-parser')
-var chalk = require('chalk')
+var chalksay = require('chalksay')
 var chokidar = require('chokidar')
 var cookieParser = require('cookie-parser')
 var cors = require('cors')
@@ -27,6 +27,8 @@ var Promise = require('bluebird')
 var sass = require('node-sass')
 var session = require('express-session')
 var status = require('express-system-status')
+var throttler = require('mongo-throttle')
+var queryParameters = require('express-query-parameters')()
 var _ = require('lodash')
 var MongoStore = require('connect-mongo')(session)
 
@@ -186,6 +188,11 @@ Mean.prototype.setupExpressErrorHandler = function () {
 Mean.prototype.setupExpressSecurity = function () {
   debug('started setupExpressSecurity')
   var self = this
+  // Mongo-Throttle
+  // Limit/Throttle the requests to your system
+  // You have multiple options with package \/
+  // only rate-limit requests that begin with /api/ , configure limits: & configure a custom limit handler
+  self.app.use(throttler(self.settings.throttle))
 
   // 7 security middleware
   self.app.use(helmet(self.settings.bodyparser.helmet))
@@ -284,15 +291,18 @@ Mean.prototype.setupExpressLogger = function () {
 Mean.prototype.setupServerRoutesModels = function () {
   debug('started setupServerRoutesModels')
   var self = this
-
-  self.build = require('buildreq')(self.settings.buildreq)
-  self.app.use(self.build.queryMiddleware({mongoose: mongoose}))
+  queryParameters.config({
+    settings: {
+      schema: ['_id', 'id', '__v', 'created', 'title', 'content', 'user', 'email', 'roles'], // the names people can search
+      adapter: 'mongoose' // <object|string:supported adapter(MONGOOSE)>
+    }
+  })
+  self.app.use(queryParameters.middleware())
   self.fileStructure = self.register({
     app: self.app,
     settings: self.settings,
     middleware: self.middleware
   })
-
   // Dynamic Routes / Manually enabling them . You can change it back to automatic in the settings
   // build.routing(app, mongoose) - if reverting back to automatic
 
@@ -346,8 +356,8 @@ Mean.prototype.setupToolSwagger = function () {
   if (self.settings.swagger) {
     var Swagger = require('swagger-node-express')
     var swaggerUI = require('swagger-ui')
-    self.app.use('/api' + '/index.html', handleIndex)
-    self.app.use('/api' + '/', handleIndex)
+    self.app.use('/api/index.html', handleIndex)
+    self.app.use('/api/', handleIndex)
     self.app.use('/api', express.static(swaggerUI.dist))
     var html
 
@@ -498,11 +508,11 @@ Mean.prototype.setupToolLivereload = function () {
         var lessContents = fs.readFileSync(path.resolve(url), 'utf8')
         less.render(lessContents, function (err, result) {
           if (err) {
-            console.log(chalk.red(err))
+            chalksay.red(err)
           }
           fs.writeFileSync(path.resolve('./client/styles/compiled/' + fileData[fileData.length - 3] + '.' + fileData[fileData.length - 2] + '.' + fileData[fileData.length - 1] + '.css'), result.css)
         })
-        console.log(chalk.green('Recompiled LESS'))
+        chalksay.green('Recompiled LESS')
       } else {
         console.log(url)
         var scssContents = fs.readFileSync(path.resolve(url), 'utf8')
@@ -511,7 +521,7 @@ Mean.prototype.setupToolLivereload = function () {
           data: scssContents
         })
         fs.writeFileSync(path.resolve('./client/styles/compiled/' + fileData[fileData.length - 3] + '.' + fileData[fileData.length - 2] + '.' + fileData[fileData.length - 1] + '.css'), result.css)
-        console.log(chalk.green('Recompiled SCSS'))
+        chalksay.green('Recompiled SCSS')
       }
     })
     scssLessGlobalWatcher.on('change', function (url) {
@@ -520,7 +530,7 @@ Mean.prototype.setupToolLivereload = function () {
         var lessContents = fs.readFileSync(path.resolve(url), 'utf8')
         less.render(lessContents, function (err, result) {
           if (err) {
-            console.log(chalk.red(err))
+            chalksay.red(err)
           }
           fs.writeFileSync(path.resolve('./client/styles/compiled/' + fileData[fileData.length - 3] + '.' + fileData[fileData.length - 2] + '.' + fileData[fileData.length - 1] + '.css'), result.css)
         })
@@ -528,12 +538,12 @@ Mean.prototype.setupToolLivereload = function () {
           var lessContents = fs.readFileSync(path.join(self.dir, l.orginal), 'utf8')
           less.render(lessContents, function (err, result) {
             if (err) {
-              console.log(chalk.red(err))
+              chalksay.red(err)
             }
             fs.writeFileSync(path.join(self.dir, l.compiled), result.css)
           })
         })
-        console.log(chalk.green('Recompiled LESS'))
+        chalksay.green('Recompiled LESS')
       } else {
         // RENDER THE GLOBAL STYLE
         var globalContents = fs.readFileSync(path.join(self.dir, '/client/styles/global.style.scss'), 'utf8')
@@ -558,7 +568,7 @@ Mean.prototype.setupToolLivereload = function () {
           })
           fs.writeFileSync(path.join(self.dir, s.compiled), result.css)
         })
-        console.log(chalk.green('Recompiled Global SCSS'))
+        chalksay.green('Recompiled Global SCSS')
       }
     })
     scssLessWatcher.add('./client/modules/*/*.less')

@@ -1,6 +1,6 @@
 var _ = require('lodash')
 // var babel = require('babel-core')
-var chalk = require('chalk')
+var chalksay = require('chalksay')
 var concat = require('serial-concat-files')
 var debug = require('debug')('meanstackjs:register')
 var fs = require('fs')
@@ -82,7 +82,7 @@ Register.prototype.getFolderContents = function () {
   var backendPath = path.resolve(self.dir, './modules')
 
   if (!pathExists(backendPath)) {
-    throw new Error(chalk.red('Critical Folder Missing:' + chalk.red.underline.bold('Expected Server Modules Directory ./server/modules/')))
+    throw new Error('Critical Folder Missing:Expected Server Modules Directory ./server/modules/')
   }
 
   var backendConfigs = expandModules(_.filter(fs.readdirSync(backendPath), function (n) {
@@ -91,7 +91,7 @@ Register.prototype.getFolderContents = function () {
 
   var frontendPath = path.resolve(self.dir, '../client/modules')
   if (!pathExists(frontendPath)) {
-    throw new Error(chalk.red('Critical Folder Missing:' + chalk.red.underline.bold('Expected Server Modules Directory ./client/modules/')))
+    throw new Error('Critical Folder Missing:Expected Server Modules Directory ./client/modules/')
   }
 
   var frontendConfigs = _.filter(fs.readdirSync(frontendPath), function (n) {
@@ -131,7 +131,7 @@ Register.prototype.setupFrontendDirectories = function () {
 
   if (self.settings.babel.active) {
     debug('checking babel directories')
-    console.log(chalk.red('Babel Currently Removed \n\n Will be Integrated later in 1.x'))
+    chalksay.red('Babel Currently Removed \n\n Will be Integrated later in 1.x')
   // if (!pathExists(self.dir + '/../client/' + self.settings.babel.folder + '/')) {
   //   fs.mkdirSync(self.dir + '/../client/' + self.settings.babel.folder + '/')
   // }
@@ -262,7 +262,7 @@ Register.prototype.compileFrontendStylesScripts = function () {
             var lessContents = fs.readFileSync(path.join(self.dir, '/../client/modules/' + r.name + '/' + j.orginal), 'utf8')
             less.render(lessContents, function (err, result) {
               if (err) {
-                debug(chalk.red(err))
+                debug(err)
               }
               fs.writeFileSync(path.join(self.dir, '/../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css'), result.css)
               self.frontendFiles.style.less.push({

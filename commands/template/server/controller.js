@@ -59,7 +59,7 @@ exports.param__Name__ = function (req, res, next, id) {
     return res.status(400).send({
       success: false,
       msg: errors[0].msg,
-      redirect: '/d'
+      redirect: '/'
     })
   }
   auto({

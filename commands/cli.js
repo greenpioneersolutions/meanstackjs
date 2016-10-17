@@ -2,7 +2,7 @@
 
 'use strict'
 var inquirer = require('inquirer')
-var chalk = require('chalk')
+var chalksay = require('chalksay')
 var _ = require('lodash')
 var mongoose = require('mongoose')
 var bcrypt = require('bcrypt-nodejs')
@@ -101,14 +101,14 @@ function ensureEmpty (url, force, callback) {
     if (empty || force) {
       callback()
     } else {
-      console.log(chalk.red('Destination is not empty:'), url)
+      chalksay.red('Destination is not empty:', url)
       ask()
     }
   })
 }
 function write (url, str) {
   fs.writeFile(url, str)
-  console.log(chalk.cyan('   Created File:'), url)
+  chalksay.cyan('   Created File:', url)
 }
 function readTemplate (url, data) {
   var template = fs.readFileSync(path.join(__dirname, '/', url), 'utf8')
@@ -133,7 +133,7 @@ function readFile (url) {
 function mkdir (url, fn) {
   shell.mkdir('-p', url)
   shell.chmod(755, url)
-  console.log(chalk.cyan('   Created Directory:'), url)
+  chalksay.cyan('   Created Directory:', url)
   if (fn) fn()
 }
 
@@ -219,10 +219,7 @@ var __name__Schema = mongoose.Schema({
       })
       modelFile += multiline(function () { /*
 })
-var __Name__ = mongoose.model('__Name__', __name__Schema)
-module.exports = {
-  __Name__: __Name__
-}
+module.exports = __name__Schema
   */
       })
       cb({
@@ -323,7 +320,7 @@ function updatePassword (user, cb) {
       }
     }, function (err, data) {
       if (err) {
-        console.log(chalk.red(err))
+        chalksay.red(err)
       }
       cb(err, data)
     })
@@ -341,7 +338,7 @@ function addRoles (user, cb) {
       }
     }, function (err, data) {
       if (err) {
-        console.log(chalk.red(err))
+        chalksay.red(err)
       }
       cb(err, data)
     })
@@ -361,7 +358,7 @@ function removeRoles (user, cb) {
       }
     }, function (err, data) {
       if (err) {
-        console.log(chalk.red(err))
+        chalksay.red(err)
       }
       cb(err, data)
     })
@@ -415,12 +412,12 @@ function ask () {
       case 'Create Schema':
         buildSchema(function (data) {
           if (data.created) {
-            console.log(chalk.blue(
+            chalksay.blue(
               useTemplate(data.modelFile, {
                 name: 'example',
                 Name: 'Example'
               })
-            ))
+            )
           }
           ask()
         })
@@ -428,12 +425,12 @@ function ask () {
       // case 'Create User':
       //   findUser(function (err, data) {
       //     if (err) {
-      //       console.log(chalk.red(err))
+      //       chalksay.red(err)
       //     } else {
       //       if (data === null) {
-      //         console.log(chalk.red('No User Found Under That Email'))
+      //         chalksay.red('No User Found Under That Email')
       //       } else {
-      //         console.log(chalk.green(data))
+      //         chalksay.green(data)
       //       }
       //     }
       //   })
@@ -441,23 +438,23 @@ function ask () {
       case 'Change Password':
         findUser(function (err, user) {
           if (err) {
-            console.log('Starting Over - Error:', chalk.red(err))
+            chalksay.red('Starting Over - Error:', err)
             ask()
           } else {
             if (user === null) {
-              console.log(chalk.red('No User Found Under That Email'))
+              console.log(chalksay.red('No User Found Under That Email'))
               ask()
             } else {
               updatePassword(user, function (err, data) {
                 if (err) {
-                  console.log('Starting Over - Error:', chalk.red(err))
+                  chalksay.red('Starting Over - Error:', err)
                   ask()
                 } else {
                   if (data === null) {
-                    console.log(chalk.red('No User Found Under That Email'))
+                    chalksay.red('No User Found Under That Email')
                     ask()
                   } else {
-                    console.log(chalk.green(data))
+                    chalksay.green(data)
                     ask()
                   }
                 }
@@ -470,25 +467,25 @@ function ask () {
       case 'Change User Roles':
         findUser(function (err, user) {
           if (err) {
-            console.log('Starting Over - Error:', chalk.red(err))
+            chalksay.red('Starting Over - Error:', err)
             ask()
           } else {
             if (user === null) {
-              console.log(chalk.red('No User Found Under That Email'))
+              chalksay.red('No User Found Under That Email')
               ask()
             } else {
               inquirer.prompt(questions.roles).then(function (answers) {
                 if (answers.role === 'Add Role') {
                   addRoles(user, function (err, data) {
                     if (err) {
-                      console.log('Starting Over - Error:', chalk.red(err))
+                      chalksay.red('Starting Over - Error:', err)
                       ask()
                     } else {
                       if (data === null) {
-                        console.log(chalk.red('No User Found Under That Email'))
+                        chalksay.red('No User Found Under That Email')
                         ask()
                       } else {
-                        console.log(chalk.green(data))
+                        chalksay.green(data)
                         ask()
                       }
                     }
@@ -496,14 +493,14 @@ function ask () {
                 } else {
                   removeRoles(user, function (err, data) {
                     if (err) {
-                      console.log('Starting Over - Error:', chalk.red(err))
+                      chalksay.red('Starting Over - Error:', err)
                       ask()
                     } else {
                       if (data === null) {
-                        console.log(chalk.red('No User Found Under That Email'))
+                        chalksay.red('No User Found Under That Email')
                         ask()
                       } else {
-                        console.log(chalk.green(data))
+                        chalksay.green(data)
                         ask()
                       }
                     }
@@ -518,14 +515,14 @@ function ask () {
       case 'View User':
         findUser(function (err, user) {
           if (err) {
-            console.log('Starting Over - Error:', chalk.red(err))
+            chalksay.red('Starting Over - Error:', err)
             ask()
           } else {
             if (user === null) {
-              console.log(chalk.red('No User Found Under That Email'))
+              chalksay.red('No User Found Under That Email')
               ask()
             } else {
-              console.log(chalk.green(user))
+              chalksay.green(user)
               ask()
             }
           }
