@@ -28,6 +28,7 @@ var sass = require('node-sass')
 var session = require('express-session')
 var status = require('express-system-status')
 var throttler = require('mongo-throttle')
+var queryParameters = require('express-query-parameters')()
 var _ = require('lodash')
 var MongoStore = require('connect-mongo')(session)
 
@@ -290,7 +291,7 @@ Mean.prototype.setupExpressLogger = function () {
 Mean.prototype.setupServerRoutesModels = function () {
   debug('started setupServerRoutesModels')
   var self = this
-  var queryParameters = require('express-query-parameters')({
+  queryParameters.config({
     settings: {
       schema: ['_id', 'id', '__v', 'created', 'title', 'content', 'user', 'email', 'roles'], // the names people can search
       adapter: 'mongoose' // <object|string:supported adapter(MONGOOSE)>

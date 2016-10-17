@@ -8,7 +8,7 @@ exports.getBlog = function (req, res, next) {
   debug('start getBlog')
   auto({
     blogs: function (cb) {
-      console.log(req.queryParameters, 'ardffds')
+      debug(req.queryParameters)
       blogs
         .find(req.queryParameters.filter || '')
         .where(req.queryParameters.where || '')
