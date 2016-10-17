@@ -66,7 +66,7 @@ var userSchema = new mongoose.Schema({
 // Password hash middleware.
 userSchema.pre('save', function (next) {
   var user = this
-  if (!user.isModified('password') {
+  if (!user.isModified('password')) {
     return next()
   }
   bcrypt.genSalt(10, function (err, salt) {
@@ -151,12 +151,12 @@ function buildFront (data, cb) {
           return !_.startsWith(n, '.')
         })
         var clientModuleJs = readFile('../client/modules/client.module.js')
-        write('./client/modules/client.module.js', clientModuleJs.replace(/(\/\/ DONT REMOVE - APP GENERATOR)+/igm, ",\n 'app." + change.name + "' // DONT REMOVE - APP GENERATOR")
+        write('./client/modules/client.module.js', clientModuleJs.replace(/(\/\/ DONT REMOVE - APP GENERATOR)+/igm, ",\n 'app." + change.name + "' // DONT REMOVE - APP GENERATOR"))
         _.forEach(files, function (n) {
           if (path.extname(n) === '.html') {
-            write(pathVar + '/modules/' + data.name + '/' + n, readTemplate('./template/client/' + n, change)
+            write(pathVar + '/modules/' + data.name + '/' + n, readTemplate('./template/client/' + n, change))
           } else {
-            write(pathVar + '/modules/' + data.name + '/' + data.name + '.' + n, readTemplate('./template/client/' + n, change)
+            write(pathVar + '/modules/' + data.name + '/' + data.name + '.' + n, readTemplate('./template/client/' + n, change))
           }
         })
         cb()
@@ -179,9 +179,9 @@ function buildBack (data, cb) {
         })
         _.forEach(files, function (n) {
           if (n === 'model.js' && data.schema.created) {
-            write(pathVar + '/modules/' + data.name + '/' + data.name + '.' + n, useTemplate(data.schema.modelFile, change)
+            write(pathVar + '/modules/' + data.name + '/' + data.name + '.' + n, useTemplate(data.schema.modelFile, change))
           } else {
-            write(pathVar + '/modules/' + data.name + '/' + data.name + '.' + n, readTemplate('./template/server/' + n, change)
+            write(pathVar + '/modules/' + data.name + '/' + data.name + '.' + n, readTemplate('./template/server/' + n, change))
           }
         })
         cb()
@@ -441,16 +441,16 @@ function ask () {
       case 'Change Password':
         findUser(function (err, user) {
           if (err) {
-            console.log('Starting Over - Error:', chalksay.red(err)
+            chalksay.red('Starting Over - Error:', err)
             ask()
           } else {
             if (user === null) {
-              chalksay.red('No User Found Under That Email')
+              console.log(chalksay.red('No User Found Under That Email'))
               ask()
             } else {
               updatePassword(user, function (err, data) {
                 if (err) {
-                  console.log('Starting Over - Error:', chalksay.red(err)
+                  chalksay.red('Starting Over - Error:', err)
                   ask()
                 } else {
                   if (data === null) {
@@ -470,7 +470,7 @@ function ask () {
       case 'Change User Roles':
         findUser(function (err, user) {
           if (err) {
-            console.log('Starting Over - Error:', chalksay.red(err)
+            chalksay.red('Starting Over - Error:', err)
             ask()
           } else {
             if (user === null) {
@@ -481,7 +481,7 @@ function ask () {
                 if (answers.role === 'Add Role') {
                   addRoles(user, function (err, data) {
                     if (err) {
-                      console.log('Starting Over - Error:', chalksay.red(err)
+                      chalksay.red('Starting Over - Error:', err)
                       ask()
                     } else {
                       if (data === null) {
@@ -496,7 +496,7 @@ function ask () {
                 } else {
                   removeRoles(user, function (err, data) {
                     if (err) {
-                      console.log('Starting Over - Error:', chalksay.red(err)
+                      chalksay.red('Starting Over - Error:', err)
                       ask()
                     } else {
                       if (data === null) {
@@ -518,7 +518,7 @@ function ask () {
       case 'View User':
         findUser(function (err, user) {
           if (err) {
-            console.log('Starting Over - Error:', chalksay.red(err)
+            chalksay.red('Starting Over - Error:', err)
             ask()
           } else {
             if (user === null) {
