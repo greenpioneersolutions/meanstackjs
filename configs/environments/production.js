@@ -33,14 +33,14 @@ module.exports = {
     }
   },
   mongodb: {
-    uri: 'mongodb://' + (process.env.DB_PORT_27017_TCP_ADDR || process.env.MONGODB || process.env.MONGOLAB_URI || 'localhost') + '/prod',
-    db: 'dev',
+    uri: (process.env.DB_PORT_27017_TCP_ADDR || process.env.MONGODB || process.env.MONGOLAB_URI || 'mongodb://localhost/prod'),
+    db: process.env.DB_COLLECTION || 'prod',
     host: process.env.DB_HOST || 'localhost',
     password: process.env.DB_PASSWORD || '',
     port: process.env.DB_PORT_27017 || 27017,
-    ssl: false,
+    ssl: process.env.DB_SSL || false,
     username: process.env.DB_USERNAME || '',
-    debug: false,
+    debug: process.env.DB_DEBUG || false,
 
     // Database options that will be passed directly to mongoose.connect
     // Below are some examples.
