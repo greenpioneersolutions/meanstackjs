@@ -18,11 +18,11 @@ module.exports = {
   },
   http: {
     active: true,
-    port: process.env.PORT || 3001
+    port: process.env.PORT || 3000
   },
   https: {
     active: false,
-    port: process.env.HTTPSPORT || 3143,
+    port: process.env.HTTPSPORT || 3043,
     key: './configs/certificates/keyExample.pem',
     cert: './configs/certificates/certExample.pem'
   },
