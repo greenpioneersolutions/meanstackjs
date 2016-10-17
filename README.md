@@ -4,6 +4,7 @@
 [![Build Status](https://travis-ci.org/greenpioneersolutions/meanstackjs.svg?branch=master)](https://travis-ci.org/greenpioneersolutions/meanstackjs)
 [![Join the chat at https://gitter.im/greenpioneersolutions/meanstackjs](https://badges.gitter.im/greenpioneersolutions/meanstackjs.svg)](https://gitter.im/greenpioneersolutions/meanstackjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Codewake](https://www.codewake.com/badges/codewake2.svg)](https://www.codewake.com/p/meanstackjs)
+[![Code Triagers Badge](https://www.codetriage.com/greenpioneersolutions/meanstackjs/badges/users.svg)](https://www.codetriage.com/greenpioneersolutions/meanstackjs)
 [![Get help on Codementor](https://cdn.codementor.io/badges/get_help_github.svg)](https://www.codementor.io/jasonhumphrey?utm_source=github&utm_medium=button&utm_term=jasonhumphrey&utm_campaign=github)
 [![Donatee](https://img.shields.io/badge/paypal-donate-blue.svg)](https://paypal.me/greenpioneer)
 
@@ -29,8 +30,10 @@ Check out this YouTube channel that has content to help you:
 * [Watch MeanStackJS - What is series](https://www.youtube.com/playlist?list=PLhJ-Q2setTdpkHfA-mDMSjl4Wv-trKlY8)
 
 For more control or something more basic, start here instead:
-* [Lite Version of MeanStackJS](https://github.com/greenpioneersolutions/meanstackjs-lite)
+* [Lite Version](https://github.com/greenpioneersolutions/meanstackjs-lite)
 
+For the Api version, start here instead:
+* [Men Version](https://github.com/greenpioneersolutions/menstackjs)
 
 Want more content?
 * [LiveCoding.TV](https://www.livecoding.tv/greenpioneer/)
@@ -105,3 +108,26 @@ restart the server each time you make a small change in code. To install, run
 [express]: <http://expressjs.com>
 [AngularJS]: <http://angularjs.org>
 [node.js]: <http://nodejs.org>
+[license]: http://showalicense.com/?fullname=Green%20Pioneer%20%3Cgreen%40greenpioneersolutions.com%3E&year=2016#license-mit
+[website]: http://greenpioneersolutions.com/
+
+
+<div align="center">
+  <img src="http://greenpioneersolutions.com/img/icons/apple-icon-180x180.png"><br>
+  <a href="https://www.facebook.com/Green-Pioneer-Solutions-1023752974341910">
+    <img src="https://greenpioneer.github.io/images/social-1_square-facebook.svg">
+  </a>
+  <a href="https://twitter.com/greenpioneerdev">
+    <img src="https://greenpioneer.github.io/images/social-1_logo-twitter.svg">
+  </a>
+  <a href="https://github.com/greenpioneersolutions">
+    <img src="https://greenpioneer.github.io/images/social-1_logo-github.svg">
+  </a>
+  <a href="http://greenpioneersolutions.com/">
+    <img src="https://greenpioneer.github.io/images/social-1_logo-blogger.svg">
+  </a>
+ </div>
+
+
+[MIT][license] © [Green Pioneer][website]
+
