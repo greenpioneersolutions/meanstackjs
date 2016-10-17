@@ -1,7 +1,7 @@
 var auth = require('./server/passport.js')
 var auto = require('run-auto')
 var bodyParser = require('body-parser')
-var chalk = require('chalk')
+var chalksay = require('chalksay')
 var chokidar = require('chokidar')
 var cookieParser = require('cookie-parser')
 var cors = require('cors')
@@ -507,11 +507,11 @@ Mean.prototype.setupToolLivereload = function () {
         var lessContents = fs.readFileSync(path.resolve(url), 'utf8')
         less.render(lessContents, function (err, result) {
           if (err) {
-            console.log(chalk.red(err))
+            chalksay.red(err)
           }
           fs.writeFileSync(path.resolve('./client/styles/compiled/' + fileData[fileData.length - 3] + '.' + fileData[fileData.length - 2] + '.' + fileData[fileData.length - 1] + '.css'), result.css)
         })
-        console.log(chalk.green('Recompiled LESS'))
+        chalksay.green('Recompiled LESS')
       } else {
         console.log(url)
         var scssContents = fs.readFileSync(path.resolve(url), 'utf8')
@@ -520,7 +520,7 @@ Mean.prototype.setupToolLivereload = function () {
           data: scssContents
         })
         fs.writeFileSync(path.resolve('./client/styles/compiled/' + fileData[fileData.length - 3] + '.' + fileData[fileData.length - 2] + '.' + fileData[fileData.length - 1] + '.css'), result.css)
-        console.log(chalk.green('Recompiled SCSS'))
+        chalksay.green('Recompiled SCSS')
       }
     })
     scssLessGlobalWatcher.on('change', function (url) {
@@ -529,7 +529,7 @@ Mean.prototype.setupToolLivereload = function () {
         var lessContents = fs.readFileSync(path.resolve(url), 'utf8')
         less.render(lessContents, function (err, result) {
           if (err) {
-            console.log(chalk.red(err))
+            chalksay.red(err)
           }
           fs.writeFileSync(path.resolve('./client/styles/compiled/' + fileData[fileData.length - 3] + '.' + fileData[fileData.length - 2] + '.' + fileData[fileData.length - 1] + '.css'), result.css)
         })
@@ -537,12 +537,12 @@ Mean.prototype.setupToolLivereload = function () {
           var lessContents = fs.readFileSync(path.join(self.dir, l.orginal), 'utf8')
           less.render(lessContents, function (err, result) {
             if (err) {
-              console.log(chalk.red(err))
+              chalksay.red(err)
             }
             fs.writeFileSync(path.join(self.dir, l.compiled), result.css)
           })
         })
-        console.log(chalk.green('Recompiled LESS'))
+        chalksay.green('Recompiled LESS')
       } else {
         // RENDER THE GLOBAL STYLE
         var globalContents = fs.readFileSync(path.join(self.dir, '/client/styles/global.style.scss'), 'utf8')
@@ -567,7 +567,7 @@ Mean.prototype.setupToolLivereload = function () {
           })
           fs.writeFileSync(path.join(self.dir, s.compiled), result.css)
         })
-        console.log(chalk.green('Recompiled Global SCSS'))
+        chalksay.green('Recompiled Global SCSS')
       }
     })
     scssLessWatcher.add('./client/modules/*/*.less')

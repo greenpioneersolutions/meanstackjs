@@ -78,7 +78,7 @@
     "bluebird": "^3.0.6",
     "body-parser": "^1.14.1",
     "buildreq": "latest",
-    "chalk": "^1.1.1",
+    "chalksay": "^1.1.0",
     "cheerio": "^0.22.0",
     "chokidar": "^1.4.1",
     "clockwork": "^0.1.0",
