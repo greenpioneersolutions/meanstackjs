@@ -10,6 +10,7 @@ function Livereload (opts, done) {
   debug('starting Livereload Server')
   done(null)
 }
+
 var run = require('./run.js')
 if (!module.parent) {
   run(Livereload)

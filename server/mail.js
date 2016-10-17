@@ -10,9 +10,10 @@ exports.send = function (message, cb) {
     subject: message.subject,
     text: message.text
   }
+
   debug('mailOptions', mailOptions)
   transporter.sendMail(mailOptions, function (err) {
-    if (err)debug('mail error:', err)
+    if (err) debug('mail error:', err)
     cb(err)
   })
 }

@@ -1,5 +1,3 @@
-module.exports = run
-
 var extend = require('xtend')
 var minimist = require('minimist')
 var Mean = require('./server.mean.js')
@@ -14,22 +12,34 @@ var debug = require('debug')('meanstackjs:run')
 
 function run (ServerConstructor, cb) {
   debug('start run - ServerConstructor')
+
   var server = new ServerConstructor(extend(argv), function (err) {
     if (err) {
       console.error('Error during ' + server.settings.title + ' startup. Abort.')
       console.error(err.stack)
       process.exit(1)
     }
+
     debug('end run - ServerConstructor')
-    if (cb && typeof cb === 'function')cb()
+    typeof cb === 'function' && cb()
   })
 
   process.on('uncaughtException', function (err) {
     debug('system err:' + err)
+
     console.error('[UNCAUGHT EXCEPTION]')
-    if (err.code === 'EACCES')console.log('Try Running in Sudo or Admin access')
-    if (err.code === 'EADDRINUSE')console.log('The Port is already occupied')
+
+    switch (err.code) {
+      case 'EACCES':
+        console.log('Try Running in Sudo or Admin access')
+        break
+      case 'EADDRINUSE':
+        console.log('The Port is already occupied')
+        break
+    }
+
     console.error(err.stack)
+
     if (environment === 'development') {
       console.error('[UNCAUGHT EXCEPTION] ' + err.message)
       console.error(err.stack.toString())
@@ -53,3 +63,5 @@ if (!module.parent) {
   run(Livereload)
   run(MongoExpress)
 }
+
+module.exports = run

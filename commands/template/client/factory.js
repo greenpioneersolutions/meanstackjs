@@ -8,7 +8,7 @@
   __Name__Factory.$inject = ['$resource']
   /* @ngInject */
   function __Name__Factory ($resource) {
-    return $resource('/api/v1/__Name__/:id', {
+    return $resource('/api/__name__/:id', {
       id: '@id'
     }, {
       update: {
