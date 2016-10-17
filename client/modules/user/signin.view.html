@@ -18,8 +18,6 @@
                 <div class="form-group" ng-class="{'has-warning': loginForm.password.$invalid && loginForm.password.$dirty, 'has-success': loginForm.password.$valid && loginForm.password.$dirty}">
                     <label for="password" class="control-label">Password</label>
                     <input type="password" name="password" id="password" placeholder="Password" ng-model="vm.loginCred.password" class="form-control" ng-minlength="6" ng-pattern="/^(?=.*[a-z])(?=.*\d)(?=.*(_|[^\w])).+$/" required>
-                    <p class="help-block" id="error-minlength" ng-show="loginForm.password.$error.minlength">Password must be at least 6 characters</p>
-                    <p class="help-block" id="error-pattern" ng-show="loginForm.password.$error.pattern">Password must contain a letter, a number, and a symbol</p>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary" id="signin" ng-disabled="loginForm.$invalid">Login</button><a href="/forgot" class="btn btn-link">Forgot your password?</a>
