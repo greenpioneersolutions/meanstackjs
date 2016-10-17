@@ -22,7 +22,7 @@
       var __name__ = new __Name__Factory(vm.__name__)
       __name__.user = vm.UserFactory.user
       __name__.$save(function (response) {
-        vm.__name__ = response.data.data
+        vm.__name__ = response
         //  window.location.href
         $location.url('/__name__/list')
       }, function (error) {
@@ -33,14 +33,14 @@
       __Name__Factory.get({
         id: $stateParams.id
       }, function (success) {
-        vm.__name__ = success.data
+        vm.__name__ = success
       }, function (error) {
         logger.error(error)
       })
     }
     vm.list = function () {
       __Name__Factory.get(function (success) {
-        vm.__name__s = success.data
+        vm.__name__s = success
       }, function (error) {
         logger.error(error)
       })
