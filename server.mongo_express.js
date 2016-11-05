@@ -5,7 +5,7 @@ var mongodbUri = require('mongodb-uri').parse(settings.mongodb.uri)
 var mongoexpress = {
   mongodb: {
     server: process.env.MONGODB_SERVER || mongodbUri.hosts[0].host,
-    port: process.env.MONGODB_PORT || mongodbUri.hosts[0].port,
+    port: process.env.MONGODB_PORT || mongodbUri.hosts[0].port || 27017,
 
     // useSSL: connect to the server using secure SSL
     useSSL: process.env.MONGODB_SSL || false,
