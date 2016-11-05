@@ -246,28 +246,9 @@ Mean.prototype.setupExpressHeaders = function () {
   debug('started setupExpressHeaders')
   var self = this
   self.app.use(function (req, res, next) {
-    // var extname = path.extname(url.parse(req.url).pathname)
-
-    // // Add cross-domain header for fonts, required by spec, Firefox, and IE.
-    // if (['.eot', '.ttf', '.otf', '.woff', '.woff2'].indexOf(extname) >= 0) {
-    //   res.header('Access-Control-Allow-Origin', '*')
-    // }
-
-    // Prevents IE and Chrome from MIME-sniffing a response to reduce exposure to
-    // drive-by download attacks when serving user uploaded content.
-    res.header('X-Content-Type-Options', 'nosniff')
-
-    // Prevent rendering of site within a frame
-    res.header('X-Frame-Options', 'DENY')
-
-    // Enable the XSS filter built into most recent web browsers. It's usually
-    // enabled by default anyway, so role of this headers is to re-enable for this
-    // particular website if it was disabled by the user.
-    res.header('X-XSS-Protection', '1; mode=block')
-
+    // Add all custom system headers here
     // Force IE to use latest rendering engine or Chrome Frame
     res.header('X-UA-Compatible', 'IE=Edge,chrome=1')
-
     next()
   })
   debug('end setupExpressHeaders')
