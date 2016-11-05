@@ -301,7 +301,8 @@ Mean.prototype.setupServerRoutesModels = function () {
   self.fileStructure = self.register({
     app: self.app,
     settings: self.settings,
-    middleware: self.middleware
+    middleware: self.middleware,
+    environment: self.environment
   })
   // Dynamic Routes / Manually enabling them . You can change it back to automatic in the settings
   // build.routing(app, mongoose) - if reverting back to automatic
