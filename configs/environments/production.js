@@ -1,4 +1,4 @@
-var uri = process.env.DB_PORT_27017_TCP_ADDR || process.env.MONGODB || process.env.MONGOLAB_URI || 'mongodb://localhost/prod'
+var mongodbUri = process.env.DB_PORT_27017_TCP_ADDR || process.env.MONGODB || process.env.MONGOLAB_URI || 'mongodb://localhost/prod'
 module.exports = {
   html: {
     title: 'MEANSTACKJS'
@@ -34,7 +34,7 @@ module.exports = {
     }
   },
   mongodb: {
-    uri: uri,
+    uri: mongodbUri,
     // Database options that will be passed directly to mongoose.connect
     // Below are some examples.
     // See http://mongodb.github.io/node-mongodb-native/driver-articles/mongoclient.html#mongoclient-connect-options
@@ -61,7 +61,7 @@ module.exports = {
     active: true,
     options: {
       db: {
-        address: uri
+        address: mongodbUri
       }
     }
   }
