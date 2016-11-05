@@ -2,7 +2,7 @@ var user = require('./users.controller.js')
 var multer = require('multer')
 var upload = multer({ dest: 'client/uploads/' })
 
-module.exports = function (app, auth, mail, settings) {
+module.exports = function (app, auth, mail, settings, models) {
   // ADMIN
   app.get('/api/users', auth.isAdmin, user.getUsers)
 

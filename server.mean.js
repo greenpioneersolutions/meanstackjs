@@ -139,25 +139,19 @@ Mean.prototype.setupExpressConfigs = function () {
   var self = this
 
   self.app = express()
-
-  // Trust "X-Forwarded-For" and "X-Forwarded-Proto" nginx headers
   self.app.enable('trust proxy')
-
-  // Disable "powered by express" header
   self.app.disable('x-powered-by')
-
   self.app.set('view engine', 'html')
   self.app.set('views', path.join(self.dir, '/client'))
   self.app.set('port', self.port)
-
   self.app.use(compress())
   self.app.use(bodyParser.json(self.settings.bodyparser.json))
   self.app.use(bodyParser.urlencoded(self.settings.bodyparser.urlencoded))
   self.app.use(expressValidator(self.settings.expresValidator))
   self.app.use(methodOverride())
   self.app.use(cookieParser())
-
   self.app.use(session({
+    name: self.settings.sessionName,
     resave: true,
     saveUninitialized: true,
     secret: self.settings.sessionSecret,
@@ -166,14 +160,11 @@ Mean.prototype.setupExpressConfigs = function () {
       autoReconnect: true
     })
   }))
-
   self.app.use(passport.initialize())
   self.app.use(passport.session())
-
   passport.serializeUser(auth.serializeUser)
   passport.deserializeUser(auth.deserializeUser)
   passport.use(auth.passportStrategy)
-
   self.app.use(flash())
   debug('end setupExpressConfigs')
 }
@@ -246,28 +237,9 @@ Mean.prototype.setupExpressHeaders = function () {
   debug('started setupExpressHeaders')
   var self = this
   self.app.use(function (req, res, next) {
-    // var extname = path.extname(url.parse(req.url).pathname)
-
-    // // Add cross-domain header for fonts, required by spec, Firefox, and IE.
-    // if (['.eot', '.ttf', '.otf', '.woff', '.woff2'].indexOf(extname) >= 0) {
-    //   res.header('Access-Control-Allow-Origin', '*')
-    // }
-
-    // Prevents IE and Chrome from MIME-sniffing a response to reduce exposure to
-    // drive-by download attacks when serving user uploaded content.
-    res.header('X-Content-Type-Options', 'nosniff')
-
-    // Prevent rendering of site within a frame
-    res.header('X-Frame-Options', 'DENY')
-
-    // Enable the XSS filter built into most recent web browsers. It's usually
-    // enabled by default anyway, so role of this headers is to re-enable for this
-    // particular website if it was disabled by the user.
-    res.header('X-XSS-Protection', '1; mode=block')
-
+    // Add all custom system headers here
     // Force IE to use latest rendering engine or Chrome Frame
     res.header('X-UA-Compatible', 'IE=Edge,chrome=1')
-
     next()
   })
   debug('end setupExpressHeaders')
@@ -301,7 +273,8 @@ Mean.prototype.setupServerRoutesModels = function () {
   self.fileStructure = self.register({
     app: self.app,
     settings: self.settings,
-    middleware: self.middleware
+    middleware: self.middleware,
+    environment: self.environment
   })
   // Dynamic Routes / Manually enabling them . You can change it back to automatic in the settings
   // build.routing(app, mongoose) - if reverting back to automatic

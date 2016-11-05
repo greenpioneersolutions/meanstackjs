@@ -34,8 +34,6 @@ var baseLine = {
       asi: true
     }
   },
-  // Template Engine
-  templateEngine: 'swig',
   // JWT Object https://github.com/auth0/node-jsonwebtoken
   jwt: {
     // is used to compute a JWT SIGN
@@ -61,21 +59,21 @@ var baseLine = {
     // at all. The cookie will expunge when the browser is closed.
     maxAge: null
   },
+  sessionName: 'session.id',
+  // Supports MAX CDN
   maxcdn: {
     companyAlias: process.env.MAXCDN_COMPANY_ALIAS || '',
     consumerKey: process.env.MAXCDN_CONSUMER_KEY || '',
     consumerSecret: process.env.MAXCDN_CONSUMER_SECRET || ''
   },
+  // SEO
   html: {
     googleAnalytics: 'UA-71654331-1',
+    title: 'MEANSTACKJS',
     keywords: 'MEAN, MEANSTACKJS, mongodb, expressjs, angularjs,nodejs, javascript',
     description: 'The Meanstack js is a opensource framework that is made for and by developers'
   },
   seo: require('./seo.js'),
-  // The session cookie name
-  sessionName: 'connect.meanstackjs',
-  title: 'MEANSTACKJS',
-
   // AGGREGATION
   // bower_components -  Needs to be manually added below
   // modules - aggregated automatically
