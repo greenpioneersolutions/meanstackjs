@@ -32,9 +32,8 @@ exports.isAuthenticated = function (req, res, next) {
 exports.isAuthorized = function (name, extra) {
   return function (req, res, next) {
     var user
-
+    var reqName = req[name]
     if (extra) {
-      var reqName = req[name]
       var reqExtra = reqName[extra]
       reqExtra && reqExtra.user && (user = reqExtra.user)
     } else {
