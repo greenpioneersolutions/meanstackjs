@@ -1,14 +1,14 @@
 var express = require('express')
 var settings = require('./configs/settings.js').get()
 var debug = require('debug')('meanstackjs:mongoExpress')
-
+var mongodbUri = require('mongodb-uri').parse(settings.mongodb.uri)
 var mongoexpress = {
   mongodb: {
-    server: process.env.MONGODB_SERVER || settings.mongodb.host,
-    port: process.env.MONGODB_PORT || settings.mongodb.port,
+    server: process.env.MONGODB_SERVER || mongodbUri.hosts[0].host,
+    port: process.env.MONGODB_PORT || mongodbUri.hosts[0].port,
 
     // useSSL: connect to the server using secure SSL
-    useSSL: process.env.MONGODB_SSL || settings.mongodb.ssl,
+    useSSL: process.env.MONGODB_SSL || false,
 
     // autoReconnect: automatically reconnect if connection is lost
     autoReconnect: true,
@@ -29,9 +29,9 @@ var mongoexpress = {
        * Add as many databases as you want!
        */
       {
-        database: process.env.MONGODB_AUTH_DATABASE || settings.mongodb.db,
-        username: process.env.MONGODB_AUTH_USERNAME || settings.mongodb.username,
-        password: process.env.MONGODB_AUTH_PASSWORD || settings.mongodb.password
+        database: process.env.MONGODB_AUTH_DATABASE || mongodbUri.database,
+        username: process.env.MONGODB_AUTH_USERNAME || mongodbUri.username,
+        password: process.env.MONGODB_AUTH_PASSWORD || mongodbUri.password
       }
     ],
 
