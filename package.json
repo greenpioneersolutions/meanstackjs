@@ -118,6 +118,7 @@
     "mongo-throttle": "^1.0.5",
     "mongodb-backup": "^1.6.1",
     "mongodb-restore": "^1.5.3",
+    "mongodb-uri": "^0.9.7",
     "mongoose": "^4.2.7",
     "mongoose-timestamp": "^0.6.0",
     "mongoose-validator": "^1.2.4",
