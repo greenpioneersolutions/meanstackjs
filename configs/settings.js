@@ -34,8 +34,6 @@ var baseLine = {
       asi: true
     }
   },
-  // Template Engine
-  templateEngine: 'swig',
   // JWT Object https://github.com/auth0/node-jsonwebtoken
   jwt: {
     // is used to compute a JWT SIGN
