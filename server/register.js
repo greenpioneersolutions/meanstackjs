@@ -332,10 +332,11 @@ Register.prototype.compileBackendScripts = function () {
 Register.prototype.setupServerModels = function () {
   debug('started createBackendModels')
   var self = this
+  self.models = {}
   _.forEach(self.backendFiles.model, function (n) {
     debug('Model: %s - %s', n.name, n.url)
-    var model = mongoose.model(n.name, require(n.url))
-    model.on('index', function (err) {
+    self.models[n.name] = mongoose.model(n.name, require(n.url))
+    self.models[n.name].on('index', function (err) {
       if (err) throw err
     })
   })
@@ -348,7 +349,7 @@ Register.prototype.setupServerRoutes = function () {
 
   _.forEach(self.backendFiles.routes, function (n) {
     debug('Route : %s', n.url)
-    require(n.url)(self.app, self.middleware, self.mail, self.settings)
+    require(n.url)(self.app, self.middleware, self.mail, self.settings, self.models)
   })
 
   debug('end createBackendRoutes')
