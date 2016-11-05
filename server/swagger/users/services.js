@@ -15,7 +15,7 @@ exports.load = function (swagger, parms) {
   var Bloglist = {
     'spec': {
       description: 'Blog operations',
-      path: '/v1/Blog',
+      path: '/blog',
       method: 'GET',
       summary: 'Get Blog',
       notes: '',
