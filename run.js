@@ -1,19 +1,19 @@
-var extend = require('xtend')
-var minimist = require('minimist')
 var Mean = require('./server.mean.js')
 var SocketIO = require('./server.socketio.js')
-var Livereload = require('./server.livereload.js')
-var MongoExpress = require('./server.mongo_express.js')
 var mail = require('./server/mail.js')
 var environment = require('./configs/environment.js').get()
 var settings = require('./configs/settings.js').get()
-var argv = minimist(process.argv.slice(2))
+
 var debug = require('debug')('meanstackjs:run')
 
-function run (ServerConstructor, cb) {
+function run (ServerConstructor, opts, cb) {
   debug('start run - ServerConstructor')
-
-  var server = new ServerConstructor(extend(argv), function (err) {
+  if (!opts) opts = {}
+  if (typeof opts === 'function') {
+    cb = opts
+    opts = {}
+  }
+  var server = new ServerConstructor(opts, function (err) {
     if (err) {
       console.error('Error during ' + server.settings.title + ' startup. Abort.')
       console.error(err.stack)
@@ -60,8 +60,6 @@ function run (ServerConstructor, cb) {
 if (!module.parent) {
   run(Mean)
   run(SocketIO)
-  run(Livereload)
-  run(MongoExpress)
 }
 
 module.exports = run

@@ -1,8 +1,6 @@
 var auth = require('./server/passport.js')
 var auto = require('run-auto')
 var bodyParser = require('body-parser')
-var chalksay = require('chalksay')
-var chokidar = require('chokidar')
 var cookieParser = require('cookie-parser')
 var cors = require('cors')
 var compress = require('compression')
@@ -13,10 +11,10 @@ var express = require('express')
 var expressValidator = require('express-validator')
 var flash = require('express-flash')
 var fs = require('fs')
+var glob = require('glob')
 var helmet = require('helmet')
 var hpp = require('hpp')
 var https = require('https')
-var less = require('less')
 var logger = require('morgan')
 var MaxCDN = require('maxcdn')
 var methodOverride = require('method-override')
@@ -24,7 +22,6 @@ var mongoose = require('mongoose')
 var path = require('path')
 var passport = require('passport')
 var Promise = require('bluebird')
-var sass = require('node-sass')
 var session = require('express-session')
 var status = require('express-system-status')
 var throttler = require('mongo-throttle')
@@ -34,8 +31,8 @@ var MongoStore = require('connect-mongo')(session)
 
 function Mean (opts, done) {
   var self = this
-
   self.opts = opts
+  self.run = require('./run.js')
   self.environment = require('./configs/environment.js').get()
   self.settings = require('./configs/settings.js').get()
   self.port = self.opts.port || self.settings.http.port
@@ -57,16 +54,8 @@ function Mean (opts, done) {
   self.setupExpressLogger()
   // setupServerRoutesModels > Used to set up the register function to dynamically build all of the models, routes & frontend files.
   self.setupServerRoutesModels()
-  // setupToolSwagger - *** OPTIONAL *** >  Used to set up swagger.io to represent the api with a nice ui. http://localhost:3000/api/
-  self.setupToolSwagger()
-  // setupToolAgenda - *** OPTIONAL *** >  Used to set up  agenda to manage light-weight job scheduling with a nice ui. http://localhost:3000/agenda
-  self.setupToolAgenda()
-  // setupToolNightwatch - *** OPTIONAL *** >  Used to set up the view into the reporting of how e2e did . http://localhost:3000/e2e/
-  self.setupToolNightwatch()
-  // setupToolPlato - *** OPTIONAL *** >  Used to set up the view into the reporting of how the analysis  . http://localhost:3000/plato/
-  self.setupToolPlato()
-  // setupToolLivereload - *** OPTIONAL *** >  Used to set up livereload which allows you as the developer to develop faster due to not having to manually restarting the server after every change
-  self.setupToolLivereload()
+  // setupTools > Used to set up every tool in the tools directory.
+  self.setupTools()
   // setupStaticRoutes > Used to set up all system static routes including the main '/*' route with ejs templating.
   self.setupStaticRoutes()
   // purgeMaxCdn - *** OPTIONAL ***  > Used to purge the max cdn cache of the file. We Support MAXCDN
@@ -219,17 +208,6 @@ Mean.prototype.setupExpressSecurity = function () {
   // ENFORCE SSL
   // var express_enforces_ssl = require('express-enforces-ssl')
   // self.app.use(express_enforces_ssl())
-  // LIMIT CALLS
-  // var client = require('redis').createClient()
-  // var limiter = require('express-limiter')(self.app, client)
-  // limiter({
-  //   path: '/api/',
-  //   method: 'get',
-  //   lookup: ['connection.remoteAddress'],
-  //   // 150 requests per hour
-  //   total: 150,
-  //   expire: 1000 * 60 * 60
-  // })
   debug('end setupExpressSecurity')
 }
 
@@ -296,261 +274,16 @@ Mean.prototype.setupServerRoutesModels = function () {
   debug('end setupServerRoutesModels')
 }
 
-Mean.prototype.setupToolSwagger = function () {
-  debug('started setupToolSwagger')
+Mean.prototype.setupTools = function () {
   var self = this
-
-  function handleIndex (req, res, next) {
-    if (req.url !== '/' && req.url !== '/index.html') {
-      return next()
+  var files = glob.sync('./tools/*/package.json')
+  _.forEach(files, function (n, k) {
+    var packageInfo = require(n)
+    if (packageInfo.active || _.isUndefined(packageInfo.active)) {
+      var mainPath = _.replace(n, 'package.json', packageInfo.main)
+      require(mainPath).call(self)
     }
-
-    if (req.originalUrl === '/api') {
-      return res.redirect(301, '/api' + '/')
-    }
-
-    if (html) {
-      return res.send(html)
-    }
-
-    fs.readFile(swaggerUI.dist + '/index.html', {
-      encoding: 'utf8'
-    }, function (err, data) {
-      if (err) {
-        console.error(err)
-        return res.send(500)
-      }
-
-      html = data.replace('http://petstore.swagger.io/v2/swagger.json', '/api-docs')
-      res.send(html)
-    })
-  }
-
-  if (self.settings.swagger) {
-    var Swagger = require('swagger-node-express')
-    var swaggerUI = require('swagger-ui')
-    self.app.use('/api/index.html', handleIndex)
-    self.app.use('/api/', handleIndex)
-    self.app.use('/api', express.static(swaggerUI.dist))
-    var html
-
-    var swagger = Swagger.createNew(self.app)
-
-    var paramTypes = swagger.paramTypes
-    var sortParm = paramTypes.query('sort', 'Comma seperated list of params to sort by.  (e.g "-created,name") ', 'string')
-    var limitParm = paramTypes.query('limit', 'Number of items to return', 'number')
-    var skipParm = paramTypes.query('skip', 'Number of items to skip', 'number')
-
-    var defaultGetParams = [
-      sortParm,
-      limitParm,
-      skipParm
-    ]
-
-    var swaggerPath = path.resolve(self.dir, './server/swagger')
-    if (!fs.existsSync(swaggerPath)) {
-      throw new Error('Critical Folder Missing:')
-    }
-
-    var swaggerDir = _.filter(fs.readdirSync(swaggerPath), function (n) {
-      return !_.startsWith(n, '.')
-    })
-
-    _.forEach(swaggerDir, function (n) {
-      var model = require(path.join(self.dir, '/server/swagger/', n, '/models'))
-      swagger.addModels(model)
-      require(path.join(self.dir, '/server/swagger/', n, '/services'))
-        .load(swagger, {
-          searchableOptions: defaultGetParams
-        })
-    })
-
-    swagger.configureSwaggerPaths('', '/api-docs', '')
-    swagger.configureDeclaration('Meanstackjs', {
-      description: 'Meanstackjs API',
-      authorizations: [''],
-      produces: ['application/json']
-    })
-    swagger.setApiInfo({
-      title: 'Meanstackjs',
-      description: 'Meanstackjs API',
-      termsOfServiceUrl: 'http://meanstackjs.com',
-      contact: 'info@meanstackjs.com',
-      licenseUrl: 'http://en.wikipedia.org/wiki/MIT_License'
-    })
-    swagger.setAuthorizations({
-      apiKey: {
-        type: 'apiKey',
-        passAs: 'header'
-      }
-    })
-    swagger.configure('/api', '1.0')
-  }
-  debug('end setupToolSwagger')
-}
-
-Mean.prototype.setupToolAgenda = function () {
-  debug('started setupToolAgenda')
-  var self = this
-  if (self.settings.agendash.active) {
-    var Agenda = require('agenda')
-    var Agendash = require('agendash')
-    var backup = require('mongodb-backup')
-    var restore = require('mongodb-restore')
-
-    self.agenda = new Agenda(self.settings.agendash.options)
-    if (!fs.existsSync(self.dir + '/backups/')) {
-      fs.mkdirSync(self.dir + '/backups/')
-    }
-
-    self.agenda.define('backup', function (job, done) {
-      var db = {}
-      if (!fs.statSync(path.join(__dirname, 'backups/'))) done('No Root Directory ')
-      if (job.attrs.data.uri) db.uri = job.attrs.data.uri
-      else done('No URI was passed')
-      if (job.attrs.data.collections) db.collections = job.attrs.data.collections
-      try {
-        backup(db)
-      } catch (err) {
-        done(err)
-      }
-      done()
-    })
-
-    self.agenda.define('restore', function (job, done) {
-      var db = {}
-      if (!fs.statSync(path.join(__dirname, 'backups/'))) done('No Root Directory ')
-      if (job.attrs.data.uri) db.uri = job.attrs.data.uri
-      else done('No URI was passed')
-      try {
-        restore(db)
-      } catch (err) {
-        done(err)
-      }
-      done()
-    })
-
-    self.agenda.on('ready', function () {
-      // //every 3 mins or every minute
-      // self.agenda.every('3 minutes', 'restore')
-      // self.agenda.every('*/1 * * * *', 'backup')
-      self.agenda.start()
-    })
-
-    self.app.use('/agenda', /*  require('./server/middleware.js').isAdmin, */ Agendash(self.agenda))
-  }
-  debug('end setupToolAgenda')
-}
-
-Mean.prototype.setupToolNightwatch = function () {
-  debug('started setupToolNightwatch')
-  var self = this
-  if (self.environment === 'development') self.app.use('/e2e', express.static(path.join(self.dir, 'reports/nightwatch/')))
-  debug('end setupToolNightwatch')
-}
-
-Mean.prototype.setupToolPlato = function () {
-  debug('started setupToolPlato')
-  var self = this
-  if (self.environment === 'development') {
-    self.app.use('/plato', express.static(path.join(self.dir, 'reports/plato')))
-    require('./reports/plato.js').report(self.settings.plato)
-  }
-  debug('end setupToolPlato')
-}
-
-Mean.prototype.setupToolLivereload = function () {
-  debug('started setupToolLivereload')
-  var self = this
-
-  if (self.environment === 'development') {
-    var scssLessWatcher = chokidar.watch('file, dir, glob, or array', {
-      ignored: /[\/\\]\./,
-      persistent: true
-    })
-    var scssLessGlobalWatcher = chokidar.watch('file, dir, glob, or array', {
-      ignored: /[\/\\]\./,
-      persistent: true
-    })
-    scssLessWatcher.on('add', function (url) {
-      debug('Styles are watching:' + url)
-    })
-    scssLessWatcher.on('change', function (url) {
-      var fileData = _.words(url, /[^./ ]+/g)
-      if (fileData[fileData.length - 1] === 'less') {
-        var lessContents = fs.readFileSync(path.resolve(url), 'utf8')
-        less.render(lessContents, function (err, result) {
-          if (err) {
-            chalksay.red(err)
-          }
-          fs.writeFileSync(path.resolve('./client/styles/compiled/' + fileData[fileData.length - 3] + '.' + fileData[fileData.length - 2] + '.' + fileData[fileData.length - 1] + '.css'), result.css)
-        })
-        chalksay.green('Recompiled LESS')
-      } else {
-        console.log(url)
-        var scssContents = fs.readFileSync(path.resolve(url), 'utf8')
-        var result = sass.renderSync({
-          includePaths: [path.join(self.dir, './client/modules'), path.join(self.dir, './client/styles'), path.join(self.dir, './client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(self.dir, './client/bower_components/Materialize/sass'), path.join(self.dir, './client/bower_components/foundation/scss'), path.join(self.dir, './client/bower_components/font-awesome/scss')],
-          data: scssContents
-        })
-        fs.writeFileSync(path.resolve('./client/styles/compiled/' + fileData[fileData.length - 3] + '.' + fileData[fileData.length - 2] + '.' + fileData[fileData.length - 1] + '.css'), result.css)
-        chalksay.green('Recompiled SCSS')
-      }
-    })
-    scssLessGlobalWatcher.on('change', function (url) {
-      var fileData = _.words(url, /[^./ ]+/g)
-      if (fileData[fileData.length - 1] === 'less') {
-        var lessContents = fs.readFileSync(path.resolve(url), 'utf8')
-        less.render(lessContents, function (err, result) {
-          if (err) {
-            chalksay.red(err)
-          }
-          fs.writeFileSync(path.resolve('./client/styles/compiled/' + fileData[fileData.length - 3] + '.' + fileData[fileData.length - 2] + '.' + fileData[fileData.length - 1] + '.css'), result.css)
-        })
-        _.forEach(self.fileStructure.style.less, function (l, k) {
-          var lessContents = fs.readFileSync(path.join(self.dir, l.orginal), 'utf8')
-          less.render(lessContents, function (err, result) {
-            if (err) {
-              chalksay.red(err)
-            }
-            fs.writeFileSync(path.join(self.dir, l.compiled), result.css)
-          })
-        })
-        chalksay.green('Recompiled LESS')
-      } else {
-        // RENDER THE GLOBAL STYLE
-        var globalContents = fs.readFileSync(path.join(self.dir, '/client/styles/global.style.scss'), 'utf8')
-        var result = sass.renderSync({
-          includePaths: [path.join(self.dir, './client/modules'), path.join(self.dir, './client/styles'), path.join(self.dir, './client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(self.dir, './client/bower_components/Materialize/sass'), path.join(self.dir, './client/bower_components/foundation/scss'), path.join(self.dir, './client/bower_components/font-awesome/scss')],
-          data: globalContents
-        })
-        fs.writeFileSync(path.join(self.dir, '/client/styles/compiled/global.style.css'), result.css)
-        _.forEach(self.fileStructure.style.scss, function (s, k) {
-          var scssContents = fs.readFileSync(path.join(self.dir, s.orginal), 'utf8')
-          // PLACED includePaths: so that @import 'global-variables.styles.scss'; work properly
-          var result = sass.renderSync({
-            includePaths: [
-              path.join(self.dir, './client/modules'),
-              path.join(self.dir, './client/styles'),
-              path.join(self.dir, './client/bower_components/bootstrap-sass/assets/stylesheets'),
-              path.join(self.dir, './client/bower_components/Materialize/sass'),
-              path.join(self.dir, './client/bower_components/foundation/scss'),
-              path.join(self.dir, './client/bower_components/font-awesome/scss')
-            ],
-            data: scssContents
-          })
-          fs.writeFileSync(path.join(self.dir, s.compiled), result.css)
-        })
-        chalksay.green('Recompiled Global SCSS')
-      }
-    })
-    scssLessWatcher.add('./client/modules/*/*.less')
-    scssLessWatcher.add('./client/modules/*/*.scss')
-    scssLessGlobalWatcher.add('./client/*/*.less')
-    scssLessGlobalWatcher.add('./client/*/*.scss')
-  }
-
-  debug('end setupToolLivereload')
+  })
 }
 
 Mean.prototype.setupStaticRoutes = function () {
@@ -588,17 +321,6 @@ Mean.prototype.setupStaticRoutes = function () {
   self.app.get('/scripts/*', nothingFoundHandler('nothing found in scripts'))
   self.app.get('/styles/*', nothingFoundHandler('nothing found in styles'))
   self.app.get('/uploads/*', nothingFoundHandler('nothing found in uploads'))
-
-  // Turning off sitemap unless you want it back on
-  // var sitemap = require('express-sitemap')()
-  // self.app.get('/sitemap', function (req, res) {
-  //   res.send(sitemap.generate(self.app))
-  // })
-
-  // var seo = require('mean-seo')
-  // SEO > is from npm mean-seo and is ment purly for crawlers. Commented out for init release because it needs more testing
-  // self.app.use(seo({cacheClient: 'disk', cacheDuration: 1 * 24 * 60 * 60 * 1000}))
-
   self.app.get('/*', function (req, res) {
     if (_.isUndefined(req.user)) {
       req.user = {}
