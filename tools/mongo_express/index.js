@@ -1,5 +1,5 @@
 var debug = require('debug')('meanstackjs:tools')
-module.exports = function (argument) {
+module.exports = function () {
   debug('started setupToolNightwatch')
   var self = this
   if (self.environment === 'development') {

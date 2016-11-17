@@ -5,7 +5,7 @@ var Agenda = require('agenda')
 var Agendash = require('agendash')
 var backup = require('mongodb-backup')
 var restore = require('mongodb-restore')
-module.exports = function (argument) {
+module.exports = function () {
   debug('started setupToolAgenda')
   var self = this
   if (self.settings.agendash.active) {
