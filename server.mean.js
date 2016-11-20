@@ -1,6 +1,7 @@
 module.exports = Mean
 var auto = require('run-auto')
 var debug = require('debug')('meanstackjs:server')
+var forceSSL = require('express-force-ssl')
 var fs = require('fs')
 var glob = require('glob')
 var https = require('https')
@@ -68,6 +69,17 @@ function Mean (opts, done) {
     },
     server: function (callback) {
       if (self.settings.https.active) {
+        if (!self.settings.http.active) {
+          var app = require('express')()
+          app.set('forceSSLOptions', {
+            httpsPort: self.settings.https.port
+          })
+          app.use('/*', forceSSL)
+          app.listen(self.settings.http.port, function () {
+            console.log('HTTP FORCE SSL Express server listening on port %d in %s mode', self.settings.http.port, self.app.get('env'))
+            debug('HTTP FORCE SSL Express server listening on port %d in %s mode', self.settings.http.port, self.app.get('env'))
+          })
+        }
         https.createServer({
           key: fs.readFileSync(self.settings.https.key),
           cert: fs.readFileSync(self.settings.https.cert)

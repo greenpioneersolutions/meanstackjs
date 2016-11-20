@@ -91,6 +91,7 @@
     "express-content-length-validator": "^1.0.0",
     "express-enforces-ssl": "^1.1.0",
     "express-flash": "^0.0.2",
+    "express-force-ssl": "^0.3.2",
     "express-query-parameters": "^1.0.1",
     "express-session": "^1.12.1",
     "express-sitemap": "^1.6.3",
