@@ -1,0 +1,17 @@
+{
+  "name": "meanstackjs-livereload",
+  "version": "1.0.0",
+  "description": "Used to set up livereload which allows you as the developer to develop faster due to not having to manually restarting the server after every change",
+  "main": "index.js",
+  "active": true,
+  "author": "Green Pioneer <info@greenpioneersolutions.com>",
+  "license": "MIT",
+  "dependencies": {
+    "chalksay": "^1.1.0",
+    "chokidar": "^1.6.1",
+    "less": "^2.7.1",
+    "lodash": "^4.17.2",
+    "node-sass": "^3.13.0"
+  },
+  "devDependencies": {}
+}

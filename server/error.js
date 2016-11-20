@@ -62,4 +62,5 @@ function errorMiddleware (self) {
     debug('error message & code:' + message.message + ' - ' + code)
     res.send(message)
   })
+  return
 }

@@ -31,6 +31,9 @@ module.exports = {
     rateLimit: {
       ttl: 600,
       max: 1000
+    },
+    mongoose: {
+      uri: mongodbUri
     }
   },
   mongodb: {

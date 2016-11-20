@@ -84,11 +84,6 @@ client/scripts/compiled
 server/dist/
 
 # --------------------
-# Night Watch reports
+# Tool Reports reports
 # --------------------
-reports/nightwatch/
-
-# --------------------
-# Plato reports
-# --------------------
-reports/plato/
+tools/*/reports
