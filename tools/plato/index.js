@@ -2,9 +2,8 @@ var express = require('express')
 var debug = require('debug')('meanstackjs:tools')
 var plato = require('plato')
 var path = require('path')
-module.exports = function () {
+module.exports = function (self) {
   debug('started setupToolPlato')
-  var self = this
   if (self.environment === 'development') {
     self.app.use('/plato', express.static(path.join(self.dir, 'tools/plato/reports/')))
     var files = [

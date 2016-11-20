@@ -3,9 +3,8 @@ var debug = require('debug')('meanstackjs:tools')
 var path = require('path')
 var _ = require('lodash')
 var fs = require('fs')
-module.exports = function () {
+module.exports = function (self) {
   debug('started setupToolSwagger')
-  var self = this
 
   function handleIndex (req, res, next) {
     if (req.url !== '/' && req.url !== '/index.html') {

@@ -6,9 +6,8 @@ var debug = require('debug')('meanstackjs:tools')
 var path = require('path')
 var fs = require('fs')
 var _ = require('lodash')
-module.exports = function () {
+module.exports = function (self) {
   debug('started setupToolLivereload')
-  var self = this
 
   if (self.environment === 'development') {
     var Livereload = require('./server.livereload.js')
