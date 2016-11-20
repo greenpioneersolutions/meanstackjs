@@ -55,7 +55,7 @@ Register.prototype.getFolderContents = function () {
 
   function expandModules (arr, dir) {
     var returnConfigs = []
-    _.forEach(arr, function (value, key) {
+    arr.forEach(function (value, key) {
       var obj = {
         'name': value,
         'lookup': dir + '/' + value
@@ -65,7 +65,7 @@ Register.prototype.getFolderContents = function () {
         return !_.startsWith(n, '.')
       })
       obj.files = []
-      _.forEach(files, function (f) {
+      files.forEach(function (f) {
         var fileData = _.words(f, /[^. ]+/g)
         obj.files.push({
           'type': fileData[1],
@@ -141,7 +141,7 @@ Register.prototype.setupFrontendDirectories = function () {
   // } else {
   //   rmdirSync(self.dir + '/' + self.settings.babel.folder + '/')
   // }
-  // _.forEach(_.uniq(self.transformFolders), function (n) {
+  // forEach(_.uniq(self.transformFolders), function (n) {
   //   if (!pathExists(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')) {
   //     fs.mkdirSync(self.dir + '/' + self.settings.babel.folder + '/' + n + '/')
   //   } else {
@@ -207,8 +207,8 @@ Register.prototype.compileFrontendStylesScripts = function () {
     '$ENV: "' + self.environment + '" !default;\n' + '$CDN: "' + self.settings.cdn + '" !default;\n'
   )
 
-  _.forEach(self.frontendFolders, function (r) {
-    _.forEach(r.files, function (j) {
+  self.frontendFolders.forEach(function (r) {
+    r.files.forEach(function (j) {
       // Use for Babel when the front end is implemented
       // var baseDirectory = './modules/'
       // if (j.ext === 'js' && self.settings.babel.active && j.type !== 'spec') {
@@ -307,8 +307,8 @@ Register.prototype.compileBackendScripts = function () {
     'controllers': [],
     'routes': []
   }
-  _.forEach(self.backendFolders, function (r) {
-    _.forEach(r.files, function (j) {
+  self.backendFolders.forEach(function (r) {
+    r.files.forEach(function (j) {
       var baseDirectory = './modules/'
       // if (j.ext === 'js' && self.settings.babel.active && j.type !== 'spec') {
       //   self.transformFiles.push('/' + r.name + '/' + j.orginal)
@@ -333,7 +333,7 @@ Register.prototype.setupServerModels = function () {
   debug('started createBackendModels')
   var self = this
   self.models = {}
-  _.forEach(self.backendFiles.model, function (n) {
+  self.backendFiles.model.forEach(function (n) {
     debug('Model: %s - %s', n.name, n.url)
     self.models[n.name] = mongoose.model(n.name, require(n.url))
     self.models[n.name].on('index', function (err) {
@@ -347,7 +347,7 @@ Register.prototype.setupServerRoutes = function () {
   debug('started createBackendRoutes')
   var self = this
 
-  _.forEach(self.backendFiles.routes, function (n) {
+  self.backendFiles.routes.forEach(function (n) {
     debug('Route : %s', n.url)
     require(n.url)(self.app, self.middleware, self.mail, self.settings, self.models)
   })
@@ -361,7 +361,7 @@ Register.prototype.transformBabel = function () {
 
 // if (self.settings.babel.active) {
 //   debug('started transform')
-//   _.forEach(self.transformFiles, function (n) {
+//   forEach(self.transformFiles, function (n) {
 //     fs.writeFileSync(self.dir + '/' + self.settings.babel.folder + n, babel.transformFileSync(self.dir + '/modules/' + n, self.settings.babel.options).code)
 //   })
 //   debug('end transform')
@@ -392,12 +392,12 @@ Register.prototype.renderFrontendFiles = function () {
   self.frontendFilesFinal.js.unshift(/modules/ + self.mainFrontendFile)
   self.frontendFilesAggregate.js.unshift(path.join(self.dir, '../client/modules/' + self.mainFrontendFile))
 
-  _.forEach(self.settings.assets.css, function (ms) {
+  self.settings.assets.css.forEach(function (ms) {
     self.frontendFilesFinal.css.unshift(ms)
     self.frontendFilesAggregate.css.unshift(path.join(self.dir, '../client/' + ms))
   })
 
-  _.forEach(self.settings.assets.js, function (ms) {
+  self.settings.assets.js.forEach(function (ms) {
     self.frontendFilesFinal.js.unshift(ms)
     self.frontendFilesAggregate.js.unshift(path.join(self.dir, '../client/' + ms))
   })
@@ -458,8 +458,8 @@ Register.prototype.updateFrontendCdn = function () {
       js: [],
       css: []
     }
-    _.forEach(self.app.locals.frontendFilesFinal, function (type, typeKey) {
-      _.forEach(type, function (n) {
+    self.app.locals.frontendFilesFinal.forEach(function (type, typeKey) {
+      type.forEach(function (n) {
         FilesFinal[typeKey].push(self.settings.cdn + n)
       })
     })

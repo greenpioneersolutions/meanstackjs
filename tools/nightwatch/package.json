@@ -1,0 +1,13 @@
+{
+  "name": "meanstackjs-nightwatch",
+  "version": "1.0.0",
+  "description": "Used to set up the view into the reporting of how e2e did . http://localhost:3000/e2e/",
+  "main": "index.js",
+  "active": true,
+  "author": "Green Pioneer <info@greenpioneersolutions.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.14.0"
+  },
+  "devDependencies": {}
+}

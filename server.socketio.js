@@ -1,12 +1,21 @@
 var express = require('express')
 var debug = require('debug')('meanstackjs:socketio')
+var fs = require('fs')
 var settings = require('./configs/settings.js').get()
 
 function SocketIO (opts, done) {
   var self = this
 
   self.app = express()
-  self.socketServer = require('http').createServer(self.app)
+  if (settings.https.active) {
+    self.socketServer = require('https').createServer({
+      key: fs.readFileSync(settings.https.key),
+      cert: fs.readFileSync(settings.https.cert)
+    }, self.app)
+  } else {
+    self.socketServer = require('http').createServer(self.app)
+  }
+
   self.io = require('socket.io')(self.socketServer)
 
   self.io.on('connection', function (socket) {
