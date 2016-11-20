@@ -5,8 +5,6 @@ var httpStatus = require('http-status-codes')
 var debug = require('debug')('meanstackjs:error')
 
 function errorMiddleware (self) {
-  console.time('errorMiddleware')
-
   self.app.use(function (err, req, res, next) {
     var code = 500
     var message = err
@@ -64,6 +62,5 @@ function errorMiddleware (self) {
     debug('error message & code:' + message.message + ' - ' + code)
     res.send(message)
   })
-  console.timeEnd('errorMiddleware')
   return
 }

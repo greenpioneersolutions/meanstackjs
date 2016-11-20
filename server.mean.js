@@ -17,7 +17,7 @@ function Mean (opts, done) {
   self.run = run
   self.environment = require('./configs/environment.js').get()
   self.settings = require('./configs/settings.js').get()
-  self.port = self.opts.port || self.settings.http.port
+  self.port = self.opts.port || self.settings.https.active ? self.settings.https.port : self.settings.http.port
   self.middleware = require('./server/middleware.js')
   self.mail = require('./server/mail.js')
   self.register = require('./server/register.js')
