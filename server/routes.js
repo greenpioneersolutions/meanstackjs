@@ -2,8 +2,6 @@ module.exports = routes
 
 var express = require('express')
 var ejs = require('ejs')
-var status = require('express-system-status')
-var mongoose = require('mongoose')
 var path = require('path')
 var queryParameters = require('express-query-parameters')()
 var seo = require('./seo')
@@ -42,21 +40,6 @@ function routes (self) {
   self.app.use(express.static(path.join(self.dir, 'client/'), {
     maxAge: 31557600000
   }))
-  if (self.environment === 'development') {
-    self.app.use('/api/status',
-      status({
-        app: self.app,
-        config: self.settings,
-        auth: true,
-        user: 'admin',
-        pass: 'pass',
-        extra: {
-          environment: self.environment
-        },
-        mongoose: mongoose
-      })
-    )
-  }
   function nothingFoundHandler (msg) {
     return function (req, res) {
       res.status(400).send({
