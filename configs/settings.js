@@ -80,6 +80,7 @@ var baseLine = {
     ogTitle: 'Mean Stack JS Demo',
     ogDescription: 'Mean Stack JS was built for easy of use with javascript at its core. MeanStackJS is a full stack javascript framework that will give you the power to develop web applications',
     ogImage: 'http://meanstackjs.com/images/logo/header.png',
+    fbAppId: '1610630462580116',
     twitterCreator: '@greenpioneerdev',
     twitterCard: 'summary_large_image',
     twitterTitle: 'Mean Stack JS Demo',
