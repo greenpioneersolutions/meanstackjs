@@ -3,6 +3,7 @@
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![Build Status](https://travis-ci.org/greenpioneersolutions/meanstackjs.svg?branch=master)](https://travis-ci.org/greenpioneersolutions/meanstackjs)
 [![Join the chat at https://gitter.im/greenpioneersolutions/meanstackjs](https://badges.gitter.im/greenpioneersolutions/meanstackjs.svg)](https://gitter.im/greenpioneersolutions/meanstackjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Known Vulnerabilities](https://snyk.io/test/github/greenpioneersolutions/meanstackjs/badge.svg)](https://snyk.io/test/github/greenpioneersolutions/meanstackjs)
 [![Codewake](https://www.codewake.com/badges/codewake2.svg)](https://www.codewake.com/p/meanstackjs)
 [![Code Triagers Badge](https://www.codetriage.com/greenpioneersolutions/meanstackjs/badges/users.svg)](https://www.codetriage.com/greenpioneersolutions/meanstackjs)
 [![Get help on Codementor](https://cdn.codementor.io/badges/get_help_github.svg)](https://www.codementor.io/jasonhumphrey?utm_source=github&utm_medium=button&utm_term=jasonhumphrey&utm_campaign=github)
