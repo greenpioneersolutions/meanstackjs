@@ -5,8 +5,8 @@ var ejs = require('ejs')
 var status = require('express-system-status')
 var mongoose = require('mongoose')
 var path = require('path')
-var _ = require('lodash')
 var queryParameters = require('express-query-parameters')()
+var seo = require('./seo')
 function routes (self) {
   queryParameters.config({
     settings: {
@@ -15,12 +15,13 @@ function routes (self) {
     }
   })
   self.app.use(queryParameters.middleware())
-  self.fileStructure = self.register({
-    app: self.app,
-    settings: self.settings,
-    middleware: self.middleware,
-    environment: self.environment
-  })
+  self.fileStructure = self.register(self)
+  // {
+  //   app: self.app,
+  //   settings: self.settings,
+  //   middleware: self.middleware,
+  //   environment: self.environment
+  // }
   // Dynamic Routes / Manually enabling them . You can change it back to automatic in the settings
   // build.routing(app, mongoose) - if reverting back to automatic
 
@@ -63,7 +64,13 @@ function routes (self) {
       })
     }
   }
+  self.app.get('/api/seo/*', function (req, res) {
+    seo(self, req, req.path.replace('/api/seo', ''), function (seoSettings) {
+      res.send(seoSettings)
+    })
+  })
 
+  self.app.use(require('./prerenderer'))
   self.app.get('/api/*', nothingFoundHandler('nothing found in api'))
   self.app.get('/bower_components/*', nothingFoundHandler('nothing found in bower_components'))
   self.app.get('/images/*', nothingFoundHandler('nothing found in images'))
@@ -71,30 +78,20 @@ function routes (self) {
   self.app.get('/styles/*', nothingFoundHandler('nothing found in styles'))
   self.app.get('/uploads/*', nothingFoundHandler('nothing found in uploads'))
   self.app.get('/*', function (req, res) {
-    if (_.isUndefined(req.user)) {
-      req.user = {}
-      req.user.authenticated = false
-    } else {
-      req.user.authenticated = true
-    }
-    var html = self.settings.html
-    var seoSettings = self.settings.seo[req.path]
-
-    if (seoSettings) {
-      if (seoSettings.title)html.title = seoSettings.title
-      if (seoSettings.description)html.description = seoSettings.description
-      if (seoSettings.keywords)html.keywords = seoSettings.keywords
-    }
-
-    ejs.renderFile(path.join(__dirname, './layout/index.html'), {
-      html: html,
-      assets: self.app.locals.frontendFilesFinal,
-      environment: self.environment
-    }, {
-      cache: true
-    }, function (err, str) {
-      if (err)console.log(err)
-      res.send(str)
+    seo(self, req, function (seoSettings) {
+      ejs.renderFile(path.join(__dirname, './layout/index.html'), {
+        html: seoSettings,
+        googleAnalytics: self.settings.googleAnalytics,
+        name: self.settings.app.name,
+        assets: self.app.locals.frontendFilesFinal,
+        environment: self.environment,
+        user: req.user ? req.user : {}
+      }, {
+        cache: true
+      }, function (err, str) {
+        if (err)console.log(err)
+        res.send(str)
+      })
     })
   })
 }
