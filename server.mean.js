@@ -1,5 +1,4 @@
 module.exports = Mean
-var auto = require('run-auto')
 var debug = require('debug')('meanstackjs:server')
 var forceSSL = require('express-force-ssl')
 var fs = require('fs')
@@ -21,7 +20,17 @@ function Mean (opts, done) {
   self.middleware = require('./server/middleware.js')
   self.mail = require('./server/mail.js')
   self.register = require('./server/register.js')
-
+  // Connect to MongoDb
+  mongoose.Promise = Promise
+  mongoose.set('debug', self.settings.mongodb.debug)
+  mongoose.connect(self.settings.mongodb.uri, self.settings.mongodb.options)
+  mongoose.connection.on('error', function (err) {
+    console.log('MongoDB Connection Error. Please make sure that MongoDB is running.')
+    debug('MongoDB Connection Error ', err)
+  })
+  mongoose.connection.on('open', function () {
+    debug('MongoDB Connection Open ')
+  })
   // Start of the build process
   // setupExpressConfigs > Used to set up expressjs initially, middleware & passport.
   require('./server/config.js')(self)
@@ -47,77 +56,37 @@ function Mean (opts, done) {
   // purgeMaxCdn - *** OPTIONAL ***  > Used to purge the max cdn cache of the file. We Support MAXCDN
   require('./server/cdn.js')(self)
   // auto  - connectMongoDb :  server > Used to finsh the final set up of the server. at the same time we start connecting to mongo and turning on the server.
-  auto({
-    connectMongoDb: function (callback) {
-      mongoose.Promise = Promise
-      mongoose.set('debug', self.settings.mongodb.debug)
-      mongoose.connect(self.settings.mongodb.uri, self.settings.mongodb.options)
 
-      mongoose.connection.on('error', function (err) {
-        console.log('MongoDB Connection Error. Please make sure that MongoDB is running.')
-        debug('MongoDB Connection Error ')
-        callback(err, null)
-      })
-
-      mongoose.connection.on('open', function () {
-        debug('MongoDB Connection Open ')
-        callback(null, {
-          db: self.settings.mongodb.uri,
-          dbOptions: self.settings.mongodb.options
+  if (self.settings.https.active) {
+    https.createServer({
+      key: fs.readFileSync(self.settings.https.key),
+      cert: fs.readFileSync(self.settings.https.cert)
+    }, self.app).listen(self.settings.https.port, function () {
+      console.log('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
+      debug('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
+      // Force SSL if the http is not active
+      if (!self.settings.http.active) {
+        var app = require('express')()
+        app.set('forceSSLOptions', {
+          httpsPort: self.settings.https.port
         })
-      })
-    },
-    server: function (callback) {
-      if (self.settings.https.active) {
-        if (!self.settings.http.active) {
-          var app = require('express')()
-          app.set('forceSSLOptions', {
-            httpsPort: self.settings.https.port
-          })
-          app.use('/*', forceSSL)
-          app.listen(self.settings.http.port, function () {
-            console.log('HTTP FORCE SSL Express server listening on port %d in %s mode', self.settings.http.port, self.app.get('env'))
-            debug('HTTP FORCE SSL Express server listening on port %d in %s mode', self.settings.http.port, self.app.get('env'))
-          })
-        }
-        https.createServer({
-          key: fs.readFileSync(self.settings.https.key),
-          cert: fs.readFileSync(self.settings.https.cert)
-        }, self.app).listen(self.settings.https.port, function () {
-          console.log('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
-          debug('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
-          if (!self.settings.http.active) {
-            callback(null, {
-              port: self.app.get('port'),
-              env: self.app.get('env')
-            })
-          }
+        app.use('/*', forceSSL)
+        app.listen(self.settings.http.port, function () {
+          console.log('HTTP FORCE SSL Express server listening on port %d in %s mode', self.settings.http.port, self.app.get('env'))
+          debug('HTTP FORCE SSL Express server listening on port %d in %s mode', self.settings.http.port, self.app.get('env'))
+          done()
         })
       }
-
-      // check if you set both to false we default to turn on http
-      if (self.settings.http.active || (self.settings.https.active === false) === (self.settings.http.active === false)) {
-        self.app.listen(self.app.get('port'), function () {
-          console.log('HTTP Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
-          debug('HTTP Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
-          callback(null, {
-            port: self.app.get('port'),
-            env: self.app.get('env')
-          })
-        })
-      }
-    }
-  },
-    function (err, results) {
-      if (err) {
-        console.log('Exiting because of error %d', err)
-        debug('Exiting because of error %d', err)
-        process.exit(1)
-      }
-
-      debug('Finished Server Load')
-      done(null)
     })
+  }
+  // check if you set both to false we default to turn on http
+  if (self.settings.http.active || (self.settings.https.active === false) === (self.settings.http.active === false)) {
+    self.app.listen(self.app.get('port'), function () {
+      console.log('HTTP Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
+      debug('HTTP Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
+      done()
+    })
+  }
 }
 
 if (!module.parent) {
