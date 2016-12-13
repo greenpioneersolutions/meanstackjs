@@ -16,11 +16,9 @@
 
   /*  $window change out */
   var config = {
-    appErrorPrefix: 'MeanStackJS',
-    appTitle: 'MeanStackJS',
-    user: window.user
+    appErrorPrefix: window.name,
+    appTitle: window.name
   }
-
   core.value('config', config)
 
   core.config(configure)
@@ -32,6 +30,5 @@
       $logProvider.debugEnabled(true)
     }
     exceptionHandlerProvider.configure(config.appErrorPrefix)
-    routerHelperProvider.configure({docTitle: config.appTitle + ': '})
   }
 })()

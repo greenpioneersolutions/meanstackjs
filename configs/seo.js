@@ -1,3 +1,5 @@
+/* eslint-disable no-template-curly-in-string */
+var _ = require('lodash')
 module.exports = {
   '/': {
     title: 'Index',
@@ -34,7 +36,29 @@ module.exports = {
   '/blog/list': {
     title: 'blog list '
   },
-  '/blog/view/': {
-    title: 'blog view '
+  '/blog/view/:id': {
+    title: '${ blog.title } -  ${ blog.user.profile.name } ',
+    keywords: '${ blog.tags } ',
+    description: '${ blog.content } ',
+    hook: function (self, data, cb) {
+      data.blog = {
+        tags: ['Add', 'Tags', 'To Blog', 'Mean Stack JS']
+      }
+      self.models.blog.findOne({_id: data.params.id}).populate('user').then(function (blog) {
+        data.blog = _.merge(data.blog, blog)
+        cb(null, data)
+      }).catch(function (err) {
+        cb(err)
+      })
+    }
+  },
+  '/todo/create': {
+    title: 'todo create '
+  },
+  '/todo/edit/': {
+    title: 'todo edit '
+  },
+  '/todo/list': {
+    title: 'todo list '
   }
 }
