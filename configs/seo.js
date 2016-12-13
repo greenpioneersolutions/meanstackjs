@@ -43,6 +43,10 @@ module.exports = {
     ogUrl: '${ path }',
     twitterUrl: '${ path }',
     canonical: '${ path }',
+    ogTitle: '${ blog.title } -  ${ blog.user.profile.name } ',
+    twitterTitle: '${ blog.title } -  ${ blog.user.profile.name } ',
+    ogDescription: '${ blog.content } ',
+    twitterDescription: '${ blog.content } ',
     hook: function (self, data, cb) {
       data.blog = {
         tags: ['Add', 'Tags', 'To Blog', 'Mean Stack JS']

@@ -65,8 +65,7 @@ function routes (self) {
     }
   }
   self.app.get('/api/seo/*', function (req, res) {
-    req.path = req.path.replace('/api/seo', '')
-    seo(self, req, function (seoSettings) {
+    seo(self, req, req.path.replace('/api/seo', ''), function (seoSettings) {
       res.send(seoSettings)
     })
   })

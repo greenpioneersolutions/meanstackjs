@@ -4,13 +4,17 @@ var pathToRegexp = require('path-to-regexp')
 var _ = require('lodash')
 
 // ADD AUTH TO ROUTES
-function Seo (self, req, cb) {
+function Seo (self, req, path, cb) {
   var matched = false
+  if (typeof path === 'function') {
+    cb = path
+    path = req.path
+  }
   if (!self.settings.seo) return cb(self.settings.html)
   _.forEach(self.settings.seo, function (pathSettings, pathValue) {
     var keys = []
     var regexMatch = pathToRegexp(pathValue, keys, { sensitive: false, strict: true, end: true })
-    var match = regexMatch.exec(req.path)
+    var match = regexMatch.exec(path)
     if (match) {
       matched = true
       var obj = {

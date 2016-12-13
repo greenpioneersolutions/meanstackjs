@@ -74,21 +74,22 @@ var baseLine = {
   html: {
     title: 'Mean Stack JS Demo',
     keywords: 'MEAN, MEANSTACKJS, mongodb, expressjs, angularjs,nodejs, javascript',
-    description: 'Mean Stack JS was built for easy of use with javascript at its core. MeanStackJS is a full stack javascript framework that will give you the power to develop web applications',
+    description: 'Mean Stack JS was built for ease of use with javascript at its core. MeanStackJS is a full stack javascript framework that will give you the power to develop web applications',
     ogUrl: 'https://meanstackjs.herokuapp.com/',
     ogType: 'website',
     ogTitle: 'Mean Stack JS Demo',
-    ogDescription: 'Mean Stack JS was built for easy of use with javascript at its core. MeanStackJS is a full stack javascript framework that will give you the power to develop web applications',
+    ogDescription: 'Mean Stack JS was built for ease of use with javascript at its core. MeanStackJS is a full stack javascript framework that will give you the power to develop web applications',
     ogImage: 'http://meanstackjs.com/images/logo/header.png',
     fbAppId: '1610630462580116',
     twitterCreator: '@greenpioneerdev',
     twitterCard: 'summary_large_image',
     twitterTitle: 'Mean Stack JS Demo',
-    twitterDescription: 'Mean Stack JS was built for easy of use with javascript at its core. MeanStackJS is a full stack javascript framework that will give you the power to develop web applications',
+    twitterDescription: 'Mean Stack JS was built for ease of use with javascript at its core. MeanStackJS is a full stack javascript framework that will give you the power to develop web applications',
     twitterUrl: 'https://meanstackjs.herokuapp.com/',
     twitterImage: 'http://meanstackjs.com/images/logo/header.png',
     twitterSite: '@meanstackjs',
-    canonical: 'https://meanstackjs.herokuapp.com/'
+    canonical: 'https://meanstackjs.herokuapp.com/',
+    author: 'Green Pioneer Solutions'
   },
   seo: require('./seo.js'),
   // AGGREGATION
