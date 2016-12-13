@@ -24,6 +24,9 @@ How to Learn Mean Stack JS
 Start learning with documentation:
 * [Check Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
 
+Start visualizing what the meanstack can do for you with our demo
+* [Check Demo Here](https://meanstackjs.herokuapp.com/)
+
 Check out this YouTube channel that has content to help you:
 * [Subscribe to our Youtube Channel - MeanStackJs](https://www.youtube.com/channel/UC5lpSv5tNowgWxC9crTl97g)
 * [Watch MeanStackJS - How to series](https://www.youtube.com/playlist?list=PLhJ-Q2setTdqgwW6U39s_oMAehgtXa15O)
@@ -49,6 +52,7 @@ What is Mean Stack JS?
 - [AngularJS](https://angularjs.org/) - based framework. -AngularJS lets you extend HTML vocabulary for your application. The resulting environment is extraordinarily expressive, readable, and quick to develop
 - [Node.js](http://www.nodejs.org/) - Node.js is a platform built on Chrome's JavaScript runtime for easily building fast, scalable network applications
 
+[Check Demo Here](https://meanstackjs.herokuapp.com/)
 [Check Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
 
 Pre-Requisites
@@ -71,6 +75,7 @@ screencast by Alex Ford that teaches Node and Express from scratch. Alternativel
 here is another great tutorial for complete beginners - [Getting Started With Node.js, Express, MongoDB](http://cwbuecheler.com/web/tutorials/2013/node-express-mongo/).
 
 [Check Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
+[Check Demo Here](https://meanstackjs.herokuapp.com/)
 
 Getting Started
 ---------------
@@ -103,7 +108,7 @@ restart the server each time you make a small change in code. To install, run
 `sudo npm install -g nodemon`.
 
 [Check Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
-
+[Check Demo Here](https://meanstackjs.herokuapp.com/)
 [Check Roadmap Here](https://github.com/greenpioneersolutions/meanstackjs/wiki/Roadmap)
 
 [express]: <http://expressjs.com>
