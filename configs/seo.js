@@ -40,6 +40,9 @@ module.exports = {
     title: '${ blog.title } -  ${ blog.user.profile.name } ',
     keywords: '${ blog.tags } ',
     description: '${ blog.content } ',
+    ogUrl: '${ path }',
+    twitterUrl: '${ path }',
+    canonical: '${ path }',
     hook: function (self, data, cb) {
       data.blog = {
         tags: ['Add', 'Tags', 'To Blog', 'Mean Stack JS']

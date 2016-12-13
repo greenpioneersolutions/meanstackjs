@@ -1,7 +1,6 @@
 <!doctype html>
-<html ng-app="app">
-
-<head>
+<html ng-app="app" lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
     <base href="/">
     <title data-ng-bind="seo.title" ><%= html.title %></title>
     <meta charset="utf-8">
@@ -33,7 +32,8 @@
     <link rel="icon" type="image/png" sizes="192x192" href="images/logo/icon.png">
     <link rel="icon" type="image/png" href="images/logo/icon.png">
     <link rel="shortcut icon" href="images/logo/icon.png" type="image/x-icon">
-    <link rel="icon" href="images/logo/icon.png" type="image/x-icon"> 
+    <link rel="icon" href="images/logo/icon.png" type="image/x-icon">
+    <link rel="canonical" href="<%= html.canonical %>" />
     <% for(var i=0; i<assets.css.length; i++) { %>
     <link rel="stylesheet" href="<%= assets.css[i] %>">
     <% } %>

@@ -65,7 +65,8 @@ function routes (self) {
     }
   }
   self.app.get('/api/seo/*', function (req, res) {
-    seo(self, req.path.replace('/api/seo', ''), req.query, function (seoSettings) {
+    req.path = req.path.replace('/api/seo', '')
+    seo(self, req, function (seoSettings) {
       res.send(seoSettings)
     })
   })
@@ -78,7 +79,7 @@ function routes (self) {
   self.app.get('/styles/*', nothingFoundHandler('nothing found in styles'))
   self.app.get('/uploads/*', nothingFoundHandler('nothing found in uploads'))
   self.app.get('/*', function (req, res) {
-    seo(self, req.path, req.query, function (seoSettings) {
+    seo(self, req, function (seoSettings) {
       ejs.renderFile(path.join(__dirname, './layout/index.html'), {
         html: seoSettings,
         googleAnalytics: self.settings.googleAnalytics,

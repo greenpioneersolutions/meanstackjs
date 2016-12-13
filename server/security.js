@@ -10,7 +10,7 @@ function security (self) {
   // Limit/Throttle the requests to your system
   // You have multiple options with package \/
   // only rate-limit requests that begin with /api/ , configure limits: & configure a custom limit handler
-  self.app.use(throttler(self.settings.throttle))
+  // self.app.use(throttler(self.settings.throttle))
 
   // 7 security middleware
   self.app.use(helmet(self.settings.bodyparser.helmet))

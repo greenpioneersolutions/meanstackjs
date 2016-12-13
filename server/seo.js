@@ -4,18 +4,19 @@ var pathToRegexp = require('path-to-regexp')
 var _ = require('lodash')
 
 // ADD AUTH TO ROUTES
-function Seo (self, path, query, cb) {
+function Seo (self, req, cb) {
   var matched = false
   if (!self.settings.seo) return cb(self.settings.html)
   _.forEach(self.settings.seo, function (pathSettings, pathValue) {
     var keys = []
     var regexMatch = pathToRegexp(pathValue, keys, { sensitive: false, strict: true, end: true })
-    var match = regexMatch.exec(path)
+    var match = regexMatch.exec(req.path)
     if (match) {
       matched = true
       var obj = {
-        query: query,
-        params: {}
+        query: req.query,
+        params: {},
+        path: (req.protocol + '://' + req.headers.host + req.path)
       }
       for (var i = 1; i < match.length; i++) {
         obj.params[keys[i - 1].name] = match[i]
@@ -28,12 +29,11 @@ function Seo (self, path, query, cb) {
           if (!data) {
             data = obj
           }
-          cb(_.merge(self.settings.html, compile(pathSettings, data)))
+          return cb(_.merge(self.settings.html, compile(pathSettings, data)))
         })
       } else {
-        cb(_.merge(self.settings.html, compile(pathSettings, obj)))
+        return cb(_.merge(self.settings.html, compile(pathSettings, obj)))
       }
-
       return false
     }
   })

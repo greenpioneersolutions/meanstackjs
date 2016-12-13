@@ -76,7 +76,7 @@ var baseLine = {
     keywords: 'MEAN, MEANSTACKJS, mongodb, expressjs, angularjs,nodejs, javascript',
     description: 'Mean Stack JS was built for easy of use with javascript at its core. MeanStackJS is a full stack javascript framework that will give you the power to develop web applications',
     ogUrl: 'https://meanstackjs.herokuapp.com/',
-    ogType: 'product',
+    ogType: 'website',
     ogTitle: 'Mean Stack JS Demo',
     ogDescription: 'Mean Stack JS was built for easy of use with javascript at its core. MeanStackJS is a full stack javascript framework that will give you the power to develop web applications',
     ogImage: 'http://meanstackjs.com/images/logo/header.png',
@@ -87,7 +87,8 @@ var baseLine = {
     twitterDescription: 'Mean Stack JS was built for easy of use with javascript at its core. MeanStackJS is a full stack javascript framework that will give you the power to develop web applications',
     twitterUrl: 'https://meanstackjs.herokuapp.com/',
     twitterImage: 'http://meanstackjs.com/images/logo/header.png',
-    twitterSite: '@meanstackjs'
+    twitterSite: '@meanstackjs',
+    canonical: 'https://meanstackjs.herokuapp.com/'
   },
   seo: require('./seo.js'),
   // AGGREGATION
