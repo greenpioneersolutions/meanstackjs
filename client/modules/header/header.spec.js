@@ -17,6 +17,8 @@ describe('HEADER Testing', function () {
         .respond(200, '')
       $httpBackend.whenGET(/\/api\/authenticate\?noCache=\d+/)
         .respond(200, authResponse)
+      $httpBackend.when('GET', /\/api\/seo\/*/)
+        .respond(200, {})
       $httpBackend.when('GET', /modules\/core\/[\d\w]+\.view\.html\?noCache=\d+/)
         .respond(200, '')
       $httpBackend.when('GET', /modules\/index\/[\d\w]+\.view\.html\?noCache=\d+/)

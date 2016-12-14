@@ -262,10 +262,7 @@ var __name__Schema = mongoose.Schema({
           })
           modelFile += multiline(function () { /*
 })
-var __Name__ = mongoose.model('__Name__', __name__Schema)
-module.exports = {
-  __Name__: __Name__
-}
+module.exports = __name__Schema
   */
           })
           cb({

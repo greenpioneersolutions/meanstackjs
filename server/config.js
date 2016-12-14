@@ -10,6 +10,7 @@ var path = require('path')
 var passport = require('passport')
 var session = require('express-session')
 var MongoStore = require('connect-mongo')(session)
+var statusMonitor = require('express-status-monitor')
 function config (self) {
   self.app = express()
   self.app.enable('trust proxy')
@@ -17,6 +18,9 @@ function config (self) {
   self.app.set('view engine', 'html')
   self.app.set('views', path.join(self.dir, '/client'))
   self.app.set('port', self.port)
+  self.app.use(statusMonitor({
+    path: '/api/status'
+  }))
   self.app.use(compress())
   self.app.use(bodyParser.json(self.settings.bodyparser.json))
   self.app.use(bodyParser.urlencoded(self.settings.bodyparser.urlencoded))

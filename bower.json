@@ -10,13 +10,13 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "^1.5.8",
-    "angular-sanitize": "^1.5.8",
-    "angular-cookies": "^1.5.8",
-    "angular-animate": "^1.5.8",
-    "angular-resource": "^1.5.8",
+    "angular": "1.5.8",
+    "angular-sanitize": "1.5.8",
+    "angular-cookies": "1.5.8",
+    "angular-animate": "1.5.8",
+    "angular-resource": "1.5.8",
     "angular-material": "~1.0.1",
-    "angular-mocks": "^1.5.8",
+    "angular-mocks": "1.5.8",
     "angular-moment": "^1.0.0-beta.6",
     "angular-ui-router": "^0.3.1",
     "angular-bootstrap": "^2.0.0",
@@ -33,7 +33,7 @@
     "angular-jwt": "^0.0.9"
   },
   "resolutions": {
-    "angular": "^1.5.8",
+    "angular": "1.5.8",
     "jquery": "^3.1.0"
   }
 }

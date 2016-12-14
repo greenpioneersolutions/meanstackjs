@@ -12,7 +12,6 @@
   /* @ngInject */
   function routerHelperProvider ($locationProvider, $stateProvider, $urlRouterProvider) {
     var config = {
-      docTitle: undefined,
       resolveAlways: {}
     }
 
@@ -24,10 +23,10 @@
 
     this.$get = RouterHelper
 
-    RouterHelper.$inject = ['$rootScope', '$state', 'logger']
+    RouterHelper.$inject = ['$rootScope', '$state', 'logger', '$location', '$http']
 
     /* @ngInject */
-    function RouterHelper ($rootScope, $state, logger) {
+    function RouterHelper ($rootScope, $state, logger, $location, $http) {
       var handlingStateChangeError = false
       var hasOtherwise = false
       var stateCounts = {
@@ -84,20 +83,21 @@
 
       function init () {
         handleRoutingErrors()
-        updateDocTitle()
+        updateupdateSeo()
       }
 
       function getStates () {
         return $state.get()
       }
 
-      function updateDocTitle () {
+      function updateupdateSeo () {
         $rootScope.$on('$stateChangeSuccess',
           function (event, toState, toParams, fromState, fromParams) {
+            $http.get('/api/seo' + $location.$$url).then(function (success) {
+              $rootScope.seo = success.data
+            })
             stateCounts.changes++
             handlingStateChangeError = false
-            var title = config.docTitle + ' ' + (toState.title || '')
-            $rootScope.title = title // data bind to <title>
           }
         )
       }
@@ -126,12 +126,8 @@
   extendExceptionHandler.$inject = ['$delegate', 'exceptionHandler', 'logger']
   function extendExceptionHandler ($delegate, exceptionHandler, logger) {
     return function (exception, cause) {
-      var exceptions = exception
-      var appErrorPrefix = exceptionHandler.config.appErrorPrefix || ''
-      var errorData = {exception: exceptions, cause: cause}
-      exceptions.message = appErrorPrefix + exceptions.message
-      $delegate(exceptions, cause)
-      logger.error(exceptions.message, errorData)
+      $delegate(exception, cause)
+      logger.error(exception.message || exception, {exception: exception, cause: cause})
     }
   }
 })()

@@ -39,7 +39,7 @@
       })
     }
     vm.list = function () {
-      __Name__Factory.get(function (success) {
+      __Name__Factory.query(function (success) {
         vm.__name__s = success
       }, function (error) {
         logger.error(error)

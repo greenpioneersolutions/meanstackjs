@@ -3,14 +3,14 @@ var cors = require('cors')
 var contentLength = require('express-content-length-validator')
 var helmet = require('helmet')
 var hpp = require('hpp')
-var throttler = require('mongo-throttle')
+// var throttler = require('mongo-throttle')
 
 function security (self) {
   // Mongo-Throttle
   // Limit/Throttle the requests to your system
   // You have multiple options with package \/
   // only rate-limit requests that begin with /api/ , configure limits: & configure a custom limit handler
-  self.app.use(throttler(self.settings.throttle))
+  // self.app.use(throttler(self.settings.throttle))
 
   // 7 security middleware
   self.app.use(helmet(self.settings.bodyparser.helmet))
