@@ -19,6 +19,7 @@ function Seo (self, req, path, cb) {
       matched = true
       var obj = {
         query: req.query,
+        user: req.user || {},
         params: {},
         path: (req.protocol + '://' + req.headers.host + req.path)
       }

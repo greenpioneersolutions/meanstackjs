@@ -3,6 +3,7 @@
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![Build Status](https://travis-ci.org/greenpioneersolutions/meanstackjs.svg?branch=master)](https://travis-ci.org/greenpioneersolutions/meanstackjs)
 [![Join the chat at https://gitter.im/greenpioneersolutions/meanstackjs](https://badges.gitter.im/greenpioneersolutions/meanstackjs.svg)](https://gitter.im/greenpioneersolutions/meanstackjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Known Vulnerabilities](https://snyk.io/test/github/greenpioneersolutions/meanstackjs/badge.svg)](https://snyk.io/test/github/greenpioneersolutions/meanstackjs/badge.svg)
 [![Codewake](https://www.codewake.com/badges/codewake2.svg)](https://www.codewake.com/p/meanstackjs)
 [![Code Triagers Badge](https://www.codetriage.com/greenpioneersolutions/meanstackjs/badges/users.svg)](https://www.codetriage.com/greenpioneersolutions/meanstackjs)
 [![Get help on Codementor](https://cdn.codementor.io/badges/get_help_github.svg)](https://www.codementor.io/jasonhumphrey?utm_source=github&utm_medium=button&utm_term=jasonhumphrey&utm_campaign=github)
@@ -22,6 +23,9 @@ How to Learn Mean Stack JS
 -----------------
 Start learning with documentation:
 * [Check Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
+
+Start visualizing what the meanstack can do for you with our demo
+* [Check Demo Here](https://meanstackjs.herokuapp.com/)
 
 Check out this YouTube channel that has content to help you:
 * [Subscribe to our Youtube Channel - MeanStackJs](https://www.youtube.com/channel/UC5lpSv5tNowgWxC9crTl97g)
@@ -48,6 +52,7 @@ What is Mean Stack JS?
 - [AngularJS](https://angularjs.org/) - based framework. -AngularJS lets you extend HTML vocabulary for your application. The resulting environment is extraordinarily expressive, readable, and quick to develop
 - [Node.js](http://www.nodejs.org/) - Node.js is a platform built on Chrome's JavaScript runtime for easily building fast, scalable network applications
 
+[Check Demo Here](https://meanstackjs.herokuapp.com/)
 [Check Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
 
 Pre-Requisites
@@ -70,6 +75,7 @@ screencast by Alex Ford that teaches Node and Express from scratch. Alternativel
 here is another great tutorial for complete beginners - [Getting Started With Node.js, Express, MongoDB](http://cwbuecheler.com/web/tutorials/2013/node-express-mongo/).
 
 [Check Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
+[Check Demo Here](https://meanstackjs.herokuapp.com/)
 
 Getting Started
 ---------------
@@ -102,7 +108,7 @@ restart the server each time you make a small change in code. To install, run
 `sudo npm install -g nodemon`.
 
 [Check Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
-
+[Check Demo Here](https://meanstackjs.herokuapp.com/)
 [Check Roadmap Here](https://github.com/greenpioneersolutions/meanstackjs/wiki/Roadmap)
 
 [express]: <http://expressjs.com>

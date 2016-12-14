@@ -3,7 +3,7 @@ var cors = require('cors')
 var contentLength = require('express-content-length-validator')
 var helmet = require('helmet')
 var hpp = require('hpp')
-var throttler = require('mongo-throttle')
+// var throttler = require('mongo-throttle')
 
 function security (self) {
   // Mongo-Throttle

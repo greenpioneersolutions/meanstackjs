@@ -182,7 +182,7 @@
     }
 
     UserClass.prototype.logout = function (vm) {
-      $http.get('/api/logout').success(function (data) {
+      $http.get('/api/logout').then(function (data) {
         localStorage.removeItem('JWT')
         $rootScope.$emit('logout')
         $state.go('index')

@@ -126,12 +126,8 @@
   extendExceptionHandler.$inject = ['$delegate', 'exceptionHandler', 'logger']
   function extendExceptionHandler ($delegate, exceptionHandler, logger) {
     return function (exception, cause) {
-      var exceptions = exception
-      var appErrorPrefix = exceptionHandler.config.appErrorPrefix || ''
-      var errorData = {exception: exceptions, cause: cause}
-      exceptions.message = appErrorPrefix + exceptions.message
-      $delegate(exceptions, cause)
-      logger.error(exceptions.message, errorData)
+      $delegate(exception, cause)
+      logger.error(exception.message || exception, {exception: exception, cause: cause})
     }
   }
 })()

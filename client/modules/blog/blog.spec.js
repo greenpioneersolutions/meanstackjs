@@ -93,6 +93,8 @@ describe('BLOG Testing', function () {
       $location = _$location_
       $httpBackend.when('GET', /\/api\/authenticate\?noCache=\d+/)
         .respond(200, authResponse)
+      $httpBackend.when('GET', /\/api\/seo\/*/)
+        .respond(200, {})
       $httpBackend.when('GET', /modules\/\w+\/(\d|\w)+\.view\.html\?noCache=\d+/)
         .respond(200, '')
       var $scope = $rootScope.$new()

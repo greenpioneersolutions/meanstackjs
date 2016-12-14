@@ -31,6 +31,8 @@ describe('USER Testing', function () {
     $httpBackend = _$httpBackend_
     $httpBackend.when('GET', /\/api\/authenticate\?noCache=\d+/)
       .respond(200, authResponse)
+    $httpBackend.when('GET', /\/api\/seo\/*/)
+        .respond(200, {})
     $httpBackend.when('GET', /modules\/[\d\w]+\/[\d\w]+\.view\.html\?noCache=\d+/)
       .respond(200, '')
     $httpBackend.when('GET', /modules\/index\/[\d\w]+\.view\.html\?noCache=\d+/)
