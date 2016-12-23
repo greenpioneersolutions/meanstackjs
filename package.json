@@ -1,6 +1,6 @@
 {
   "name": "meanstackjs",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Do you need a full stack solution that is easy to build and all JavaScript? Then you're in the right place with Mean Stack JS. There is no steep learning curve and it only takes an average of 10 minutes to get your base code up and running. We've made the development process as simple and scalable as possible. This is perfect for anyone involved in software development, including User Experience Designers, Quality Assurance Engineers, Software Engineers, Frontend Developers, Backend Developers and Full Stack Engineers.",
   "main": "index.js",
   "standard": {
@@ -36,12 +36,14 @@
     "lint:fix": "node_modules/.bin/standard --fix",
     "postinstall": "node_modules/.bin/bower install && node scripts/postinstall.js",
     "start": "node index.js",
-    "start:watch": "cross-env NODE_ENV=development node_modules/.bin/nodemon index.js",
-    "start:test": "cross-env NODE_ENV=test node index.js",
-    "start:nightwatch": "cross-env NODE_ENV=nightwatch node index.js",
-    "start:production": "cross-env NODE_ENV=production node index.js",
+    "start:watch": "node_modules/.bin/cross-env NODE_ENV=development node_modules/.bin/nodemon index.js",
+    "start:test": "node_modules/.bin/cross-env NODE_ENV=test node index.js",
+    "start:nightwatch": "node_modules/.bin/cross-env NODE_ENV=nightwatch node index.js",
+    "start:production": "node_modules/.bin/cross-env NODE_ENV=production node index.js",
     "cli": "node commands/cli.js",
-    "generate-ssl-certs": "bash scripts/generate-ssl-certs.sh "
+    "generate-ssl-certs": "bash scripts/generate-ssl-certs.sh ",
+    "processes:linux": "ps -ef | grep 'node index.js'",
+    "processes:linux:kill": "ps -ef | grep 'node index.js' | grep -v grep | awk '{print $2}' | xargs kill -9"
   },
   "repository": {
     "type": "git",
@@ -85,7 +87,7 @@
     "cookie-parser": "^1.4.0",
     "cors": "^2.7.1",
     "cross-env": "^3.1.3",
-    "debug": "^2.2.0",
+    "debug": "^2.5.1",
     "ejs": "^2.5.1",
     "express": "^4.14.0",
     "express-content-length-validator": "^1.0.0",
