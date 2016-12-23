@@ -24,7 +24,7 @@ module.exports = function (self) {
       debug('Styles are watching:' + url)
     })
     scssLessWatcher.on('change', function (url) {
-      var fileData = _.words(url, /[^./ ]+/g)
+      var fileData = _.words(url, /[^./ \\]+/g)
       if (fileData[fileData.length - 1] === 'less') {
         var lessContents = fs.readFileSync(path.resolve(url), 'utf8')
         less.render(lessContents, function (err, result) {
@@ -46,7 +46,7 @@ module.exports = function (self) {
       }
     })
     scssLessGlobalWatcher.on('change', function (url) {
-      var fileData = _.words(url, /[^./ ]+/g)
+      var fileData = _.words(url, /[^./ \\]+/g)
       if (fileData[fileData.length - 1] === 'less') {
         var lessContents = fs.readFileSync(path.resolve(url), 'utf8')
         less.render(lessContents, function (err, result) {
