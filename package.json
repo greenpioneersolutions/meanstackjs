@@ -1,7 +1,7 @@
 {
   "name": "meanstackjs",
   "version": "1.4.1",
-  "description": "Do you need a full stack solution that is easy to build and all JavaScript? Then you're in the right place with Mean Stack JS. There is no steep learning curve and it only takes an average of 10 minutes to get your base code up and running. We've made the development process as simple and scalable as possible. This is perfect for anyone involved in software development, including User Experience Designers, Quality Assurance Engineers, Software Engineers, Frontend Developers, Backend Developers and Full Stack Engineers.",
+  "description": "The best developers want to be efficient and productive, quickly prototyping and experimenting, able to build successes into production-ready applications. We believe Mean Stack JS gives developers of all skill levels—whether at enterprise scale or working solo—an ideal open-source toolset for building rapid, scalable Javascript applications. We'll provide you a simple project structure that is versatile enough to quickly apply to your own development projects. Want to get started?",
   "main": "index.js",
   "standard": {
     "globals": [
@@ -25,6 +25,9 @@
     "ignore": [
       "commands/template/",
       "commands/blank/",
+      "database/",
+      "downloads/",
+      "backups/",
       "tools/"
     ]
   },

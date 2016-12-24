@@ -87,3 +87,10 @@ server/dist/
 # Tool Reports reports
 # --------------------
 tools/*/reports
+
+# --------------------
+# Mean Stack Folders
+# --------------------
+database/
+downloads/
+backups/

@@ -365,6 +365,22 @@ function logShellJS (code, stdout, stderr) {
 function ask () {
   inquirer.prompt(questions.intro).then(function (answers) {
     switch (answers.intro) {
+
+      case 'Start Mongod':
+        shell.exec('bash scripts/start-mongod.sh', {silent: false}, logShellJS)
+        break
+      case 'Install MongoDB':
+        shell.exec('bash scripts/mongodb-install.sh', {silent: false}, logShellJS)
+        break
+      case 'Install NodeJS':
+        shell.exec('bash scripts/nodejs-install.sh', {silent: false}, logShellJS)
+        break
+      case 'Set Proxies':
+        shell.exec('bash scripts/set-proxies.sh', {silent: false}, logShellJS)
+        break
+      case 'Delete Proxies':
+        shell.exec('bash scripts/unset-proxies.sh', {silent: false}, logShellJS)
+        break
       case 'Linux Processes':
         shell.exec("ps -ef | grep 'node index.js' | grep -v grep", {silent: false}, logShellJS)
         break
