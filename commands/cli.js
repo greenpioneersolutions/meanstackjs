@@ -83,17 +83,41 @@ userSchema.pre('save', function (next) {
   })
 })
 var User = mongoose.model('User', userSchema)
+var commandFiles = {}
+commandFiles.template = _.union(
+  [new inquirer.Separator('Client Creation:')],
+  _.map(fs.readdirSync('./commands/template/client'), function (n) { return 'client/' + n }),
+  [new inquirer.Separator('Server Creation:')],
+  _.map(fs.readdirSync('./commands/template/server'), function (n) { return 'server/' + n })
+  )
 
+commandFiles.blank = _.union(
+  [new inquirer.Separator('Client Creation:')],
+  _.map(fs.readdirSync('./commands/blank/client'), function (n) { return 'client/' + n }),
+  [new inquirer.Separator('Server Creation:')],
+  _.map(fs.readdirSync('./commands/blank/server'), function (n) { return 'server/' + n })
+  )
 function emptyDirectory (url, callback) {
   fs.readdir('./' + url, function (err, files) {
-    if (err && err.code !== 'ENOENT') throw new Error(err)
-    callback(!files || !files.length)
+    if (err && err.code !== 'ENOENT') throw new Error(err, 'THIS ERR')
+    callback(files === undefined)
   })
 }
 function readDirectory (url, callback) {
   fs.readdir('./' + url, function (err, files) {
     if (err && err.code !== 'ENOENT') throw new Error(err)
     callback(files)
+  })
+}
+function ensureMade (url, callback) {
+  emptyDirectory(url, function (empty) {
+    if (empty) {
+      mkdir(url, function () {
+        return callback()
+      })
+    } else {
+      callback()
+    }
   })
 }
 function ensureEmpty (url, force, callback) {
@@ -145,7 +169,7 @@ function buildFront (data, cb) {
   var pathVar = './client'
   ensureEmpty(pathVar + '/modules/' + data.name + '/', false, function () {
     mkdir(pathVar + '/modules/' + data.name + '/', function () {
-      readDirectory('./commands/template/client/', function (files) {
+      readDirectory('./commands/' + data.location + '/client/', function (files) {
         // FILTER OUT DC STORES ...etc anythin with a .
         files = _.filter(files, function (n) {
           return !_.startsWith(n, '.')
@@ -154,9 +178,9 @@ function buildFront (data, cb) {
         write('./client/modules/client.module.js', clientModuleJs.replace(/(\/\/ DONT REMOVE - APP GENERATOR)+/igm, ",\n 'app." + change.name + "' // DONT REMOVE - APP GENERATOR"))
         _.forEach(files, function (n) {
           if (path.extname(n) === '.html') {
-            write(pathVar + '/modules/' + data.name + '/' + n, readTemplate('./template/client/' + n, change))
+            write(pathVar + '/modules/' + data.name + '/' + n, readTemplate('./' + data.location + '/client/' + n, change))
           } else {
-            write(pathVar + '/modules/' + data.name + '/' + data.name + '.' + n, readTemplate('./template/client/' + n, change))
+            write(pathVar + '/modules/' + data.name + '/' + data.name + '.' + n, readTemplate('./' + data.location + '/client/' + n, change))
           }
         })
         cb()
@@ -172,7 +196,7 @@ function buildBack (data, cb) {
   var pathVar = './server'
   ensureEmpty(pathVar + '/modules/' + data.name + '/', false, function () {
     mkdir(pathVar + '/modules/' + data.name + '/', function () {
-      readDirectory('./commands/template/server/', function (files) {
+      readDirectory('./commands/' + data.location + '/server/', function (files) {
         // FILTER OUT DC STORES ...etc anythin with a .
         files = _.filter(files, function (n) {
           return !_.startsWith(n, '.')
@@ -181,7 +205,7 @@ function buildBack (data, cb) {
           if (n === 'model.js' && data.schema.created) {
             write(pathVar + '/modules/' + data.name + '/' + data.name + '.' + n, useTemplate(data.schema.modelFile, change))
           } else {
-            write(pathVar + '/modules/' + data.name + '/' + data.name + '.' + n, readTemplate('./template/server/' + n, change))
+            write(pathVar + '/modules/' + data.name + '/' + data.name + '.' + n, readTemplate('./' + data.location + '/server/' + n, change))
           }
         })
         cb()
@@ -364,44 +388,86 @@ function removeRoles (user, cb) {
 function ask () {
   inquirer.prompt(questions.intro).then(function (answers) {
     switch (answers.intro) {
+      // CREATE A FILE
+      case 'Create A File or Files':
+        inquirer.prompt(questions.location).then(function (location) {
+          inquirer.prompt(questions.module).then(function (modules) {
+            inquirer.prompt({
+              type: 'checkbox',
+              name: 'files',
+              message: 'What files do you want to create?',
+              choices: commandFiles[location.location]
+            }).then(function (files) {
+              var change = {
+                name: modules.module,
+                Name: _.capitalize(modules.module)
+              }
+              _.forEach(files.files, function (n) {
+                ensureMade(n.substring(0, 6) + '/modules/' + modules.module + '/', function () {
+                  if (n.substring(0, 6) === 'client') {
+                    if (path.extname(n) === '.html') {
+                      write('./client' + '/modules/' + modules.module + '/' + n.substring(7), readTemplate('./' + location.location + '/client/' + n.substring(7), change))
+                    } else {
+                      write('./client' + '/modules/' + modules.module + '/' + modules.module + '.' + n.substring(7), readTemplate('./' + location.location + '/client/' + n.substring(7), change))
+                    }
+                  } else {
+                    write('./server' + '/modules/' + modules.module + '/' + modules.module + '.' + n.substring(7), readTemplate('./' + location.location + '/server/' + n.substring(7), change))
+                  }
+                })
+              })
+              ask()
+            })
+          })
+        })
+        break
+      // DONT FORGET STANDARD JS FIX
       case 'Create Frontend Module':
-        inquirer.prompt(questions.module).then(function (modules) {
-          buildFront({
-            name: modules.module
-          }, function (err) {
-            if (err)console.log(err)
-            ask()
+        inquirer.prompt(questions.location).then(function (location) {
+          inquirer.prompt(questions.module).then(function (modules) {
+            buildFront({
+              location: location.location,
+              name: modules.module
+            }, function (err) {
+              if (err)console.log(err)
+              ask()
+            })
           })
         })
         break
       case 'Create Backend Module':
-        inquirer.prompt(questions.module).then(function (modules) {
-          buildSchema(function (data) {
-            buildBack({
-              name: modules.module,
-              schema: data
-            }, function (err) {
-              if (err)console.log(err)
-              ask()
+        inquirer.prompt(questions.location).then(function (location) {
+          inquirer.prompt(questions.module).then(function (modules) {
+            buildSchema(function (data) {
+              buildBack({
+                location: location.location,
+                name: modules.module,
+                schema: data
+              }, function (err) {
+                if (err)console.log(err)
+                ask()
+              })
             })
           })
         })
-
         break
       case 'Create Frontend & Backend Module':
-        inquirer.prompt(questions.module).then(function (modules) {
-          buildSchema(function (data) {
-            buildFront({
-              name: modules.module
-            }, function (err) {
-              if (err)console.log(err)
-            })
-            buildBack({
-              name: modules.module,
-              schema: data
-            }, function (err) {
-              if (err)console.log(err)
-              ask()
+        inquirer.prompt(questions.location).then(function (location) {
+          inquirer.prompt(questions.module).then(function (modules) {
+            buildSchema(function (data) {
+              buildFront({
+                location: location.location,
+                name: modules.module
+              }, function (err) {
+                if (err)console.log(err)
+              })
+              buildBack({
+                location: location.location,
+                name: modules.module,
+                schema: data
+              }, function (err) {
+                if (err)console.log(err)
+                ask()
+              })
             })
           })
         })

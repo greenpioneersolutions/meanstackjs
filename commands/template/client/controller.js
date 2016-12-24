@@ -9,7 +9,7 @@
   /* @ngInject */
   function __Name__Controller ($http, $stateParams, __Name__Factory, logger, $location, UserFactory) {
     var vm = this
-    vm.title = 'System'
+    vm.title = '__name__'
     vm.__name__ = {}
     vm.UserFactory = UserFactory
     activate()

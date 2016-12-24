@@ -1,5 +1,17 @@
 var inquirer = require('inquirer')
 module.exports = {
+  location: [
+    {
+      type: 'list',
+      name: 'location',
+      message: 'Do you want a templated file or a blank file',
+      choices: [
+        'template',
+        'blank'
+      ],
+      default: function () { return 'template' }
+    }
+  ],
   intro: [
     {
       type: 'list',
@@ -9,6 +21,7 @@ module.exports = {
 
         new inquirer.Separator('Module Creation:'),
         'Create Schema',
+        'Create A File or Files',
         'Create Frontend Module',
         'Create Backend Module',
         'Create Frontend & Backend Module',
