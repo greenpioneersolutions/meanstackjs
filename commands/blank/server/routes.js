@@ -1,6 +1,6 @@
-var __name__ = require('./__name__.controller.js')
+var <%= name %> = require('./<%= name %>.controller.js')
 
 module.exports = function (app, auth, mail, settings, models) {
   // GET
-  app.get('/api/__name__/', __name__.get__Name__)
+  app.get('/api/<%= name %>/', <%= name %>.get<%= Name %>)
 }

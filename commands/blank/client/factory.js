@@ -2,12 +2,12 @@
   'use strict'
 
   angular
-    .module('app.__name__')
-    .factory('__Name__Factory', __Name__Factory)
+    .module('app.<%= name %>')
+    .factory('<%= Name %>Factory', <%= Name %>Factory)
 
-  __Name__Factory.$inject = []
+  <%= Name %>Factory.$inject = []
   /* @ngInject */
-  function __Name__Factory () {
+  function <%= Name %>Factory () {
     var self = this
     return self
   }

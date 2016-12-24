@@ -24,6 +24,7 @@
     ],
     "ignore": [
       "commands/template/",
+      "commands/blank/",
       "tools/"
     ]
   },

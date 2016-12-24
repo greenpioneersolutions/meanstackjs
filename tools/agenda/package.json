@@ -12,5 +12,9 @@
     "mongodb-backup": "^1.6.8",
     "mongodb-restore": "^1.6.1"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/greenpioneersolutions/meanstackjs.git"
+  }
 }

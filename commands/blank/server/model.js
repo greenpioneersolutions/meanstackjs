@@ -1,9 +1,9 @@
 var mongoose = require('mongoose')
 
-var __name__Schema = mongoose.Schema({
-  __name__: {
+var <%= name %>Schema = mongoose.Schema({
+  <%= name %>: {
     type: String
   }
 })
 
-module.exports = __name__Schema
+module.exports = <%= name %>Schema

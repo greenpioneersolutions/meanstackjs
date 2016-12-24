@@ -2,14 +2,14 @@
   'use strict'
 
   angular
-    .module('app.__name__', [])
-    .controller('__Name__Controller', __Name__Controller)
-
-  __Name__Controller.$inject = ['$http', '$stateParams', '__Name__Factory', 'logger', '$location', 'UserFactory']
+    .module('app.<%= name %>', [])
+    .controller('<%= Name %>Controller', <%= Name %>Controller)
+    
+  <%= Name %>Controller.$inject = ['$http', '$stateParams', '<%= Name %>Factory', 'logger', '$location', 'UserFactory']
   /* @ngInject */
-  function __Name__Controller ($http, $stateParams, __Name__Factory, logger, $location, UserFactory) {
+  function <%= Name %>Controller ($http, $stateParams, <%= Name %>Factory, logger, $location, UserFactory) {
     var vm = this
-    vm.__name__ = {}
+    vm.<%= name %> = {}
     vm.UserFactory = UserFactory
     activate()
 

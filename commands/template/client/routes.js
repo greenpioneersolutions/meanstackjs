@@ -2,7 +2,7 @@
   'use strict'
 
   angular
-    .module('app.__name__')
+    .module('app.<%= name %>')
     .run(appRun)
 
   appRun.$inject = ['routerHelper']
@@ -14,11 +14,11 @@
   function getStates () {
     return [
       {
-        state: '__name__Create',
+        state: '<%= name %>Create',
         config: {
-          url: '/__name__/create',
-          templateUrl: 'modules/__name__/create.view.html',
-          controller: '__Name__Controller',
+          url: '/<%= name %>/create',
+          templateUrl: 'modules/<%= name %>/create.view.html',
+          controller: '<%= Name %>Controller',
           controllerAs: 'vm',
           resolve: {
             loggedin: function (UserFactory) {
@@ -28,11 +28,11 @@
         }
       },
       {
-        state: '__name__Edit',
+        state: '<%= name %>Edit',
         config: {
-          url: '/__name__/edit/:id',
-          templateUrl: 'modules/__name__/edit.view.html',
-          controller: '__Name__Controller',
+          url: '/<%= name %>/edit/:id',
+          templateUrl: 'modules/<%= name %>/edit.view.html',
+          controller: '<%= Name %>Controller',
           controllerAs: 'vm',
           resolve: {
             loggedin: function (UserFactory) {
@@ -42,20 +42,20 @@
         }
       },
       {
-        state: '__name__List',
+        state: '<%= name %>List',
         config: {
-          url: '/__name__/list',
-          templateUrl: 'modules/__name__/list.view.html',
-          controller: '__Name__Controller',
+          url: '/<%= name %>/list',
+          templateUrl: 'modules/<%= name %>/list.view.html',
+          controller: '<%= Name %>Controller',
           controllerAs: 'vm'
         }
       },
       {
-        state: '__name__View',
+        state: '<%= name %>View',
         config: {
-          url: '/__name__/view/:id',
-          templateUrl: 'modules/__name__/view.view.html',
-          controller: '__Name__Controller',
+          url: '/<%= name %>/view/:id',
+          templateUrl: 'modules/<%= name %>/view.view.html',
+          controller: '<%= Name %>Controller',
           controllerAs: 'vm'
         }
       }

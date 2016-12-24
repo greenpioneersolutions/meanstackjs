@@ -1,26 +1,26 @@
 var auto = require('run-auto')
 var mongoose = require('mongoose')
-var __name__s = mongoose.model('__name__')
+var <%= name %>s = mongoose.model('<%= name %>')
 var _ = require('lodash')
 
-exports.get__Name__ = function (req, res, next) {
+exports.get<%= Name %> = function (req, res, next) {
   auto({
-    __name__s: function (cb) {
-      __name__s
+    <%= name %>s: function (cb) {
+      <%= name %>s
         .find()
         .exec(cb)
     }
   }, function (err, results) {
     if (err) return next(err)
-    return res.status(200).send(results.__name__s)
+    return res.status(200).send(results.<%= name %>s)
   })
 }
-exports.delete__Name__ = function (req, res, next) {
-  req.__name__.remove(function () {
+exports.delete<%= Name %> = function (req, res, next) {
+  req.<%= name %>.remove(function () {
     res.status(204).send()
   })
 }
-exports.post__Name__ = function (req, res, next) {
+exports.post<%= Name %> = function (req, res, next) {
   // req.assert('name', 'The name cannot be blank').notEmpty()
 
   var errors = req.validationErrors()
@@ -32,26 +32,26 @@ exports.post__Name__ = function (req, res, next) {
     })
   }
   req.body.user = req.user._id
-  __name__s.create(req.body, function (err, data) {
+  <%= name %>s.create(req.body, function (err, data) {
     if (err) return next(err)
     return res.status(201).send(data)
   })
 }
-exports.put__Name__ = function (req, res, next) {
-  req.__name__ = _.merge(req.__name__, req.body)
-  req.__name__.save(function (err) {
+exports.put<%= Name %> = function (req, res, next) {
+  req.<%= name %> = _.merge(req.<%= name %>, req.body)
+  req.<%= name %>.save(function (err) {
     console.log('err', err)
     if (err) return next(err)
-    return res.status(200).send(req.__name__)
+    return res.status(200).send(req.<%= name %>)
   })
 }
 
-exports.get__Name__ById = function (req, res, next) {
-  res.send(req.__name__)
+exports.get<%= Name %>ById = function (req, res, next) {
+  res.send(req.<%= name %>)
 }
-exports.param__Name__ = function (req, res, next, id) {
-  req.assert('__name__Id', 'Your __Name__ ID cannot be blank').notEmpty()
-  req.assert('__name__Id', 'Your __Name__ ID has to be a real id').isMongoId()
+exports.param<%= Name %> = function (req, res, next, id) {
+  req.assert('<%= name %>Id', 'Your <%= Name %> ID cannot be blank').notEmpty()
+  req.assert('<%= name %>Id', 'Your <%= Name %> ID has to be a real id').isMongoId()
 
   var errors = req.validationErrors()
   if (errors) {
@@ -63,14 +63,14 @@ exports.param__Name__ = function (req, res, next, id) {
     })
   }
   auto({
-    __name__: function (cb) {
-      __name__s
+    <%= name %>: function (cb) {
+      <%= name %>s
         .findOne({_id: id})
         .exec(cb)
     }
   }, function (err, results) {
     if (err) return next(err)
-    req.__name__ = results.__name__
+    req.<%= name %> = results.<%= name %>
     next()
   })
 }

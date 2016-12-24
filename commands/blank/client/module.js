@@ -1,4 +1,4 @@
 ;(function () {
   'use strict'
-  angular.module('app.__name__', ['app.core'])
+  angular.module('app.<%= name %>', ['app.core'])
 })()

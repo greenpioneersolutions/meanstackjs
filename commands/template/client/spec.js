@@ -1,70 +1,70 @@
-describe('Generated __Name__ Testing', function () {
-  beforeEach(module('app.__name__'))
+describe('Generated <%= Name %> Testing', function () {
+  beforeEach(module('app.<%= name %>'))
   beforeEach(module('app.core'))
   beforeEach(module('app.user'))
 
   describe('routes', function () {
     var states = {}
     beforeEach(inject(function ($state) {
-      states.list = $state.get('__name__List')
-      states.view = $state.get('__name__View')
-      states.create = $state.get('__name__Create')
-      states.edit = $state.get('__name__Edit')
+      states.list = $state.get('<%= name %>List')
+      states.view = $state.get('<%= name %>View')
+      states.create = $state.get('<%= name %>Create')
+      states.edit = $state.get('<%= name %>Edit')
     }))
 
     describe('list', function () {
       it('should have the correct url', function () {
-        expect(states.list.url).to.equal('/__name__/list')
+        expect(states.list.url).to.equal('/<%= name %>/list')
       })
 
       it('should have the correct templateUrl', function () {
-        expect(states.list.templateUrl).to.equal('modules/__name__/list.view.html')
+        expect(states.list.templateUrl).to.equal('modules/<%= name %>/list.view.html')
       })
 
       it('should have the correct controller', function () {
-        expect(states.list.controller).to.equal('__Name__Controller')
+        expect(states.list.controller).to.equal('<%= Name %>Controller')
       })
     })
 
     describe('view', function () {
       it('should have the correct url', function () {
-        expect(states.view.url).to.equal('/__name__/view/:id')
+        expect(states.view.url).to.equal('/<%= name %>/view/:id')
       })
 
       it('should have the correct templateUrl', function () {
-        expect(states.view.templateUrl).to.equal('modules/__name__/view.view.html')
+        expect(states.view.templateUrl).to.equal('modules/<%= name %>/view.view.html')
       })
 
       it('should have the correct controller', function () {
-        expect(states.view.controller).to.equal('__Name__Controller')
+        expect(states.view.controller).to.equal('<%= Name %>Controller')
       })
     })
 
     describe('create', function () {
       it('should have the correct url', function () {
-        expect(states.create.url).to.equal('/__name__/create')
+        expect(states.create.url).to.equal('/<%= name %>/create')
       })
 
       it('should have the correct templateUrl', function () {
-        expect(states.create.templateUrl).to.equal('modules/__name__/create.view.html')
+        expect(states.create.templateUrl).to.equal('modules/<%= name %>/create.view.html')
       })
 
       it('should have the correct controller', function () {
-        expect(states.create.controller).to.equal('__Name__Controller')
+        expect(states.create.controller).to.equal('<%= Name %>Controller')
       })
     })
 
     describe('edit', function () {
       it('should have the correct url', function () {
-        expect(states.edit.url).to.equal('/__name__/edit/:id')
+        expect(states.edit.url).to.equal('/<%= name %>/edit/:id')
       })
 
       it('should have the correct templateUrl', function () {
-        expect(states.edit.templateUrl).to.equal('modules/__name__/edit.view.html')
+        expect(states.edit.templateUrl).to.equal('modules/<%= name %>/edit.view.html')
       })
 
       it('should have the correct controller', function () {
-        expect(states.edit.controller).to.equal('__Name__Controller')
+        expect(states.edit.controller).to.equal('<%= Name %>Controller')
       })
     })
   })
@@ -73,15 +73,15 @@ describe('Generated __Name__ Testing', function () {
     var $httpBackend
     var $stateParams
     var $location
-    var __Name__Controller
+    var <%= Name %>Controller
     var authResponse = {
       user: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwcm9maWxlIjp7ImdlbmRlciI6Ik1hbGUiLCJsb2NhdGlvbiI6IkludGVybmF0aW9uYWwiLCJ3ZWJzaXRlIjoiZ29vZ2xlLmNvbSIsInBpY3R1cmUiOiIiLCJuYW1lIjoiVGVzdCBVc2VyIn0sInJvbGVzIjpbXSwiZ3JhdmF0YXIiOiJodHRwczovL2dyYXZhdGFyLmNvbS9hdmF0YXIvZDViYjRmZmZmYTZhMzI0MjhjN2UzMTBjMzQxYjRmN2I_cz0yMDAmZD1yZXRybyIsImVtYWlsIjoidGVzdEB1c2VyLmNvbSIsIl9pZCI6IjU3MTdhMmQ1MGI1ZTQ0YWE1ZTU0NjQ4YiIsImlhdCI6MTQ2MTE2NzQ5NSwiZXhwIjoxNDYxMTc0Njk1fQ.tsAiRGB-lUhnD70XXtliNsTzQj3gKLA0a28yTJWoo8c'
     }
-    var __name__Id = '571a6803389f702a5c16dfa1'
+    var <%= name %>Id = '571a6803389f702a5c16dfa1'
     var timestamp = new Date()
-    var getMock__Name__Data = function () {
+    var getMock<%= Name %>Data = function () {
       return {
-        _id: __name__Id,
+        _id: <%= name %>Id,
         title: 'Nodejs',
         content: 'Try it out',
         created: timestamp
@@ -97,15 +97,15 @@ describe('Generated __Name__ Testing', function () {
       $httpBackend.when('GET', /modules\/\w+\/(\d|\w)+\.view\.html\?noCache=\d+/)
         .respond(200, '')
       var $scope = $rootScope.$new()
-      __Name__Controller = $controller('__Name__Controller', {$scope: $scope})
+      <%= Name %>Controller = $controller('<%= Name %>Controller', {$scope: $scope})
     }))
 
     it('should exist', function () {
-      expect(__Name__Controller).to.exist
+      expect(<%= Name %>Controller).to.exist
     })
 
-    it('vm.list() should return an array of __name__s from GET request and store it in vm', function () {
-      $httpBackend.whenGET(/\/api\/v1\/__Name__\?noCache=\d+/).respond({
+    it('vm.list() should return an array of <%= name %>s from GET request and store it in vm', function () {
+      $httpBackend.whenGET(/\/api\/v1\/<%= Name %>\?noCache=\d+/).respond({
         data: [
           {
             title: 'Nodejs',
@@ -119,10 +119,10 @@ describe('Generated __Name__ Testing', function () {
         ]
       })
 
-      __Name__Controller.list()
+      <%= Name %>Controller.list()
       $httpBackend.flush()
 
-      var same__Name__s = angular.equals(__Name__Controller.__name__s,
+      var same<%= Name %>s = angular.equals(<%= Name %>Controller.<%= name %>s,
         [
           {
             title: 'Nodejs',
@@ -136,79 +136,79 @@ describe('Generated __Name__ Testing', function () {
         ]
       )
 
-      expect(same__Name__s).to.equal(true)
+      expect(same<%= Name %>s).to.equal(true)
     })
 
-    it('vm.find() should return a __name__ from GET request and store it in vm', function () {
-      $httpBackend.whenGET(/\/api\/v1\/__Name__\/[\w\d]+\?noCache=\d+/)
-        .respond({data: getMock__Name__Data()})
+    it('vm.find() should return a <%= name %> from GET request and store it in vm', function () {
+      $httpBackend.whenGET(/\/api\/v1\/<%= Name %>\/[\w\d]+\?noCache=\d+/)
+        .respond({data: getMock<%= Name %>Data()})
 
       // find() relies on id state param being present
-      $stateParams.id = __name__Id
-      __Name__Controller.find()
+      $stateParams.id = <%= name %>Id
+      <%= Name %>Controller.find()
       $httpBackend.flush()
 
-      var same__Name__ = angular.equals(__Name__Controller.__name__, getMock__Name__Data())
+      var same<%= Name %> = angular.equals(<%= Name %>Controller.<%= name %>, getMock<%= Name %>Data())
 
-      expect(same__Name__).to.equal(true)
+      expect(same<%= Name %>).to.equal(true)
     })
 
-    it('vm.create() should return a __name__ from POST request and redirect to __name__ list', function () {
-      $httpBackend.whenPOST(/api\/v1\/__Name__/)
+    it('vm.create() should return a <%= name %> from POST request and redirect to <%= name %> list', function () {
+      $httpBackend.whenPOST(/api\/v1\/<%= Name %>/)
         .respond({
           data: {
-            data: getMock__Name__Data()
+            data: getMock<%= Name %>Data()
           }
         })
 
       // Mimic form inputs
-      __Name__Controller.__name__.title = getMock__Name__Data().title
-      __Name__Controller.__name__.content = getMock__Name__Data().content
+      <%= Name %>Controller.<%= name %>.title = getMock<%= Name %>Data().title
+      <%= Name %>Controller.<%= name %>.content = getMock<%= Name %>Data().content
 
-      __Name__Controller.create(true)
+      <%= Name %>Controller.create(true)
       $httpBackend.flush()
 
-      var same__Name__ = angular.equals(__Name__Controller.__name__, getMock__Name__Data())
+      var same<%= Name %> = angular.equals(<%= Name %>Controller.<%= name %>, getMock<%= Name %>Data())
 
-      expect(same__Name__).to.equal(true)
-      expect($location.path()).to.equal('/__name__/list')
+      expect(same<%= Name %>).to.equal(true)
+      expect($location.path()).to.equal('/<%= name %>/list')
     })
 
-    it('vm.update() should return a __name__ from PUT request and redirect to __name__ view', function () {
-      $httpBackend.whenPUT(/\/api\/v1\/__Name__\/[\w\d]+/)
+    it('vm.update() should return a <%= name %> from PUT request and redirect to <%= name %> view', function () {
+      $httpBackend.whenPUT(/\/api\/v1\/<%= Name %>\/[\w\d]+/)
         .respond({
-          data: getMock__Name__Data()
+          data: getMock<%= Name %>Data()
         })
 
-      __Name__Controller.__name__ = getMock__Name__Data()
+      <%= Name %>Controller.<%= name %> = getMock<%= Name %>Data()
 
       // Mimic form inputs
-      __Name__Controller.__name__.title = getMock__Name__Data().title
-      __Name__Controller.__name__.content = getMock__Name__Data().content
+      <%= Name %>Controller.<%= name %>.title = getMock<%= Name %>Data().title
+      <%= Name %>Controller.<%= name %>.content = getMock<%= Name %>Data().content
 
       // update() relies on id state param being present
-      $stateParams.id = __name__Id
-      __Name__Controller.update(true)
+      $stateParams.id = <%= name %>Id
+      <%= Name %>Controller.update(true)
       $httpBackend.flush()
 
-      var same__Name__ = angular.equals(__Name__Controller.__name__, getMock__Name__Data())
+      var same<%= Name %> = angular.equals(<%= Name %>Controller.<%= name %>, getMock<%= Name %>Data())
 
-      expect(same__Name__).to.equal(true)
-      expect($location.path()).to.equal('/__name__/view/' + __Name__Controller.__name__._id)
+      expect(same<%= Name %>).to.equal(true)
+      expect($location.path()).to.equal('/<%= name %>/view/' + <%= Name %>Controller.<%= name %>._id)
     })
 
-    it('vm.delete() should send a DELETE request with a valid __name__ id and delete the __name__ from the view model', function () {
-      $httpBackend.whenDELETE(/api\/v1\/__Name__\/([0-9a-fA-F]{24})$/)
+    it('vm.delete() should send a DELETE request with a valid <%= name %> id and delete the <%= name %> from the view model', function () {
+      $httpBackend.whenDELETE(/api\/v1\/<%= Name %>\/([0-9a-fA-F]{24})$/)
         .respond(204)
 
-      // Initialize __name__ posts as in the __name__ list view
-      __Name__Controller.__name__s = [getMock__Name__Data()]
-      expect(__Name__Controller.__name__s.length).to.equal(1)
+      // Initialize <%= name %> posts as in the <%= name %> list view
+      <%= Name %>Controller.<%= name %>s = [getMock<%= Name %>Data()]
+      expect(<%= Name %>Controller.<%= name %>s.length).to.equal(1)
 
-      __Name__Controller.delete(__Name__Controller.__name__s[0]._id)
+      <%= Name %>Controller.delete(<%= Name %>Controller.<%= name %>s[0]._id)
       $httpBackend.flush()
 
-      expect(__Name__Controller.__name__s.length).to.equal(0)
+      expect(<%= Name %>Controller.<%= name %>s.length).to.equal(0)
     })
   })
 

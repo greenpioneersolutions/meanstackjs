@@ -7,6 +7,16 @@ var baseLine = {
   app: {
     name: 'MeanStackJS'
   },
+  render: {
+    cli: 'lodash', // __ or ejs or lodash.
+    seo: 'lodash', // ejs or lodash. default is lodash
+    lodash: {
+      options: {} // https://lodash.com/docs#template
+    },
+    ejs: {
+      options: {} // https://www.npmjs.com/package/ejs#options
+    }
+  },
   env: environment,
   // Root path of server
   root: path.join(__dirname, '/../../..'),

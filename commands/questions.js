@@ -25,7 +25,19 @@ module.exports = {
         'Create Frontend Module',
         'Create Backend Module',
         'Create Frontend & Backend Module',
-
+        new inquirer.Separator('Module Deletion:'),
+        'Remove Module',
+        new inquirer.Separator('System Tasks:'),
+        'Install SSL Certs',
+        'Install Tools Dependencies',
+        'Install Bower Dependencies',
+        'Lint Code',
+        'Lint & Fix Code',
+        'Mean Stack JS Install Dependencies',
+        'Mean Stack JS Post Install',
+        'Seed Database',
+        'Linux Processes',
+        'Linux Kill Processes',
         new inquirer.Separator('User Management:'),
         // 'Create User',
         'Change Password',
@@ -51,7 +63,7 @@ module.exports = {
       type: 'input',
       name: 'email',
       message: 'Email of the User',
-      default: function () { return 'testing@test.com' }
+      default: function () { return 'help@greenpioneersolutions.com' }
     }
   ],
   module: [

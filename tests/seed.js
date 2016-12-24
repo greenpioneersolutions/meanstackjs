@@ -1,8 +1,8 @@
 module.exports = seed
 var mongoose = require('mongoose')
 var auto = require('run-auto')
-var User = mongoose.model('users')
-var Blog = mongoose.model('blog')
+var User = mongoose.model('users', require('../server/modules/users/users.model.js'))
+var Blog = mongoose.model('blog', require('../server/modules/blog/blog.model.js'))
 
 function seed (cb) {
   auto({
