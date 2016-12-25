@@ -5,7 +5,6 @@ var fs = require('fs')
 var glob = require('glob')
 var https = require('https')
 var mongoose = require('mongoose')
-var Promise = require('bluebird')
 var _ = require('lodash')
 var run = require('./run.js')
 
@@ -21,7 +20,7 @@ function Mean (opts, done) {
   self.mail = require('./server/mail.js')
   self.register = require('./server/register.js')
   // Connect to MongoDb
-  mongoose.Promise = Promise
+  mongoose.Promise = global.Promise
   mongoose.set('debug', self.settings.mongodb.debug)
   mongoose.connect(self.settings.mongodb.uri, self.settings.mongodb.options)
   mongoose.connection.on('error', function (err) {
