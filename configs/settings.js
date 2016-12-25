@@ -7,6 +7,7 @@ var baseLine = {
   app: {
     name: 'MeanStackJS'
   },
+  minify: 'default',
   render: {
     cli: 'lodash', // __ or ejs or lodash.
     seo: 'lodash', // ejs or lodash. default is lodash

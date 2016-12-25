@@ -32,8 +32,10 @@
     ]
   },
   "scripts": {
-    "test": "npm run mocha && npm run karma && npm run e2e && npm run lint",
-    "e2e": "node_modules/.bin/nightwatch",
+    "test": "npm run mocha && npm run karma && npm run e2e && npm run e2e:concat && npm run e2e:minify && npm run lint",
+    "e2e": "node_modules/.bin/cross-env MINIFY=default node_modules/.bin/nightwatch --tag seo",
+    "e2e:concat": "node_modules/.bin/cross-env MINIFY=concat node_modules/.bin/nightwatch --tag seo",
+    "e2e:minify": "node_modules/.bin/cross-env MINIFY=minify node_modules/.bin/nightwatch --tag seo",
     "mocha": "node_modules/.bin/mocha tests/unit/mocha.test.js  ",
     "karma": "node_modules/.bin/karma start tests/unit/karma.test.js",
     "lint": "node_modules/.bin/standard",
@@ -114,7 +116,7 @@
     "lodash": "^4.11.1",
     "maxcdn": "^0.2.0",
     "method-override": "^2.3.5",
-    "mongo-throttle": "^1.0.5",
+    "mongo-throttle": "^1.2.0",
     "mongoose": "^4.7.4",
     "mongoose-timestamp": "^0.6.0",
     "mongoose-validator": "^1.2.4",
