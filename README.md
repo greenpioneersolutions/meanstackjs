@@ -53,6 +53,7 @@ What is Mean Stack JS?
 - [Node.js](http://www.nodejs.org/) - Node.js is a platform built on Chrome's JavaScript runtime for easily building fast, scalable network applications
 
 [Check Demo Here](https://meanstackjs.herokuapp.com/)
+
 [Check Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
 
 Pre-Requisites
@@ -75,6 +76,7 @@ screencast by Alex Ford that teaches Node and Express from scratch. Alternativel
 here is another great tutorial for complete beginners - [Getting Started With Node.js, Express, MongoDB](http://cwbuecheler.com/web/tutorials/2013/node-express-mongo/).
 
 [Check Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
+
 [Check Demo Here](https://meanstackjs.herokuapp.com/)
 
 Getting Started
@@ -108,7 +110,9 @@ restart the server each time you make a small change in code. To install, run
 `sudo npm install -g nodemon`.
 
 [Check Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
+
 [Check Demo Here](https://meanstackjs.herokuapp.com/)
+
 [Check Roadmap Here](https://github.com/greenpioneersolutions/meanstackjs/wiki/Roadmap)
 
 [express]: <http://expressjs.com>
