@@ -38,6 +38,8 @@
     "e2e:minify": "node_modules/.bin/cross-env MINIFY=minify node_modules/.bin/nightwatch --tag seo",
     "mocha": "node_modules/.bin/mocha tests/unit/mocha.test.js  ",
     "karma": "node_modules/.bin/karma start tests/unit/karma.test.js",
+    "selenium:install": "node_modules/.bin/selenium-standalone install",
+    "selenium:start": "node_modules/.bin/selenium-standalone start",
     "lint": "node_modules/.bin/standard",
     "lint:fix": "node_modules/.bin/standard --fix",
     "postinstall": "node_modules/.bin/bower install && node scripts/postinstall.js",
@@ -159,6 +161,7 @@
     "nightwatch-html-reporter": "^1.0.4",
     "nodemon": "^1.8.1",
     "phantomjs-prebuilt": "^2.1.7",
+    "selenium-standalone": "^5.9.0",
     "standard": "latest",
     "supertest": "^2.0.0"
   }
