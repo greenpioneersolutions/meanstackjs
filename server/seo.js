@@ -2,7 +2,7 @@ module.exports = Seo
 
 var pathToRegexp = require('path-to-regexp')
 var _ = require('lodash')
-
+var ejs = require('ejs')
 // ADD AUTH TO ROUTES
 function Seo (self, req, path, cb) {
   var matched = false
@@ -34,10 +34,10 @@ function Seo (self, req, path, cb) {
           if (!data) {
             data = obj
           }
-          return cb(_.merge(self.settings.html, compile(pathSettings, data)))
+          return cb(_.merge(self.settings.html, compile({name: self.settings.render.seo.toLowerCase(), options: self.settings.render[self.settings.render.seo.toLowerCase()].options}, pathSettings, data)))
         })
       } else {
-        return cb(_.merge(self.settings.html, compile(pathSettings, obj)))
+        return cb(_.merge(self.settings.html, compile({name: self.settings.render.seo.toLowerCase(), options: self.settings.render[self.settings.render.seo.toLowerCase()].options}, pathSettings, obj)))
       }
       return false
     }
@@ -46,15 +46,23 @@ function Seo (self, req, path, cb) {
     return cb(self.settings.html)
   }
 }
-function compile (seo, data) {
+function compile (type, seo, data) {
   var compiled = {}
   _.forEach(seo, function (value, prop) {
     if (prop === 'hook') { return }
-    var propTemplate = _.template(value)
-    try {
-      compiled[prop] = propTemplate(data)
-    } catch (err) {
-      console.log(err.message, ' in seo compile')
+    if (type.name === 'lodash') {
+      var propTemplate = _.template(value, type.options)
+      try {
+        compiled[prop] = propTemplate(data)
+      } catch (err) {
+        console.log(err.message, ' in seo compile lodash')
+      }
+    } else if (type.name === 'ejs') {
+      try {
+        compiled[prop] = ejs.render(value, data, type.options)
+      } catch (err) {
+        console.log(err.message, ' in seo compile ejs')
+      }
     }
   })
 

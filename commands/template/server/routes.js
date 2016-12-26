@@ -1,15 +1,15 @@
-var __name__ = require('./__name__.controller.js')
+var <%= name %> = require('./<%= name %>.controller.js')
 
 module.exports = function (app, auth, mail, settings, models) {
   // GET
-  app.get('/api/__name__/', __name__.get__Name__)
-  app.get('/api/__name__/:__name__Id', __name__.get__Name__ById)
+  app.get('/api/<%= name %>/', <%= name %>.get<%= Name %>)
+  app.get('/api/<%= name %>/:<%= name %>Id', <%= name %>.get<%= Name %>ById)
   // POST
-  app.post('/api/__name__', __name__.post__Name__)
+  app.post('/api/<%= name %>', <%= name %>.post<%= Name %>)
   // PUT
-  app.put('/api/__name__/:__name__Id', __name__.put__Name__)
+  app.put('/api/<%= name %>/:<%= name %>Id', <%= name %>.put<%= Name %>)
   // DELETE
-  app.delete('/api/__name__/:__name__Id', __name__.delete__Name__)
+  app.delete('/api/<%= name %>/:<%= name %>Id', <%= name %>.delete<%= Name %>)
   // PARAM
-  app.param('__name__Id', __name__.param__Name__)
+  app.param('<%= name %>Id', <%= name %>.param<%= Name %>)
 }

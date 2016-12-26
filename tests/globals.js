@@ -5,7 +5,7 @@ var HtmlReporter = require('nightwatch-html-reporter')
 var path = require('path')
 var reporter = new HtmlReporter({
   openBrowser: true,
-  reportsDirectory: path.join(__dirname, '../reports/nightwatch'),
+  reportsDirectory: path.join(__dirname, '../tools/nightwatch/reports'),
   // The filename that the html report will be saved as.
   reportFilename: 'index.html',
 

@@ -17,7 +17,7 @@ module.exports = {
     title: 'Join Mean Stack JS '
   },
   '/account': {
-    title: '${user.profile.name} Account'
+    title: '<%= user.profile.name %> Account'
   },
   '/forgot': {
     title: 'Forgot Your Password '
@@ -35,16 +35,16 @@ module.exports = {
     title: 'Blog List'
   },
   '/blog/view/:id': {
-    title: '${ blog.title } -  ${ blog.user.profile.name } ',
-    keywords: '${ blog.tags } ',
-    description: '${ blog.content } ',
-    ogUrl: '${ path }',
-    twitterUrl: '${ path }',
-    canonical: '${ path }',
-    ogTitle: '${ blog.title } -  ${ blog.user.profile.name } ',
-    twitterTitle: '${ blog.title } -  ${ blog.user.profile.name } ',
-    ogDescription: '${ blog.content } ',
-    twitterDescription: '${ blog.content } ',
+    title: '<%=  blog.title  %> -  <%=  blog.user.profile.name %> ',
+    keywords: '<%=  blog.tags  %>',
+    description: '<%=  blog.content  %> ',
+    ogUrl: '<%=  path  %>',
+    twitterUrl: '<%=  path  %>',
+    canonical: '<%=  path  %>',
+    ogTitle: '<%=  blog.title  %> -  <%=  blog.user.profile.name  %> ',
+    twitterTitle: '<%=  blog.title  %> -  <%=  blog.user.profile.name  %> ',
+    ogDescription: '<%=  blog.content  %> ',
+    twitterDescription: '<%=  blog.content  %> ',
     hook: function (self, data, cb) {
       data.blog = {
         tags: ['Add', 'Tags', 'To Blog', 'Mean Stack JS']

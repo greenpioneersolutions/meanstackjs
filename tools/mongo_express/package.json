@@ -11,5 +11,9 @@
     "mongo-express": "^0.32.0",
     "mongodb-uri": "^0.9.7"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/greenpioneersolutions/meanstackjs.git"
+  }
 }

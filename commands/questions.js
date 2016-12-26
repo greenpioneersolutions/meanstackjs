@@ -1,5 +1,17 @@
 var inquirer = require('inquirer')
 module.exports = {
+  location: [
+    {
+      type: 'list',
+      name: 'location',
+      message: 'Do you want a templated file or a blank file',
+      choices: [
+        'template',
+        'blank'
+      ],
+      default: function () { return 'template' }
+    }
+  ],
   intro: [
     {
       type: 'list',
@@ -9,10 +21,28 @@ module.exports = {
 
         new inquirer.Separator('Module Creation:'),
         'Create Schema',
+        'Create A File or Files',
         'Create Frontend Module',
         'Create Backend Module',
         'Create Frontend & Backend Module',
-
+        new inquirer.Separator('Module Deletion:'),
+        'Remove Module',
+        new inquirer.Separator('System Tasks:'),
+        'Start Mongod',
+        'Install SSL Certs',
+        'Install Tools Dependencies',
+        'Install Bower Dependencies',
+        'Install MongoDB',
+        'Install NodeJS',
+        'Lint Code',
+        'Lint & Fix Code',
+        'Mean Stack JS Install Dependencies',
+        'Mean Stack JS Post Install',
+        'Seed Database',
+        'Linux Processes',
+        'Linux Kill Processes',
+        'Set Proxies',
+        'Delete Proxies',
         new inquirer.Separator('User Management:'),
         // 'Create User',
         'Change Password',
@@ -38,7 +68,7 @@ module.exports = {
       type: 'input',
       name: 'email',
       message: 'Email of the User',
-      default: function () { return 'testing@test.com' }
+      default: function () { return 'help@greenpioneersolutions.com' }
     }
   ],
   module: [
