@@ -1,4 +1,4 @@
-<div class="container-fluid" ng-init="vm.list()">
+<div class="container-fluid" >
     <div class="row">
 
 
@@ -15,14 +15,18 @@
                             <a ui-sref="adminDashboard({view:'home'})" id="Home" ><i class="glyphicon glyphicon-home"></i> Home</a>
                         </li>
                         <li>
-                            <a ui-sref="adminDashboard({view:'messages'})" id="Messages" ><i class="glyphicon glyphicon-envelope"></i> Messages <span class="badge badge-info">4</span></a>
+                            <a ui-sref="adminDashboard({view:'users'})" id="Users" ><i class="glyphicon glyphicon-user"></i> Users</a>
+                        </li>
+                        <li>
+                            <a ui-sref="adminDashboard({view:'errors'})" id="Errors" ><i class="glyphicon glyphicon-console"></i> Errors <span class="badge badge-info">{{vm.errors.length}}</span></a>
+                        </li>
+                        <li>
+                            <a ui-sref="adminDashboard({view:'messages'})" id="Messages" ><i class="glyphicon glyphicon-envelope"></i> Messages</a>
                         </li>
                         <li>
                             <a ui-sref="adminDashboard({view:'options'})" id="Options"><i class="glyphicon glyphicon-cog"></i> Options</a>
                         </li>
-                        <li>
-                            <a ui-sref="adminDashboard({view:'users'})" id="Users" ><i class="glyphicon glyphicon-user"></i> Users</a>
-                        </li>
+                        
                         <li>
                             <a ui-sref="adminDashboard({view:'transactions'})" id="Transactions" ><i class="glyphicon glyphicon-flag"></i> Transactions</a>
                         </li>

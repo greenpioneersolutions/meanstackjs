@@ -16,14 +16,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="(key, value) in vm.admins | limitTo:10">
+                        <tr ng-repeat="(key, value) in vm.users track by $index| limitTo:10">
                             <th scope="row">{{$index + 1}}</th>
                             <td>
                                 <img width="50" ng-src="{{value.gravatar}}">
                                 <span>{{value.profile.name}}</span>                            
                             </td>
                             <td> 
-                                <div ng-repeat="role in value.roles">{{role}}</div>
+                                <div ng-repeat="role in value.roles track by $index">{{role}}</div>
                             </td>
                             
                             <td>
