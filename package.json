@@ -98,6 +98,7 @@
     "cors": "^2.7.1",
     "cross-env": "^3.1.3",
     "debug": "^2.5.1",
+    "dotenv": "^2.0.0",
     "ejs": "^2.5.1",
     "express": "^4.14.0",
     "express-content-length-validator": "^1.0.0",

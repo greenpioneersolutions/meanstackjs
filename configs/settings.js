@@ -1,4 +1,4 @@
-'use strict'
+require('dotenv').config({silent: true})
 
 var path = require('path')
 var _ = require('lodash')
