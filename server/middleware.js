@@ -11,7 +11,6 @@ function findUser (id, cb) {
   }, '-password', function (err, user) {
     if (err || !user) cb(null)
     else cb(user)
-    // http://goo.gl/rRqMUw - Satisfy bluebird warning
     return null
   })
 }
