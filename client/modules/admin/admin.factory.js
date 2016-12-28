@@ -3,12 +3,23 @@
 
   angular
     .module('app.admin')
-    .factory('AdminFactory', AdminFactory)
+    .factory('AdminUsersFactory', AdminUsersFactory)
+    .factory('AdminErrorsFactory', AdminErrorsFactory)
 
-  AdminFactory.$inject = ['$resource']
+  AdminUsersFactory.$inject = ['$resource']
+  AdminErrorsFactory.$inject = ['$resource']
   /* @ngInject */
-  function AdminFactory ($resource) {
-    return $resource('/api/users/:id', {
+  function AdminUsersFactory ($resource) {
+    return $resource('/api/admin/users/:id', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    })
+  }
+  function AdminErrorsFactory ($resource) {
+    return $resource('/api/admin/errors/:id', {
       id: '@id'
     }, {
       update: {

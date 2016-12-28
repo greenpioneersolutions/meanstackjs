@@ -11,18 +11,6 @@ var mail = require('../../mail.js')
 var jwt = require('jsonwebtoken')
 var debug = require('debug')('meanstackjs:users')
 
-exports.getUsers = function (req, res, next) {
-  debug('start getUsers')
-  User
-    .find({})
-    .select('-password')
-    .exec(function (err, users) {
-      if (err) next(err)
-      debug('end getUsers')
-      return res.send(users)
-    })
-}
-
 exports.postAuthenticate = function (req, res, next) {
   debug('start postAuthenticate')
 
