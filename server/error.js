@@ -19,47 +19,47 @@ function log (error, cb) {
     return cb(true)
   }
   // error instanceof Error - maybe implement something last that is more specific to only Error's
-  Errors
-    .findOne({message: error.message || error })
-    .exec(function (err, data) {
-      if (err)chalksay.red('Error trying to record error', err)
-      if (typeof cb === 'function') {
-        cb()
-      }
-      if (!data) {
-        var errors = Errors({
-          code: error.code,
-          message: error.message || JSON.stringify(error),
-          name: error.name,
-          stack: error.stack,
-          type: error.type || 'exception',
-          history: [Date.now()]
-        })
-        errors.save(function (err) {
-          if (err) {
-            chalksay.red('Error trying to record error', err)
-            return cb(err)
-          }
-          if (typeof cb === 'function') {
-            chalksay.red(JSON.stringify(errors))
-            return cb(false)
-          }
-        })
-      } else {
-        data.count++
-        data.history.push(Date.now())
-        data.save(function (err) {
-          if (err) {
-            chalksay.red('Error trying to record error', err)
-            return cb(err)
-          }
-          if (typeof cb === 'function') {
-            chalksay.red(JSON.stringify(data))
-            return cb(false)
-          }
-        })
-      }
-    })
+  Errors.findOne({
+    message: error.message || error
+  }, function (err, data) {
+    if (err)chalksay.red('Error trying to record error', err)
+    if (typeof cb === 'function') {
+      cb()
+    }
+    if (!data) {
+      var errors = Errors({
+        code: error.code,
+        message: error.message || JSON.stringify(error),
+        name: error.name,
+        stack: error.stack,
+        type: error.type || 'exception',
+        history: [Date.now()]
+      })
+      errors.save(function (err) {
+        if (err) {
+          chalksay.red('Error trying to record error', err)
+          return cb(err)
+        }
+        if (typeof cb === 'function') {
+          chalksay.red(JSON.stringify(errors))
+          return cb(false)
+        }
+      })
+    } else {
+      data.count++
+      data.history.push(Date.now())
+      data.save(function (err) {
+        if (err) {
+          chalksay.red('Error trying to record error', err)
+          return cb(err)
+        }
+        if (typeof cb === 'function') {
+          chalksay.red(JSON.stringify(data))
+          return cb(false)
+        }
+      })
+    }
+  })
 }
 
 function middleware (self) {
@@ -101,17 +101,17 @@ function middleware (self) {
     }
 
     var text = '\n=== EXCEPTION ===\n  <br>' +
-      'Message:<br>' + message + '\n <br>' +
-      'Code:<br>' + code + '\n <br>' +
-      'User:<br>' + (req.user ? req.user.email : 'no user info') + '\n <br>' +
-      'IP Address:<br>' + (ip || 'no IP') + '\n <br>' +
-      'User-Agent:<br>' + JSON.stringify(req.headers['user-agent']) + '\n <br>' +
-      'Route:<br>' + req.method + '-' + req.url + '\n <br>' +
-      'Headers:<br>' + '\n' + JSON.stringify(req.headers) + '\n <br>' +
-      'Params:<br>' + '\n' + JSON.stringify(req.params) + '\n <br>' +
-      'Body:<br>' + '\n' + JSON.stringify(req.body) + '\n <br>' +
-      'Session:<br>' + '\n' + JSON.stringify(req.session) + '\n <br>' +
-      'Stack:<br>' + err.stack + '\n'
+'Message:<br>' + message + '\n <br>' +
+'Code:<br>' + code + '\n <br>' +
+'User:<br>' + (req.user ? req.user.email : 'no user info') + '\n <br>' +
+'IP Address:<br>' + (ip || 'no IP') + '\n <br>' +
+'User-Agent:<br>' + JSON.stringify(req.headers['user-agent']) + '\n <br>' +
+'Route:<br>' + req.method + '-' + req.url + '\n <br>' +
+'Headers:<br>' + '\n' + JSON.stringify(req.headers) + '\n <br>' +
+'Params:<br>' + '\n' + JSON.stringify(req.params) + '\n <br>' +
+'Body:<br>' + '\n' + JSON.stringify(req.body) + '\n <br>' +
+'Session:<br>' + '\n' + JSON.stringify(req.session) + '\n <br>' +
+'Stack:<br>' + err.stack + '\n'
     code = 500
     res.status(code)
 
@@ -130,10 +130,8 @@ function middleware (self) {
     if (self.environment !== 'production') {
       renderData.text = text
     }
-    return res.send(renderData)
-
     debug('error message & code:' + message.message + ' - ' + code)
+    return res.send(renderData)
   })
-  return
 }
 

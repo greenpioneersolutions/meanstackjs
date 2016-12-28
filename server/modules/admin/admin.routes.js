@@ -2,7 +2,7 @@ var admin = require('./admin.controller.js')
 
 module.exports = function (app, auth, mail, settings, models) {
   // USERS
-  app.get('/api/admin/users', admin.getUsers)
+  app.get('/api/admin/users', auth.isAdmin, admin.getUsers)
   app.get('/api/admin/users/:userId', auth.isAdmin, admin.getUsersById)
   // POST
   app.post('/api/admin/users', auth.isAdmin, admin.postUsers)

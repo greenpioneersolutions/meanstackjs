@@ -1,8 +1,5 @@
 var Mean = require('./server.mean.js')
 var SocketIO = require('./server.socketio.js')
-
-var environment = require('./configs/environment.js').get()
-var settings = require('./configs/settings.js').get()
 var error = require('./server/error.js')
 var debug = require('debug')('meanstackjs:run')
 
@@ -16,7 +13,7 @@ function run (ServerConstructor, opts, cb) {
   var server = new ServerConstructor(opts, function (err) {
     if (err) {
       console.error('Error during ' + server.settings.title + ' startup. Abort.')
-      // console.error(err.stack)
+      console.error(err.stack)
       process.exit(1)
     }
 
@@ -25,17 +22,15 @@ function run (ServerConstructor, opts, cb) {
   })
 
   process.on('unhandledRejection', function (reason) {
-    debug('system err:' + reason)
-
-    // console.error('[UNHANDLED REJECTION]')
-    // console.error(error.log(reason))
+    debug('System Error unhandledRejection:' + reason)
+    console.error('[UNHANDLED REJECTION]')
+    console.error(error.log(reason))
   })
 
   process.on('uncaughtException', function (err) {
-    debug('system err:' + err)
-
-   // console.error('[UNCAUGHT EXCEPTION]')
-
+    debug('System Error uncaughtException:' + err)
+    console.error('[UNCAUGHT EXCEPTION] - ', err.message)
+    console.log()
     switch (err.code) {
       case 'EACCES':
         console.log('(Permission denied): An attempt was made to access a file in a way forbidden by its file access permissions.')
@@ -77,28 +72,27 @@ function run (ServerConstructor, opts, cb) {
         console.log('(Operation timed out): A connect or send request failed because the connected party did not properly respond after a period of time. Usually encountered by http or net -- often a sign that a socket.end() was not properly called.')
         break
     }
-    console.log('JERE ?')
-    error.log(err)
-    // console.error(err.stack)
-
-    if (environment === 'development') {
-      // console.error('[UNCAUGHT EXCEPTION] ' + err.message)
-     // console.error(err.stack.toString())
-      // process.exit(1)
-      // error.log(err)
-    } else {
-      var message = {}
-      message.to = settings.email.error
-      message.subject = '[UNCAUGHT EXCEPTION] ' + err.message
-      message.text = err.stack.toString()
-      console.log(message)
-      console.log('Sending Email in production is commented out ./run.js:99')
-      // var mail = require('./server/mail.js')
-      // mail.send(message, function (err) {
-      //   if (err) throw err
-      //   process.exit(1)
-      // })
-    }
+    // Our Custom Error Handler
+    error.log(err, function (err) {
+      if (err)console.log('Error in log function in errors.js')
+      // How do you want to handle your errors ? email admin , exit process or nothing at all ?
+      process.exit(1)
+      // var settings = require('./configs/settings.js').get()
+      // var environment = require('./configs/environment.js').get()
+      // if (environment === 'production') {
+      //   var message = {}
+      //   message.to = settings.email.error
+      //   message.subject = '[UNCAUGHT EXCEPTION] ' + err.message
+      //   message.text = err.stack.toString()
+      //   console.log(message)
+      //   console.log('Sending Email in production is commented out ./run.js:99')
+      //   var mail = require('./server/mail.js')
+      //   mail.send(message, function (err) {
+      //     if (err) throw err
+      //     process.exit(1)
+      //   })
+      // }
+    })
   })
 }
 

@@ -365,7 +365,12 @@ function logShellJS (code, stdout, stderr) {
 function ask () {
   inquirer.prompt(questions.intro).then(function (answers) {
     switch (answers.intro) {
-
+      case 'Start Selenium Server':
+        shell.exec('node_modules/.bin/selenium-standalone start', {silent: false}, logShellJS)
+        break
+      case 'Install Selenuim Server':
+        shell.exec('node_modules/.bin/selenium-standalone install', {silent: false}, logShellJS)
+        break
       case 'Start Mongod':
         shell.exec('bash scripts/start-mongod.sh', {silent: false}, logShellJS)
         break
