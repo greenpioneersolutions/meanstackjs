@@ -33,14 +33,17 @@ if which node >/dev/null; then
 	exit
 fi
 
+install_node () {
+	export NVM_DIR="$HOME/.nvm"
+	[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
+	echo "nvm is installed. Installing Node.js v6.9.2."  
+	nvm install 6.9.2
+}
+
 NVM_DIRECTORY="$HOME/.nvm"
 if [ -d "$NVM_DIRECTORY" ]; then
-	echo "nvm is already installed. Please run the following command to install Node.js."  
-	echo -e "\033[1m nvm install 6.9.2\033[0m"
+	install_node
 else
 	curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
-	echo ""
-	echo -e "\033[1mAfter loading nvm (please run the above commands), then run manually:\033[0m"
-	echo ""	
-	echo " nvm install 6.9.2"
+	install_node
 fi
