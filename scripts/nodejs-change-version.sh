@@ -14,10 +14,10 @@ fi
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
 
-if ! [ -x "$(command -v nvm)" ]; then
-  echo "Please install nvm and try again."
-  exit 1
-fi
+# if ! [ -x "$(command -v nvm)" ]; then
+#   echo "Please install nvm and try again."
+#   exit 1
+# fi
 
 echo "Please enter a version of Node.js"
 read input_variable
