@@ -11,4 +11,14 @@ elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
     exit 1
 fi
 
-echo "Please enter a version of Node.js" && read input_variable && echo -e "Run this command: \033[1mnvm install $input_variable\033[0m"
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
+
+if ! [ -x "$(command -v nvm)" ]; then
+  echo "Please install nvm and try again."
+  exit 1
+fi
+
+echo "Please enter a version of Node.js"
+read input_variable
+nvm install $input_variable
