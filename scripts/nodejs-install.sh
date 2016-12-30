@@ -36,7 +36,7 @@ fi
 install_node () {
 	export NVM_DIR="$HOME/.nvm"
 	[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
-	echo "nvm is installed. Installing Node.js v6.9.2."  
+	echo "nvm is installed. Installing Node.js v6.9.2."
 	nvm install 6.9.2
 }
 
