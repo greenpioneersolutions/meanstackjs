@@ -1,5 +1,6 @@
 var mongodbUri = process.env.DB_PORT_27017_TCP_ADDR || process.env.MONGODB || process.env.MONGOLAB_URI || 'mongodb://localhost/dev'
 module.exports = {
+  minify: 'default', // 'concat' all files or 'minify' concat and minfy  or 'default' leave as is
   html: {
     title: 'Development MEANSTACKJS'
   },

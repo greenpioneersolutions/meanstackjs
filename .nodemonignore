@@ -6,3 +6,7 @@ npm-debug.log
 /commands/*
 /reports/*
 /client/*
+/documentation/*
+/database/*
+/scripts/*
+/tools/*

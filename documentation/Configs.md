@@ -1,4 +1,6 @@
-### Settings.js
+### Settings Usage
+
+you can programmatically set it in your code. Recommended you just change it in the settings or env config 
 
 ``` javascript
 self.settings = require('./configs/settings.js').get()
@@ -7,10 +9,151 @@ self.settings = require('./configs/settings.js').set({
 })
 ```
 
+### Seo.js
+
+Example below of how totally control the seo of a dynamic route. In the hook if you chose to create one you have access to the `self` obj for the entire system, `data` object which will get sent to your templates & lastly if you need to call the callback to pass a error first or the data second. if there is a error the system will revert to the default seo. Note the data object will hold the values of the route before you do anything to it for example anything on the query or the params. In the env configs you can deem how you want to render by which template engine. Default - `lodash` which can handles es6 and ejs-like templating. If you wanted to you could switch right from the start to ejs and the templates are already compatible 
+
+``` javascript
+'/blog/view/:id': {
+    title: '<%=  blog.title  %> -  <%=  blog.user.profile.name %> ',
+    keywords: '<%=  blog.tags  %>',
+    description: '<%=  blog.content  %> ',
+    ogUrl: '<%=  path  %>',
+    twitterUrl: '<%=  path  %>',
+    canonical: '<%=  path  %>',
+    ogTitle: '<%=  blog.title  %> -  <%=  blog.user.profile.name  %> ',
+    twitterTitle: '<%=  blog.title  %> -  <%=  blog.user.profile.name  %> ',
+    ogDescription: '<%=  blog.content  %> ',
+    twitterDescription: '<%=  blog.content  %> ',
+    hook: function (self, data, cb) {
+      data.blog = {
+        tags: ['Add', 'Tags', 'To Blog', 'Mean Stack JS']
+      }
+      self.models.blog.findOne({_id: data.params.id}).populate('user').then(function (blog) {
+        data.blog = _.merge(data.blog, blog)
+        cb(null, data)
+      }).catch(function (err) {
+        cb(err)
+      })
+    }
+  }
+```
+### Environment.js
+
+``` javascript
+self.environment = require('./server/environment.js').get()
+self.environment = require('./server/environment.js').set('development')
+// or by CMD
+export NODE_ENV=test // LINUX
+set NODE_ENE=test // WINDOWS
+```
+
+### Configs are based off env
+
+``` javascript
+// Development example
+var mongodbUri = process.env.DB_PORT_27017_TCP_ADDR || process.env.MONGODB || process.env.MONGOLAB_URI || 'mongodb://localhost/dev'
+module.exports = {
+  minify: 'default', // 'concat' all files or 'minify' concat and minfy  or 'default' leave as is
+  html: {
+    title: 'Development MEANSTACKJS'
+  },
+  logger: 'dev',
+  cdn: process.env.CDN || false,
+  buildreq: {
+    console: true
+  },
+  maxcdn: {
+    zoneId: process.env.MAXCDN_ZONE_ID || false
+  },
+  mongoexpress: {
+    port: process.env.MONGOEXPRESSPORT || 8081
+  },
+  socketio: {
+    port: process.env.SOCKETIOPORT || 8282
+  },
+  http: {
+    active: true,
+    port: process.env.PORT || 3000
+  },
+  https: {
+    active: false,
+    port: process.env.HTTPSPORT || 3043,
+    key: './configs/certificates/keyExample.pem',
+    cert: './configs/certificates/certExample.pem'
+  },
+  throttle: {
+    rateLimit: {
+      ttl: 600,
+      max: 20000
+    },
+    mongoose: {
+      uri: mongodbUri
+    }
+  },
+  mongodb: {
+    uri: mongodbUri,
+    // Database options that will be passed directly to mongoose.connect
+    // Below are some examples.
+    // See http://mongodb.github.io/node-mongodb-native/driver-articles/mongoclient.html#mongoclient-connect-options
+    // and http://mongoosejs.com/docs/connections.html for more information
+
+    options: {
+      // server: {
+      //   socketOptions: {
+      //     keepAlive: 1
+      //   },
+      //   poolSize: 5
+      // },
+      // replset: {
+      //   rs_name: 'myReplicaSet',
+      //   poolSize: 5
+      // },
+      db: {
+        w: 1,
+        numberOfRetries: 2
+      }
+    }
+  },
+  agendash: {
+    active: true,
+    options: {
+      db: {
+        address: mongodbUri
+      }
+    }
+  }
+}
+
+```
+
+### Settings.js
+
+We now have included [Dotenv](https://www.npmjs.com/package/dotenv) as you see below. In doing this it purposely fails silently because we want you to never source that info in github for security reasons. Please keep your configs safe and out of the public eye. `minify` is now configurable and no longer based on our env names so you have total control of your env names and how they build.
+
 Note: assets are in reverse order of which there loaded
 
 ``` javascript
+require('dotenv').config({silent: true})
+
+var path = require('path')
+var _ = require('lodash')
+var environment = require('./environment.js').get()
 var baseLine = {
+  app: {
+    name: 'MeanStackJS'
+  },
+  minify: 'default',
+  render: {
+    cli: 'lodash', // __ or ejs or lodash.
+    seo: 'lodash', // ejs or lodash. default is lodash
+    lodash: {
+      options: {} // https://lodash.com/docs#template
+    },
+    ejs: {
+      options: {} // https://www.npmjs.com/package/ejs#options
+    }
+  },
   env: environment,
   // Root path of server
   root: path.join(__dirname, '/../../..'),
@@ -41,8 +184,6 @@ var baseLine = {
       asi: true
     }
   },
-  // Template Engine
-  templateEngine: 'swig',
   // JWT Object https://github.com/auth0/node-jsonwebtoken
   jwt: {
     // is used to compute a JWT SIGN
@@ -68,16 +209,36 @@ var baseLine = {
     // at all. The cookie will expunge when the browser is closed.
     maxAge: null
   },
+  sessionName: 'session.id',
+  // Supports MAX CDN
+  maxcdn: {
+    companyAlias: process.env.MAXCDN_COMPANY_ALIAS || '',
+    consumerKey: process.env.MAXCDN_CONSUMER_KEY || '',
+    consumerSecret: process.env.MAXCDN_CONSUMER_SECRET || ''
+  },
+  // SEO - Default html setup
+  googleAnalytics: 'UA-71654331-1',
   html: {
-    googleAnalytics: 'UA-71654331-1',
+    title: 'Mean Stack JS Demo',
     keywords: 'MEAN, MEANSTACKJS, mongodb, expressjs, angularjs,nodejs, javascript',
-    description: 'The Meanstack js is a opensource framework that is made for and by developers'
+    description: 'Mean Stack JS was built for ease of use with javascript at its core. MeanStackJS is a full stack javascript framework that will give you the power to develop web applications',
+    ogUrl: 'https://meanstackjs.herokuapp.com/',
+    ogType: 'website',
+    ogTitle: 'Mean Stack JS Demo',
+    ogDescription: 'Mean Stack JS was built for ease of use with javascript at its core. MeanStackJS is a full stack javascript framework that will give you the power to develop web applications',
+    ogImage: 'http://meanstackjs.com/images/logo/header.png',
+    fbAppId: '1610630462580116',
+    twitterCreator: '@greenpioneerdev',
+    twitterCard: 'summary_large_image',
+    twitterTitle: 'Mean Stack JS Demo',
+    twitterDescription: 'Mean Stack JS was built for ease of use with javascript at its core. MeanStackJS is a full stack javascript framework that will give you the power to develop web applications',
+    twitterUrl: 'https://meanstackjs.herokuapp.com/',
+    twitterImage: 'http://meanstackjs.com/images/logo/header.png',
+    twitterSite: '@meanstackjs',
+    canonical: 'https://meanstackjs.herokuapp.com/',
+    author: 'Green Pioneer Solutions'
   },
   seo: require('./seo.js'),
-  // The session cookie name
-  sessionName: 'connect.meanstackjs',
-  title: 'MEANSTACKJS',
-
   // AGGREGATION
   // bower_components -  Needs to be manually added below
   // modules - aggregated automatically
@@ -118,6 +279,68 @@ var baseLine = {
   },
   helmet: {
     // https://github.com/helmetjs/helmet
+  },
+  expresValidator: {
+    customValidators: {
+      isArray: function (value) { // req.assert('param', 'Invalid Param').isArray()
+        return _.isObject(value)
+      },
+      isObject: function (value) { // req.assert('param', 'Invalid Param').isObject()
+        return _.isObject(value)
+      },
+      isString: function (value) { // req.assert('param', 'Invalid Param').isString()
+        return _.isString(value)
+      },
+      isRegExp: function (value) { // req.assert('param', 'Invalid Param').isRegExp()
+        return _.isRegExp(value)
+      },
+      isEmpty: function (value) { // req.assert('param', 'Invalid Param').isEmpty()
+        return _.isEmpty(value)
+      },
+      gte: function (param, num) { // req.assert('param', 'Invalid Param').gte(5)
+        return _.gte(param, num)
+      },
+      lte: function (param, num) { // req.assert('param', 'Invalid Param').lte(5)
+        return _.lte(param, num)
+      },
+      gt: function (param, num) { // req.assert('param', 'Invalid Param').gt(5)
+        return _.gt(param, num)
+      },
+      lt: function (param, num) { // req.assert('param', 'Invalid Param').lt(5)
+        return _.lt(param, num)
+      }
+    },
+    customSanitizers: {
+      toArray: function (value) { // req.sanitize('postparam').toArray()
+        return _.toArray(value)
+      },
+      toFinite: function (value) { // req.sanitize('postparam').toFinite()
+        return _.toFinite(value)
+      },
+      toLength: function (value) { // req.sanitize('postparam').toLength()
+        return _.toLength(value)
+      },
+      toPlainObject: function (value) { // req.sanitize('postparam').toPlainObject()
+        return _.toPlainObject(value)
+      },
+      toString: function (value) { // req.sanitize('postparam').toString()
+        return _.toString(value)
+      }
+    },
+    errorFormatter: function (param, msg, value) {
+      var namespace = param.split('.')
+      var root = namespace.shift()
+      var formParam = root
+
+      while (namespace.length) {
+        formParam += '[' + namespace.shift() + ']'
+      }
+      return {
+        param: formParam,
+        msg: msg,
+        value: value
+      }
+    }
   },
   buildreq: {
     console: true,
@@ -198,86 +421,24 @@ var baseLine = {
     }
   }
 }
-```
+if (environment === 'test') {
+  baseLine = _.merge(baseLine, require('./environments/test.js'))
+} else if (environment === 'production') {
+  baseLine = _.merge(baseLine, require('./environments/production.js'))
+} else if (environment === 'nightwatch') {
+  baseLine = _.merge(baseLine, require('./environments/nightwatch.js'))
+} else {
+  baseLine = _.merge(baseLine, require('./environments/development.js'))
+}
 
-
-### Environment.js
-
-``` javascript
-self.environment = require('./server/environment.js').get()
-self.environment = require('./server/environment.js').set('development')
-// or by CMD
-export NODE_ENV=test // LINUX
-set NODE_ENE=test // WINDOWS
-```
-
-### Configs are based off env
-
-``` javascript
-// Production example
-module.exports = {
-  html: {
-    title: 'MEANSTACKJS'
-  },
-  logger: 'combined',
-  buildreq: {
-    console: false
-  },
-  mongoexpress: {
-    port: process.env.MONGOEXPRESSPORT || 8081
-  },
-  socketio: {
-    port: process.env.SOCKETIOPORT || 8282
-  },
-  http: {
-    active: true,
-    port: process.env.PORT || 80
-  },
-  https: {
-    active: true,
-    port: process.env.HTTPSPORT || 843,
-    key: './configs/certificates/keyExample.pem',
-    cert: './configs/certificates/certExample.pem'
-  },
-  mongodb: {
-    uri: 'mongodb://' + (process.env.DB_PORT_27017_TCP_ADDR || process.env.MONGODB || process.env.MONGOLAB_URI || 'localhost') + '/prod',
-    db: 'dev',
-    host: process.env.DB_HOST || 'localhost',
-    password: process.env.DB_PASSWORD || '',
-    port: process.env.DB_PORT_27017 || 27017,
-    ssl: false,
-    username: process.env.DB_USERNAME || '',
-    /**
-   * Database options that will be passed directly to mongoose.connect
-   * Below are some examples.
-   * See http://mongodb.github.io/node-mongodb-native/driver-articles/mongoclient.html#mongoclient-connect-options
-   * and http://mongoosejs.com/docs/connections.html for more information
-   */
-    options: {
-      // server: {
-      //   socketOptions: {
-      //     keepAlive: 1
-      //   },
-      //   poolSize: 5
-      // },
-      // replset: {
-      //   rs_name: 'myReplicaSet',
-      //   poolSize: 5
-      // },
-      db: {
-        w: 1,
-        numberOfRetries: 2
-      }
-    }
-  },
-  agendash: {
-    active: true,
-    options: {
-      db: {
-        address: 'mongodb://' + (process.env.DB_PORT_27017_TCP_ADDR || process.env.MONGODB || process.env.MONGOLAB_URI || 'localhost') + '/prod'
-      }
-    }
-  }
+exports.get = function (env) {
+  return baseLine
+}
+exports.set = function (identifer, value) {
+  baseLine[identifer] = value
+  return baseLine
 }
 
 ```
+
+

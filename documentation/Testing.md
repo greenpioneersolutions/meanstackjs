@@ -43,3 +43,21 @@ standard
 # or
 npm run standard
 ```
+
+### Need help installing?
+
+Easiest way to start testing your whole system 
+
+``` bash
+npm run cli
+# select - Install Selenium Server
+# once installed - Start Selenium Server
+npm test
+```
+
+Note you must have mongodb running and if you dont then 
+``` bash
+npm run cli
+# the select - Install MongoDB
+# in a new window or tab select - Start Mongod
+```

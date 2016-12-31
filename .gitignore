@@ -87,3 +87,12 @@ server/dist/
 # Tool Reports reports
 # --------------------
 tools/*/reports
+tools/nightwatch/reports/index.html
+
+
+# --------------------
+# Mean Stack Folders
+# --------------------
+database/
+downloads/
+backups/

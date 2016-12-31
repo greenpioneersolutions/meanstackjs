@@ -12,5 +12,9 @@
     "swagger-node-express": "^2.1.3",
     "swagger-ui": "2.1.8-M1"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/greenpioneersolutions/meanstackjs.git"
+  }
 }

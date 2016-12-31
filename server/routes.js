@@ -3,18 +3,18 @@ module.exports = routes
 var express = require('express')
 var ejs = require('ejs')
 var path = require('path')
-var queryParameters = require('express-query-parameters')()
 var seo = require('./seo')
+
+function nothingFoundHandler (msg) {
+  return function (req, res) {
+    res.status(400).send({
+      error: msg
+    })
+  }
+}
+
 function routes (self) {
-  queryParameters.config({
-    settings: {
-      schema: ['_id', 'id', '__v', 'created', 'title', 'content', 'user', 'email', 'roles'], // the names people can search
-      adapter: 'mongoose' // <object|string:supported adapter(MONGOOSE)>
-    }
-  })
-  self.app.use(queryParameters.middleware())
-  self.fileStructure = self.register(self)
-  // {
+    // {
   //   app: self.app,
   //   settings: self.settings,
   //   middleware: self.middleware,
@@ -40,20 +40,11 @@ function routes (self) {
   self.app.use(express.static(path.join(self.dir, 'client/'), {
     maxAge: 31557600000
   }))
-  function nothingFoundHandler (msg) {
-    return function (req, res) {
-      res.status(400).send({
-        error: msg
-      })
-    }
-  }
   self.app.get('/api/seo/*', function (req, res) {
     seo(self, req, req.path.replace('/api/seo', ''), function (seoSettings) {
       res.send(seoSettings)
     })
   })
-
-  self.app.use(require('./prerenderer'))
   self.app.get('/api/*', nothingFoundHandler('nothing found in api'))
   self.app.get('/bower_components/*', nothingFoundHandler('nothing found in bower_components'))
   self.app.get('/images/*', nothingFoundHandler('nothing found in images'))

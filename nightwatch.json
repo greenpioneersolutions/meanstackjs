@@ -44,6 +44,16 @@
           "args":["disable-web-security", "ignore-certificate-errors"]
         }
       }
+    },
+    "chrome" : {
+      "desiredCapabilities": {
+        "browserName": "chrome"
+      }
+    },
+    "edge" : {
+      "desiredCapabilities": {
+        "browserName": "MicrosoftEdge"
+      }
     }
   }
 }

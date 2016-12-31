@@ -1,4 +1,4 @@
-'use strict'
+require('dotenv').config({silent: true})
 
 var path = require('path')
 var _ = require('lodash')
@@ -6,6 +6,17 @@ var environment = require('./environment.js').get()
 var baseLine = {
   app: {
     name: 'MeanStackJS'
+  },
+  minify: 'default',
+  render: {
+    cli: 'lodash', // __ or ejs or lodash.
+    seo: 'lodash', // ejs or lodash. default is lodash
+    lodash: {
+      options: {} // https://lodash.com/docs#template
+    },
+    ejs: {
+      options: {} // https://www.npmjs.com/package/ejs#options
+    }
   },
   env: environment,
   // Root path of server

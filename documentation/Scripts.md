@@ -3,40 +3,22 @@
 How to generate your own certs for https.
 
 ``` bash
-npm run generate-ssl-certs
-bash ./generate-ssl-certs.sh
-```
-
------------
-Script
-``` bash
-#!/bin/bash
-
-if [ ! -e index.js ]
-then
-	echo "Please run the generate-ssl-certs.sh script from the main root directory"
-	echo "i.e: bash scripts/generate-ssl-certs.sh"
-	echo "Or by npm run generate-ssl-certs"
-	exit -1
-fi
-
-echo "Generating self-signed certificates..."
-
-mkdir -p ./configs/certificates
-openssl req -x509 -newkey rsa:2048 -keyout ./configs/certificates/key.pem -out ./configs/certificates/cert.pem -days 365
-openssl rsa -in ./configs/certificates/key.pem -out ./configs/certificates/newkey.pem && mv ./configs/certificates/newkey.pem ./configs/certificates/key.pem
-
-if [ ! -e ./configs/certificates/key.pem ]
-then
-	echo "Error has occured creating the key.pem"
-	exit -1
-fi
-
-if [ ! -e ./configs/certificates/cert.pem ]
-then
-	echo "Error has occured creating the cert.pem"
-	exit -1
-fi
-
-echo "Generated self-signed certificates at ./configs/certificates/key.pem & ./configs/certificates/cert.pem"
+# used to generate your ssl certs - really good for testing ssl out
+bash ./scripts/generate-ssl-certs.sh
+# used to install mongodb into the project to help those out who dont know mongodb
+bash ./scripts/mongodb-install.sh
+# used to switch node versions easily with nvm
+bash ./scripts/nodejs-change-version.sh
+# used to install nodejs with nvm
+bash ./scripts/nodejs-install.sh
+# used to set proxies need to run our stack if your behind a firewall that needs a proxy
+bash ./scripts/set-proxies.sh
+# used to start of mongod regardless where it is install - as long as it is in the path
+bash ./scripts/start-mongod.sh
+# used to delete all proxy configs
+bash ./scripts/unset-proxies.sh
+# used to help users stack up todate on verisons of the mean stack by helping them merge
+node ./scripts/update-meanstackjs.js
+# used to install the tools
+node ./scripts/postinstall.js
 ```

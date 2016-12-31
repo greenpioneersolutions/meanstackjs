@@ -16,7 +16,7 @@
 Why Mean Stack JS
 -----------------
 
-Do you need a full stack solution that is easy to build and all javascript?  Then you're in the right place with Mean Stack JS. There is no steep learning curve and it only takes an average of 10 minutes to get your base code up and running.  We've made the development process as simple and scalable as possible. This is perfect for anyone involved in software development, including User Experience Designers, Quality Assurance Engineers, Software Engineers, Frontend Developers, Backend Developers and Full Stack Engineers.
+The best developers want to be efficient and productive, quickly prototyping and experimenting, able to build successes into production-ready applications. We believe Mean Stack JS gives developers of all skill levels—whether at enterprise scale or working solo—an ideal open-source toolset for building rapid, scalable Javascript applications. We'll provide you a simple project structure that is versatile enough to quickly apply to your own development projects. Want to get started?
 
 
 How to Learn Mean Stack JS
@@ -29,6 +29,7 @@ Start visualizing what the meanstack can do for you with our demo
 
 Check out this YouTube channel that has content to help you:
 * [Subscribe to our Youtube Channel - MeanStackJs](https://www.youtube.com/channel/UC5lpSv5tNowgWxC9crTl97g)
+* [Watch MeanStackJS - Releases](https://www.youtube.com/playlist?list=PLhJ-Q2setTdrhK1m0F1lUfZsIzBbw6wny)
 * [Watch MeanStackJS - How to series](https://www.youtube.com/playlist?list=PLhJ-Q2setTdqgwW6U39s_oMAehgtXa15O)
 * [Watch MeanStackJS - Error series](https://www.youtube.com/playlist?list=PLhJ-Q2setTdr19ha6bx7jt6Bu2RCM5c5_)
 * [Watch MeanStackJS - What is series](https://www.youtube.com/playlist?list=PLhJ-Q2setTdpkHfA-mDMSjl4Wv-trKlY8)
@@ -41,7 +42,8 @@ For the Api version, start here instead:
 
 Want more content?
 * [LiveCoding.TV](https://www.livecoding.tv/greenpioneer/)
-* [Style Guide](https://github.com/greenpioneersolutions/gps-style-guide)
+* [GPS Style Guide](https://github.com/greenpioneersolutions/gps-style-guide)
+* [GPS Setup Guide](https://github.com/greenpioneersolutions/gps-setup-guide)
 * [Roadmap](https://github.com/greenpioneersolutions/meanstackjs/wiki/Roadmap)
 
 What is Mean Stack JS?
@@ -53,6 +55,7 @@ What is Mean Stack JS?
 - [Node.js](http://www.nodejs.org/) - Node.js is a platform built on Chrome's JavaScript runtime for easily building fast, scalable network applications
 
 [Check Demo Here](https://meanstackjs.herokuapp.com/)
+
 [Check Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
 
 Pre-Requisites
@@ -64,17 +67,9 @@ Pre-Requisites
   - <img src="https://lh5.googleusercontent.com/-2YS1ceHWyys/AAAAAAAAAAI/AAAAAAAAAAc/0LCb_tsTvmU/s46-c-k/photo.jpg" height="17">&nbsp; [Linux Mongodb](https://docs.mongodb.org/manual/administration/install-on-linux/)
 - <img src="https://nodejs.org/static/apple-touch-icon.png" height="17">&nbsp; [Download](http://nodejs.org) and Install Node.js  - nodeschool has free <a href=" http://nodeschool.io/#workshoppers">node tutorials</a> to get you started
 
-- <img src="http://bower.io/img/bower-logo.png" height="17">&nbsp; [Install Bower](http://bower.io/)
-```bash
-$ npm install -g bower
-```
-
-**Note:** If you are new to Node or Express, we recommend to watch
-[Node.js and Express 101](https://www.youtube.com/watch?v=BN0JlMZCtNU)
-screencast by Alex Ford that teaches Node and Express from scratch. Alternatively,
-here is another great tutorial for complete beginners - [Getting Started With Node.js, Express, MongoDB](http://cwbuecheler.com/web/tutorials/2013/node-express-mongo/).
 
 [Check Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
+
 [Check Demo Here](https://meanstackjs.herokuapp.com/)
 
 Getting Started
@@ -96,19 +91,12 @@ npm install
 npm start
 # or
 node index.js
-# or
-nodemon index.js
 ```
 
-**Note:** We highly recommend installing [Nodemon](https://github.com/remy/nodemon).
-It watches for any changes in your  node.js app and automatically restarts the
-server. Once installed, instead of `node index.js` use `nodemon index.js`. It will
-save you a lot of time in the long run, because you won't need to manually
-restart the server each time you make a small change in code. To install, run
-`sudo npm install -g nodemon`.
-
 [Check Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
+
 [Check Demo Here](https://meanstackjs.herokuapp.com/)
+
 [Check Roadmap Here](https://github.com/greenpioneersolutions/meanstackjs/wiki/Roadmap)
 
 [express]: <http://expressjs.com>

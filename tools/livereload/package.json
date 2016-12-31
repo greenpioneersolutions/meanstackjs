@@ -13,5 +13,9 @@
     "lodash": "^4.17.2",
     "node-sass": "^4.1.1"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/greenpioneersolutions/meanstackjs.git"
+  }
 }

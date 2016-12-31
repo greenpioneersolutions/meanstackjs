@@ -4,6 +4,7 @@ describe('BLOG Testing', function () {
   describe('routes', function () {
     var states = {}
     beforeEach(inject(function ($state) {
+      this.timeout(1000)
       states.list = $state.get('list')
       states.view = $state.get('view')
       states.create = $state.get('create')
