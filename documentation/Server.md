@@ -1,126 +1,113 @@
-### Server Structure 
-
-WORK IN PROGRESS
+### Server Structure
 
 | Name                               | Description                                                  |
 | ---------------------------------- | ------------------------------------------------------------ |
 | **server**/layout/                 | Folder: Swig Layout before rendered to user                  |
 | **server**/modules/                | Folder:all dynamic modules to run server side logic          |
-| **server**/swagger/                | Folder:all files to display api documentation          |
-| **server**/dist/                   | Folder:all files created by the system if you use babel         |
-| **server**/environment.js             | File:This is a getter/setter for the env   |
-| **server**/error.js             | File:This handles any unexpected errors in express |
-| **server**/error.pug             | File:This is the template for error.js    |
+| **server**/error.js             | File:This handles any unexpected errors in express and exposes a log & middleware|
 | **server**/mail.js             | File:This gives you the ability to email   |
 | **server**/middleware.js             | File:This holds all of the middleware to use   |
 | **server**/passport.js             | File:This has the login system  |
-| **server**/register.js             | File:This file registers all the dynamic frontend & backend modules    |
-
+| **server**/register.js             | File:This file is used to gather all modules to gether and to register them properly   |
+| **server**/cdn.js             | File:This file is for those using a cdn like maxcdn  |
+| **server**/config.js             | File:This file is used to set up expressjs initially, middleware & passport |
+| **server**/db.js             | File:This file is to connect to the database in the start of the build process  |
+| **server**/headers.js             | File:This file is used to set up the headers that go out on every route   |
+| **server**/logger.js             | File:This file is used to set up our morgan logger & debug statements on all routes   |
+| **server**/prerenderer.js             | File:This file is used by seo to prerender certain requests   |
+| **server**/routes.js             | File:This file is used to set up all system static routes including the main '/*' route with ejs templating  |
+| **server**/security.js             | File:This file is used to set up helmet, hpp, cors & content length    |
+| **server**/seo.js             | File:This file is used for the main route to properly response to all request for seo  |
 
 #### How Server.Mean.Js Works
 How it works
 
 ``` javascript
+module.exports = Mean
+var debug = require('debug')('meanstackjs:server')
+var forceSSL = require('express-force-ssl')
+var fs = require('fs')
+var glob = require('glob')
+var https = require('https')
+var _ = require('lodash')
 var run = require('./run.js')
+
+function Mean (opts, done) {
+  var self = this
+  self.dir = __dirname
+  self.opts = opts
+  self.run = run
+  self.environment = require('./configs/environment.js').get()
+  self.settings = require('./configs/settings.js').get()
+  self.port = self.opts.port || self.settings.https.active ? self.settings.https.port : self.settings.http.port
+  self.middleware = require('./server/middleware.js')
+  self.mail = require('./server/mail.js')
+  // Connect to MongoDb
+  require('./server/db.js')(self)
+  // Start of the build process
+  // setupExpressConfigs > Used to set up expressjs initially, middleware & passport.
+  require('./server/config.js')(self)
+  // setupExpressSecurity > Used to set up helmet, hpp, cors & content length.
+  require('./server/security.js')(self)
+  // setupExpressHeaders > Used to set up the headers that go out on every route.
+  require('./server/headers.js')(self)
+  // setupExpressLogger > Used to set up our morgan logger & debug statements on all routes.
+  require('./server/logger.js')(self)
+  // setupTools > Used to set up every tool in the tools directory.
+  var files = glob.sync('./tools/*/package.json')
+  files.forEach(function (n, k) {
+    var packageInfo = require(n)
+    if (packageInfo.active || _.isUndefined(packageInfo.active)) {
+      var mainPath = _.replace(n, 'package.json', packageInfo.main)
+      require(mainPath)(self)
+    }
+  })
+  // setupRegister > Used to gather all modules to gether and to register them properly
+  require('./server/register.js')(self)
+  // setupStaticRoutes > Used to set up all system static routes including the main '/*' route with ejs templating.
+  require('./server/routes.js')(self)
+  // setupExpressErrorHandler > Used to set up our customer error handler in the server folder. NOTE: This goes after routes because we do not want it potentally default to express error handler
+  require('./server/error.js').middleware(self)
+  // purgeMaxCdn - *** OPTIONAL ***  > Used to purge the max cdn cache of the file. We Support MAXCDN
+  require('./server/cdn.js')(self)
+  // auto  - connectMongoDb :  server > Used to finsh the final set up of the server. at the same time we start connecting to mongo and turning on the server.
+
+  if (self.settings.https.active) {
+    https.createServer({
+      key: fs.readFileSync(self.settings.https.key),
+      cert: fs.readFileSync(self.settings.https.cert)
+    }, self.app).listen(self.settings.https.port, function () {
+      console.log('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
+      debug('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
+      // Force SSL if the http is not active
+      if (!self.settings.http.active) {
+        var app = require('express')()
+        app.set('forceSSLOptions', {
+          httpsPort: self.settings.https.port
+        })
+        app.use('/*', forceSSL)
+        app.listen(self.settings.http.port, function () {
+          console.log('HTTP FORCE SSL Express server listening on port %d in %s mode', self.settings.http.port, self.app.get('env'))
+          debug('HTTP FORCE SSL Express server listening on port %d in %s mode', self.settings.http.port, self.app.get('env'))
+          done()
+        })
+      }
+    })
+  }
+  // check if you set both to false we default to turn on http
+  if (self.settings.http.active || (self.settings.https.active === false) === (self.settings.http.active === false)) {
+    self.app.listen(self.app.get('port'), function () {
+      console.log('HTTP Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
+      debug('HTTP Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
+      done()
+    })
+  }
+}
+
 if (!module.parent) {
   run(Mean)
 }
 
-function Mean (opts, done) {
-  var self = this
-  self.opts = opts
-  self.environment = require('./configs/environment.js').get()
-  self.settings = require('./configs/settings.js').get()
-  self.port = self.opts.port || self.settings.http.port
-  self.middleware = require('./server/middleware.js')
-  self.mail = require('./server/mail.js')
-  self.dir = __dirname
-  self.register = require('./server/register.js')
-  // Start of the build process
-  // setupExpressConfigs > Used to set up expressjs initially, middleware & passport.
-  self.setupExpressConfigs()
-  // setupExpressErrorHandler > Used to set up our customer error handler in the server folder.
-  self.setupExpressErrorHandler()
-  // setupExpressSecurity > Used to set up helmet, hpp, cors & content length.
-  self.setupExpressSecurity()
-  // setupExpressHeaders > Used to set up the headers that go out on every route.
-  self.setupExpressHeaders()
-  // setupExpressLogger > Used to set up our morgan logger & debug statements on all routes.
-  self.setupExpressLogger()
-  // setupServerRoutesModels > Used to set up the register function to dynamically build all of the models, routes & frontend files.
-  self.setupServerRoutesModels()
-  // setupToolSwagger - *** OPTIONAL *** >  Used to set up swagger.io to represent the api with a nice ui. http://localhost:3000/api/
-  self.setupToolSwagger()
-  // setupToolAgenda - *** OPTIONAL *** >  Used to set up  agenda to manage light-weight job scheduling with a nice ui. http://localhost:3000/agenda
-  self.setupToolAgenda()
-  // setupToolNightwatch - *** OPTIONAL *** >  Used to set up the view into the reporting of how e2e did . http://localhost:3000/e2e/
-  self.setupToolNightwatch()
-  // setupToolPlato - *** OPTIONAL *** >  Used to set up the view into the reporting of how the analysis  . http://localhost:3000/plato/
-  self.setupToolPlato()
-  // setupToolLivereload - *** OPTIONAL *** >  Used to set up livereload which allows you as the developer to develop faster due to not having to manually restarting the server after every change
-  self.setupToolLivereload()
-  // setupStaticRoutes > Used to set up all system static routes including the main '/*' route with ejs templating.
-  self.setupStaticRoutes()
-  // purgeMaxCdn - *** OPTIONAL ***  > Used to purge the max cdn cache of the file. We Support MAXCDN
-  self.purgeMaxCdn()
-  // auto  - connectMongoDb :  server > Used to finsh the final set up of the server. at the same time we start connecting to mongo and turning on the server.
-  auto({
-    connectMongoDb: function (callback) {
-      mongoose.Promise = Promise
-      mongoose.set('debug', self.settings.mongodb.debug)
-      mongoose.connect(self.settings.mongodb.uri, self.settings.mongodb.options)
-      mongoose.connection.on('error', function (err) {
-        console.log('MongoDB Connection Error. Please make sure that MongoDB is running.')
-        debug('MongoDB Connection Error ')
-        callback(err, null)
-      })
-      mongoose.connection.on('open', function () {
-        debug('MongoDB Connection Open ')
-        callback(null, {
-          db: self.settings.mongodb.uri,
-          dbOptions: self.settings.mongodb.options
-        })
-      })
-    },
-    server: function (callback) {
-      if (self.settings.https.active) {
-        https.createServer({
-          key: fs.readFileSync(self.settings.https.key),
-          cert: fs.readFileSync(self.settings.https.cert)
-        }, self.app).listen(self.settings.https.port, function () {
-          console.log('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
-          debug('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
-          if (!self.settings.http.active) {
-            callback(null, {
-              port: self.app.get('port'),
-              env: self.app.get('env')
-            })
-          }
-        })
-      }
-      // check if you set both to false we default to turn on http
-      if (self.settings.http.active || (self.settings.https.active === false) === (self.settings.http.active === false)) {
-        self.app.listen(self.app.get('port'), function () {
-          console.log('HTTP Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
-          debug('HTTP Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
-          callback(null, {
-            port: self.app.get('port'),
-            env: self.app.get('env')
-          })
-        })
-      }
-    }
-  },
-    function (err, results) {
-      if (err) {
-        console.log('Exiting because of error %d', err)
-        debug('Exiting because of error %d', err)
-        process.exit(1)
-      }
-      debug('Finished Server Load')
-      done(null)
-    })
-}
 
 ```
 
@@ -129,34 +116,26 @@ How it works
 
 ``` javascript
 
-function Register (opts, done) {
-  var self = this
-
-  self.environment = opts.environment
-  self.mail = opts.mail
-  self.app = opts.app
-  self.settings = opts.settings
-  self.middleware = opts.middleware
-  self.dir = __dirname
+function Register (self, done) {
   // Start Build Process
   // getFolderContents > Used to dynamically get all of the contents of all module folders.
-  self.getFolderContents()
+  this.getFolderContents(self)
   // setupFrontendDirectories > Used to set up all directories need & to remove the previously compiled files.
-  self.setupFrontendDirectories()
+  this.setupFrontendDirectories(self)
   // compileFrontendStylesScripts > Used to compile all of the info needed for styles & scripts to render later.
-  self.compileFrontendStylesScripts()
+  this.compileFrontendStylesScripts(self)
   // compileBackendScripts > Used to compile all of the info need for all of the backend modules.
-  self.compileBackendScripts()
+  this.compileBackendScripts(self)
   // transformBabel > Used to transform files to es6 - commented out till the next release.
   // self.transformBabel()
   // setupServerModels > Used to set up the mongoose modules.
-  self.setupServerModels()
+  this.setupServerModels(self)
   // setupServerRoutes > Used to set up the module routes.
-  self.setupServerRoutes()
+  this.setupServerRoutes(self)
   // renderFrontendFiles > Used to render all of the frontend files based on all the information from above.
-  self.renderFrontendFiles()
+  this.renderFrontendFiles(self)
   // updateFrontendCdn > Used to update the files based of if your using a cdn. We Support MAXCDN.
-  self.updateFrontendCdn()
+  this.updateFrontendCdn(self)
   // frontendFiles > Returns the files to send to the frontend
   return self.frontendFiles
 }
@@ -169,7 +148,7 @@ How it works
 ``` javascript
 // test.routes.js
 var test = require('./test.controller.js')
-module.exports = function (app, auth, mail, settings) {
+module.exports = function (app, auth, mail, settings, models) {
   app.get('/api/math', test.doMath)
   app.get('/api/query' , test.queryParameters)
 }
@@ -194,7 +173,7 @@ How it works
 ``` javascript
 // test.routes.js
 var test = require('./test.controller.js')
-module.exports = function (app, auth, mail, settings) {
+module.exports = function (app, auth, mail, settings, models) {
   app.post('/api/mail', test.sendMail(mail, settings))
 }
 // test.controller.js
@@ -380,11 +359,11 @@ text: 'Test Email Text'
 //or
 // test.routes.js
 var test = require('./test.controller.js')
-module.exports = function (app, auth, mail, settings) {
+module.exports = function (app, auth, mail, settings, models) {
   app.post('/api/mail', test.sendMail(mail, settings))
 }
 // test.controller.js
-exports.sendMail = function (mail, settings) {
+exports.sendMail = function (mail, settings, models) {
   return function (req, res) {
     mail.send({
     to: 'test@greenpioneersolutions.com',
