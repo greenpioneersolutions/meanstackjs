@@ -18,12 +18,18 @@ exports.pug = function (settings) {
 exports.proxy = function (req, res, next) {
   try {
     var url = _.replace(req.originalUrl, '/api/proxy/', '')
-    req.pipe(request({
+    var requestOptions = {
       url: url,
       qs: req.query,
       method: req.method,
-      headers: {}
-    })).on('error', function (err) {
+      headers: {
+        'content-type': 'application/json'
+      }
+    }
+    if (req.method === 'POST' || req.method === 'PUT') {
+      requestOptions.body = JSON.stringify(req.body)
+    }
+    req.pipe(request(requestOptions)).on('error', function (err) {
       next(err)
     }).pipe(res).on('error', function (err) {
       next(err)

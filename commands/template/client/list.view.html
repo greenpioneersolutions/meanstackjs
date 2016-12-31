@@ -1,32 +1,32 @@
 <div class="container" ng-init="vm.list()">
   <div class="row">
-      <div class="col-sm-12 __name__-header text-center">
-        <h1 class="__name__-title">MeanStackJS __Name__s</h1>
-        <p class="lead __name__-description">Using the official example template of creating a __name__ module with Bootstrap.</p>
+      <div class="col-sm-12 <%= name %>-header text-center">
+        <h1 class="<%= name %>-title">MeanStackJS <%= Name %>s</h1>
+        <p class="lead <%= name %>-description">Using the official example template of creating a <%= name %> module with Bootstrap.</p>
       </div>
   </div> 
   <div class="row">
-    <div class="center-block __name__-main ">
-      <div ng-show="vm.__name__s.length == 0">
-        <h3>No __Name__ Data Points</h3>
-        <a class="btn btn-primary" href="/__name__/create">Create One Now</a>
+    <div class="center-block <%= name %>-main ">
+      <div ng-show="vm.<%= name %>s.length == 0">
+        <h3>No <%= Name %> Data Points</h3>
+        <a class="btn btn-primary" href="/<%= name %>/create">Create One Now</a>
       </div>
       
-      <div class="__name__-post" ng-repeat="(key, value) in vm.__name__s | orderBy:'-date'">
-        <a href="/__name__/view/{{value._id}}"><h2 class="__name__-post-title">{{value.title}}</h2></a>
+      <div class="<%= name %>-post" ng-repeat="(key, value) in vm.<%= name %>s | orderBy:'-date'">
+        <a href="/<%= name %>/view/{{value._id}}"><h2 class="<%= name %>-post-title">{{value.title}}</h2></a>
         <span ng-show="vm.UserFactory.loggedin">
-          <a href="/__name__/edit/{{value._id}}"><i class="fa fa-pencil-square-o"></i></a>
+          <a href="/<%= name %>/edit/{{value._id}}"><i class="fa fa-pencil-square-o"></i></a>
           <a ng-click="vm.delete(value._id)"><i class="fa fa-trash"></i></a>
         </span>
         
-        <p class="__name__-post-meta">
+        <p class="<%= name %>-post-meta">
           on {{value.created |date:'medium'}}
         </p>
         
         <p>{{value.content}}</p>
-      </div><!-- /.__name__-post -->
+      </div><!-- /.<%= name %>-post -->
 
-    </div><!-- /.__name__-main -->
+    </div><!-- /.<%= name %>-main -->
 
   </div>
     

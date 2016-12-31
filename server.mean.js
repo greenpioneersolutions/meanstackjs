@@ -4,8 +4,6 @@ var forceSSL = require('express-force-ssl')
 var fs = require('fs')
 var glob = require('glob')
 var https = require('https')
-var mongoose = require('mongoose')
-var Promise = require('bluebird')
 var _ = require('lodash')
 var run = require('./run.js')
 
@@ -19,23 +17,11 @@ function Mean (opts, done) {
   self.port = self.opts.port || self.settings.https.active ? self.settings.https.port : self.settings.http.port
   self.middleware = require('./server/middleware.js')
   self.mail = require('./server/mail.js')
-  self.register = require('./server/register.js')
   // Connect to MongoDb
-  mongoose.Promise = Promise
-  mongoose.set('debug', self.settings.mongodb.debug)
-  mongoose.connect(self.settings.mongodb.uri, self.settings.mongodb.options)
-  mongoose.connection.on('error', function (err) {
-    console.log('MongoDB Connection Error. Please make sure that MongoDB is running.')
-    debug('MongoDB Connection Error ', err)
-  })
-  mongoose.connection.on('open', function () {
-    debug('MongoDB Connection Open ')
-  })
+  require('./server/db.js')(self)
   // Start of the build process
   // setupExpressConfigs > Used to set up expressjs initially, middleware & passport.
   require('./server/config.js')(self)
-  // setupExpressErrorHandler > Used to set up our customer error handler in the server folder.
-  require('./server/error.js')(self)
   // setupExpressSecurity > Used to set up helmet, hpp, cors & content length.
   require('./server/security.js')(self)
   // setupExpressHeaders > Used to set up the headers that go out on every route.
@@ -51,8 +37,12 @@ function Mean (opts, done) {
       require(mainPath)(self)
     }
   })
+  // setupRegister > Used to gather all modules to gether and to register them properly
+  require('./server/register.js')(self)
   // setupStaticRoutes > Used to set up all system static routes including the main '/*' route with ejs templating.
   require('./server/routes.js')(self)
+  // setupExpressErrorHandler > Used to set up our customer error handler in the server folder. NOTE: This goes after routes because we do not want it potentally default to express error handler
+  require('./server/error.js').middleware(self)
   // purgeMaxCdn - *** OPTIONAL ***  > Used to purge the max cdn cache of the file. We Support MAXCDN
   require('./server/cdn.js')(self)
   // auto  - connectMongoDb :  server > Used to finsh the final set up of the server. at the same time we start connecting to mongo and turning on the server.

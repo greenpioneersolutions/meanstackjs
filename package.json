@@ -1,7 +1,7 @@
 {
   "name": "meanstackjs",
-  "version": "1.4.1",
-  "description": "Do you need a full stack solution that is easy to build and all JavaScript? Then you're in the right place with Mean Stack JS. There is no steep learning curve and it only takes an average of 10 minutes to get your base code up and running. We've made the development process as simple and scalable as possible. This is perfect for anyone involved in software development, including User Experience Designers, Quality Assurance Engineers, Software Engineers, Frontend Developers, Backend Developers and Full Stack Engineers.",
+  "version": "1.5.0",
+  "description": "Mean Stack JS is an enterprise ready full stack JavaScript solution using MongoDB, ExpressJs, AngularJs, and NodeJs. Providing a simple project structure to quickly build prototypes into production ready applications for modern agile development teams.",
   "main": "index.js",
   "standard": {
     "globals": [
@@ -24,18 +24,26 @@
     ],
     "ignore": [
       "commands/template/",
+      "commands/blank/",
+      "database/",
+      "downloads/",
+      "backups/",
       "tools/"
     ]
   },
   "scripts": {
-    "test": "npm run mocha && npm run karma && npm run e2e && npm run lint",
-    "e2e": "node_modules/.bin/nightwatch",
+    "test": "npm run mocha && npm run karma && npm run e2e && npm run e2e:concat && npm run e2e:minify && npm run lint",
+    "e2e": "node_modules/.bin/cross-env MINIFY=default node_modules/.bin/nightwatch",
+    "e2e:concat": "node_modules/.bin/cross-env MINIFY=concat node_modules/.bin/nightwatch",
+    "e2e:minify": "node_modules/.bin/cross-env MINIFY=minify node_modules/.bin/nightwatch",
     "mocha": "node_modules/.bin/mocha tests/unit/mocha.test.js  ",
     "karma": "node_modules/.bin/karma start tests/unit/karma.test.js",
     "lint": "node_modules/.bin/standard",
     "lint:fix": "node_modules/.bin/standard --fix",
     "postinstall": "node_modules/.bin/bower install && node scripts/postinstall.js",
     "start": "node index.js",
+    "start:debug": "node debug index.js",
+    "start:inspect": "node --inspect  index.js",
     "start:watch": "node_modules/.bin/cross-env NODE_ENV=development node_modules/.bin/nodemon index.js",
     "start:test": "node_modules/.bin/cross-env NODE_ENV=test node index.js",
     "start:nightwatch": "node_modules/.bin/cross-env NODE_ENV=nightwatch node index.js",
@@ -43,7 +51,10 @@
     "cli": "node commands/cli.js",
     "generate-ssl-certs": "bash scripts/generate-ssl-certs.sh ",
     "processes:linux": "ps -ef | grep 'node index.js'",
-    "processes:linux:kill": "ps -ef | grep 'node index.js' | grep -v grep | awk '{print $2}' | xargs kill -9"
+    "processes:linux:kill": "ps -ef | grep 'node index.js' | grep -v grep | awk '{print $2}' | xargs kill -9",
+    "selenium:install": "node_modules/.bin/selenium-standalone install",
+    "selenium:start": "node_modules/.bin/selenium-standalone start",
+    "update": "node scripts/update-meanstackjs.js"
   },
   "repository": {
     "type": "git",
@@ -78,7 +89,6 @@
     "babel-plugin-transform-class-properties": "^6.6.0",
     "babel-preset-es2015": "^6.6.0",
     "bcrypt-nodejs": "^0.0.3",
-    "bluebird": "^3.0.6",
     "body-parser": "^1.14.1",
     "buildreq": "latest",
     "chalksay": "^1.1.0",
@@ -88,6 +98,7 @@
     "cors": "^2.7.1",
     "cross-env": "^3.1.3",
     "debug": "^2.5.1",
+    "dotenv": "^2.0.0",
     "ejs": "^2.5.1",
     "express": "^4.14.0",
     "express-content-length-validator": "^1.0.0",
@@ -97,7 +108,7 @@
     "express-query-parameters": "^1.0.1",
     "express-session": "^1.12.1",
     "express-sitemap": "^1.6.3",
-    "express-status-monitor": "^0.1.6",
+    "express-status-monitor": "^0.1.7",
     "express-validator": "^3.0.0",
     "glob": "^7.1.1",
     "helmet": "^3.1.0",
@@ -111,8 +122,8 @@
     "lodash": "^4.11.1",
     "maxcdn": "^0.2.0",
     "method-override": "^2.3.5",
-    "mongo-throttle": "^1.0.5",
-    "mongoose": "^4.2.7",
+    "mongo-throttle": "^1.2.0",
+    "mongoose": "^4.7.4",
     "mongoose-timestamp": "^0.6.0",
     "mongoose-validator": "^1.2.4",
     "morgan": "^1.6.1",
@@ -131,6 +142,7 @@
     "redis": "^2.6.2",
     "request": "^2.79.0",
     "run-auto": "^2.0.0",
+    "semver": "^5.3.0",
     "serial-concat-files": "^1.0.0",
     "shelljs": "^0.7.5",
     "socket.io": "^1.3.7",
@@ -154,6 +166,7 @@
     "nightwatch-html-reporter": "^1.0.4",
     "nodemon": "^1.8.1",
     "phantomjs-prebuilt": "^2.1.7",
+    "selenium-standalone": "^5.9.0",
     "standard": "latest",
     "supertest": "^2.0.0"
   }

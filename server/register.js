@@ -13,13 +13,6 @@ var path = require('path')
 var pathExists = require('is-there')
 var dir = __dirname
 function Register (self, done) {
-  // self.environment = opts.environment
-  // self.mail = opts.mail
-  // self.app = opts.app
-  // self.settings = opts.settings
-  // self.middleware = opts.middleware
-  // self.dir = __dirname
-
   // Start Build Process
   // getFolderContents > Used to dynamically get all of the contents of all module folders.
   this.getFolderContents(self)
@@ -39,7 +32,6 @@ function Register (self, done) {
   this.renderFrontendFiles(self)
   // updateFrontendCdn > Used to update the files based of if your using a cdn. We Support MAXCDN.
   this.updateFrontendCdn(self)
-
   // frontendFiles > Returns the files to send to the frontend
   return self.frontendFiles
 }
@@ -402,7 +394,7 @@ Register.prototype.renderFrontendFiles = function (self) {
   debug('end createFrontend')
 
   debug('started env')
-  if (self.environment === 'test') {
+  if (self.settings.minify === 'concat') {
     concat(self.frontendFilesAggregate.css, path.join(dir, '../client/styles/compiled/concat.css'), function (error) {
       if (error)debug(error, 'concat')
     })
@@ -413,7 +405,7 @@ Register.prototype.renderFrontendFiles = function (self) {
       js: ['scripts/compiled/concat.js'],
       css: ['styles/compiled/concat.css']
     }
-  } else if (self.environment === 'production') {
+  } else if (self.settings.minify === 'minify') {
     var uglifiedcss = uglifycss.processFiles(
       self.frontendFilesAggregate.css, {
         maxLineLen: 500

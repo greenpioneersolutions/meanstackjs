@@ -66,14 +66,16 @@ Client-side routes can be found in the `moduleName.routes.js` file in a module d
 
 ### Retrieving User Data and State
 `UserFactory` can be injected into any controller or service to provide needed information. A simple set of properties satisfies most use cases.
+
 | Property         | Description                                                                  |
 |------------------|------------------------------------------------------------------------------|
 | user             | Object: Contains email, profile, and roles if logged in, empty if logged out |
 | loggedin         | True if logged in, false if logged out                                       |
 | isAdmin          | True if user is an admin, false if not                                       |
-| checkLoggedOut() | Used in route resolves                                                       |
-| checkLoggedin()  | Used in route resolves                                                       |
-| checkAdmin()     | Used in route resolves                                                       |
+| checkLoggedOut() | Used to check if the user is logged out                                      |
+| checkLoggedin()  | Used to check if the user is logged in                                       |
+| checkAdmin()     | Used to check if the user has admin role                                     |
+
 `UserFactory` may also be assigned to the view-model within a controller for use in views like so.
 ```javascript
 // In controller

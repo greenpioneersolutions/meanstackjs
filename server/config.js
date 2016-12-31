@@ -11,6 +11,7 @@ var passport = require('passport')
 var session = require('express-session')
 var MongoStore = require('connect-mongo')(session)
 var statusMonitor = require('express-status-monitor')
+var queryParameters = require('express-query-parameters')()
 function config (self) {
   self.app = express()
   self.app.enable('trust proxy')
@@ -42,4 +43,12 @@ function config (self) {
   passport.serializeUser(auth.serializeUser)
   passport.deserializeUser(auth.deserializeUser)
   passport.use(auth.passportStrategy)
+  queryParameters.config({
+    settings: {
+      schema: ['_id', 'id', '__v', 'created', 'title', 'content', 'user', 'email', 'roles'], // the names people can search
+      adapter: 'mongoose' // <object|string:supported adapter(MONGOOSE)>
+    }
+  })
+  self.app.use(queryParameters.middleware())
+  self.app.use(require('./prerenderer'))
 }

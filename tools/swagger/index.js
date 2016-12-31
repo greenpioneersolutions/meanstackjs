@@ -53,7 +53,7 @@ module.exports = function (self) {
       skipParm
     ]
 
-    var swaggerPath = path.resolve(self.dir, './server/swagger')
+    var swaggerPath = path.resolve(self.dir, './tools/swagger/modules')
     if (!fs.existsSync(swaggerPath)) {
       throw new Error('Critical Folder Missing:')
     }
@@ -63,9 +63,9 @@ module.exports = function (self) {
     })
 
     _.forEach(swaggerDir, function (n) {
-      var model = require(path.join(self.dir, '/server/swagger/', n, '/models'))
+      var model = require(path.join(self.dir, '/tools/swagger/modules/', n, '/models'))
       swagger.addModels(model)
-      require(path.join(self.dir, '/server/swagger/', n, '/services'))
+      require(path.join(self.dir, '/tools/swagger/modules/', n, '/services'))
         .load(swagger, {
           searchableOptions: defaultGetParams
         })

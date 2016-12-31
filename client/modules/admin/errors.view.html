@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>Errors</h4>
+            </div>
+            <div class="panel-body" style="overflow: scroll;width: 99%;">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Message</th>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Stack</th>
+                            <th>Type</th>
+                            <th>Count</th>
+                            <th>History</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="(key, value) in vm.errors track by $index">
+                            <th scope="row">{{$index + 1}}</th>
+                            <td>
+                                <span>{{value.message}}</span>
+                            </td>
+                            <td>
+                                <span>{{value.name}}</span>
+                            </td>
+                            <td>
+                                <span>{{value.code}}</span>
+                            </td>
+                            <td>
+                                <pre>{{value.stack}}</pre>
+                            </td>
+                            <td>
+                                <span>{{value.type}}</span>
+                            </td>
+                            <td>
+                                <span>{{value.count}}</span>
+                            </td>
+                            <td> 
+                                <div ng-repeat="history in value.history track by $index">{{history}}</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

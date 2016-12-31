@@ -5,7 +5,7 @@ var HtmlReporter = require('nightwatch-html-reporter')
 var path = require('path')
 var reporter = new HtmlReporter({
   openBrowser: true,
-  reportsDirectory: path.join(__dirname, '../reports/nightwatch'),
+  reportsDirectory: path.join(__dirname, '../tools/nightwatch/reports'),
   // The filename that the html report will be saved as.
   reportFilename: 'index.html',
 
@@ -36,7 +36,7 @@ module.exports = {
 
   // controls the timeout time for async hooks. Expects the done() callback to be invoked within this time
   // or an error is thrown
-  asyncHookTimeout: 10000,
+  asyncHookTimeout: 20000,
 
   before: function (done) {
     run(MeanStack, function (err) {

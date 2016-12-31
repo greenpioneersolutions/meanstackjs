@@ -2,76 +2,76 @@
   'use strict'
 
   angular
-    .module('app.__name__', [])
-    .controller('__Name__Controller', __Name__Controller)
+    .module('app.<%= name %>', [])
+    .controller('<%= Name %>Controller', <%= Name %>Controller)
 
-  __Name__Controller.$inject = ['$http', '$stateParams', '__Name__Factory', 'logger', '$location', 'UserFactory']
+  <%= Name %>Controller.$inject = ['$http', '$stateParams', '<%= Name %>Factory', 'logger', '$location', 'UserFactory']
   /* @ngInject */
-  function __Name__Controller ($http, $stateParams, __Name__Factory, logger, $location, UserFactory) {
+  function <%= Name %>Controller ($http, $stateParams, <%= Name %>Factory, logger, $location, UserFactory) {
     var vm = this
-    vm.title = 'System'
-    vm.__name__ = {}
+    vm.title = '<%= name %>'
+    vm.<%= name %> = {}
     vm.UserFactory = UserFactory
     activate()
 
     vm.create = function (validated) {
       if (!validated) {
-        logger.warning('Data not valid', vm, 'Create __Name__ Validation')
+        logger.warning('Data not valid', vm, 'Create <%= Name %> Validation')
         return
       }
-      var __name__ = new __Name__Factory(vm.__name__)
-      __name__.user = vm.UserFactory.user
-      __name__.$save(function (response) {
-        vm.__name__ = response
+      var <%= name %> = new <%= Name %>Factory(vm.<%= name %>)
+      <%= name %>.user = vm.UserFactory.user
+      <%= name %>.$save(function (response) {
+        vm.<%= name %> = response
         //  window.location.href
-        $location.url('/__name__/list')
+        $location.url('/<%= name %>/list')
       }, function (error) {
         logger.error(error)
       })
     }
     vm.find = function () {
-      __Name__Factory.get({
+      <%= Name %>Factory.get({
         id: $stateParams.id
       }, function (success) {
-        vm.__name__ = success
+        vm.<%= name %> = success
       }, function (error) {
         logger.error(error)
       })
     }
     vm.list = function () {
-      __Name__Factory.query(function (success) {
-        vm.__name__s = success
+      <%= Name %>Factory.query(function (success) {
+        vm.<%= name %>s = success
       }, function (error) {
         logger.error(error)
       })
     }
     vm.update = function (validated) {
       if (!validated) {
-        logger.warning('Data not valid', vm, 'Edit __Name__ Post Validation')
+        logger.warning('Data not valid', vm, 'Edit <%= Name %> Post Validation')
         return
       }
-      __Name__Factory.update({
+      <%= Name %>Factory.update({
         id: $stateParams.id
-      }, vm.__name__,
+      }, vm.<%= name %>,
         function (success) {
-          $location.url('/__name__/view/' + $stateParams.id)
+          $location.url('/<%= name %>/view/' + $stateParams.id)
         },
         function (error) {
           logger.error(error)
         })
     }
-    vm.delete = function (__name__Id) {
+    vm.delete = function (<%= name %>Id) {
       // Confirm disabled for testing purposes
       var deleteConfirm = true
-      // var deleteConfirm = confirm('Are you sure you want to delete this __name__?') // eslint-disable-line
+      // var deleteConfirm = confirm('Are you sure you want to delete this <%= name %>?') // eslint-disable-line
       if (deleteConfirm === true) {
-        __Name__Factory.remove({
-          id: __name__Id
+        <%= Name %>Factory.remove({
+          id: <%= name %>Id
         },
           function (success) {
-            for (var i in vm.__name__s) {
-              if (vm.__name__s[i]._id === __name__Id) {
-                vm.__name__s.splice(i, 1)
+            for (var i in vm.<%= name %>s) {
+              if (vm.<%= name %>s[i]._id === <%= name %>Id) {
+                vm.<%= name %>s.splice(i, 1)
               }
             }
           },
@@ -81,7 +81,7 @@
       }
     }
     function activate () {
-      logger.info('Activated __Name__ View')
+      logger.info('Activated <%= Name %> View')
     }
   }
 })()
