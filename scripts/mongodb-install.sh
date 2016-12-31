@@ -1,6 +1,13 @@
 #!/bin/bash
 # if you need more help installing mongodb - https://docs.mongodb.com/manual/administration/install-community/
 #
+
+if [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
+    echo "Please follow this page to install MongoDB:  https://docs.mongodb.com/manual/administration/install-community"
+    exit 1
+fi
+
+
 CURRENT=`pwd`
 DOWNLOADSDIR="$CURRENT/downloads/mongodb-linux-x86_64-3.4.1.tgz"
 EXPORTPATH="$CURRENT/database/mongodb/bin"
@@ -12,10 +19,7 @@ then
 	echo "Or by npm run mongodb-install"
 	exit -1
 fi
-mkdir -p ./downloads
-mkdir -p ./database
-mkdir -p ./database/mongodb
-mkdir -p ./database/mongodb/db
+mkdir -p ./downloads ./database/mongodb/db
 cd ./downloads
 curl -O https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-3.4.1.tgz
 cd ../database

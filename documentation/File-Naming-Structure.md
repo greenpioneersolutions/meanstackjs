@@ -12,18 +12,19 @@ We have implemented modules with a specific file naming convention for server & 
 | `module` | `models` |
 | `controller` | `controller` |
 | `routes` | `routes` |
-| `config` | |
+| `config` | `spec` |
 | `service` | |
 | `provider` | |
 | `directive` | |
 | `style` | |
 | `json` | |
 | `view` | |
+| `spec` | |
 
-Once everthing is set up properly we then register all modules and all of its content appropriately on `server.js` startup. 
+Once everything is set up properly we then register all modules and all of its content appropriately on `server.js` startup. 
 
 
-Examples on the frontend  include :
+Examples on the frontend include :
 
 - `blog.controller.js`
 - `email.controller.js`
@@ -31,6 +32,7 @@ Examples on the frontend  include :
 - `auth.factory.js`
 - `blog.module.js`
 - `blog.routes.js.js`
+- `blog.spec.css`
 - `blog.style.css`
 - `blog.style.scss`
 - `list.style.less`
@@ -41,4 +43,5 @@ Examples on the backend  include :
 - `blog.controller.js`
 - `blog.model.js`
 - `blog.routes.js`
+- `blog.spec.js`
 

@@ -35,7 +35,7 @@ module.exports = {
         'Install Bower Dependencies',
         'Install MongoDB',
         'Install NodeJS',
-        'Install Selenuim Server',
+        'Install Selenium Server',
         'Lint Code',
         'Lint & Fix Code',
         'Mean Stack JS Install Dependencies',
