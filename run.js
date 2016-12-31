@@ -76,8 +76,8 @@ process.on('uncaughtException', function (err) {
       break
   }
     // Our Custom Error Handler
-  error.log(err, function (err) {
-    if (err)console.log('Error in log function in errors.js')
+  error.log(err, function (logErr) {
+    if (logErr)console.log('Error in log function in errors.js')
       // How do you want to handle your errors ? email admin , exit process or nothing at all ?
     process.exit(1)
       // var settings = require('./configs/settings.js').get()

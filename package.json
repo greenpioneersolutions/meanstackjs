@@ -1,7 +1,7 @@
 {
   "name": "meanstackjs",
-  "version": "1.4.1",
-  "description": "The best developers want to be efficient and productive, quickly prototyping and experimenting, able to build successes into production-ready applications. We believe Mean Stack JS gives developers of all skill levels—whether at enterprise scale or working solo—an ideal open-source toolset for building rapid, scalable Javascript applications. We'll provide you a simple project structure that is versatile enough to quickly apply to your own development projects. Want to get started?",
+  "version": "1.5.0",
+  "description": "Mean Stack JS is an enterprise ready full stack JavaScript solution using MongoDB, ExpressJs, AngularJs, and NodeJs. Providing a simple project structure to quickly build prototypes into production ready applications for modern agile development teams.",
   "main": "index.js",
   "standard": {
     "globals": [

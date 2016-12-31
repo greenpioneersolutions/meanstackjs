@@ -3,7 +3,7 @@ var Mean = require('../../server.mean.js')
 var run = require('../../run.js')
 describe('MEANSTACKJS API Testing', function () {
   before(function (done) {
-    this.timeout(10000)
+    this.timeout(20000)
     run(Mean, function () {
       require('../seed.js')(function () {
         done()

@@ -368,7 +368,7 @@ function ask () {
       case 'Start Selenium Server':
         shell.exec('node_modules/.bin/selenium-standalone start', {silent: false}, logShellJS)
         break
-      case 'Install Selenuim Server':
+      case 'Install Selenium Server':
         shell.exec('node_modules/.bin/selenium-standalone install', {silent: false}, logShellJS)
         break
       case 'Start Mongod':
