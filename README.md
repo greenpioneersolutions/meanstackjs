@@ -67,15 +67,6 @@ Pre-Requisites
   - <img src="https://lh5.googleusercontent.com/-2YS1ceHWyys/AAAAAAAAAAI/AAAAAAAAAAc/0LCb_tsTvmU/s46-c-k/photo.jpg" height="17">&nbsp; [Linux Mongodb](https://docs.mongodb.org/manual/administration/install-on-linux/)
 - <img src="https://nodejs.org/static/apple-touch-icon.png" height="17">&nbsp; [Download](http://nodejs.org) and Install Node.js  - nodeschool has free <a href=" http://nodeschool.io/#workshoppers">node tutorials</a> to get you started
 
-- <img src="http://bower.io/img/bower-logo.png" height="17">&nbsp; [Install Bower](http://bower.io/)
-```bash
-$ npm install -g bower
-```
-
-**Note:** If you are new to Node or Express, we recommend to watch
-[Node.js and Express 101](https://www.youtube.com/watch?v=BN0JlMZCtNU)
-screencast by Alex Ford that teaches Node and Express from scratch. Alternatively,
-here is another great tutorial for complete beginners - [Getting Started With Node.js, Express, MongoDB](http://cwbuecheler.com/web/tutorials/2013/node-express-mongo/).
 
 [Check Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
 
@@ -100,8 +91,6 @@ npm install
 npm start
 # or
 node index.js
-# or
-nodemon index.js
 ```
 
 [Check Documentation Here](https://github.com/greenpioneersolutions/meanstackjs/wiki)
