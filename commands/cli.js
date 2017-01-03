@@ -22,8 +22,7 @@ if (settings.env === 'production') {
 
 mongoose.connect(settings.mongodb.uri, settings.mongodb.options)
 mongoose.connection.on('error', function () {
-  console.log('MongoDB Connection Error. Please make sure that MongoDB is running.')
-  process.exit(1)
+  chalksay.red('\nMongoDB Connection Error.\nPlease make sure that MongoDB is running.\nUser Tasks will not work')
 })
 mongoose.Promise = Promise
 var User = mongoose.model('users', require('../server/modules/users/users.model.js'))
