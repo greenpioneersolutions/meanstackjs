@@ -18,7 +18,7 @@ module.exports = {
       .click('#admin')
       .pause(2000)
       .click('#Users')
-      .pause(16000)
+      .pause(1000)
       .assert.containsText('body', 'jason@greenpioneersolutions.com')
       .end()
   },
@@ -37,15 +37,6 @@ module.exports = {
       .click('#simple-dropdown')
       .pause(1000)
       .verify.hidden('#admin')
-      .end()
-  },
-  'Localhost Check:login check admin page - not authorized': function (browser) {
-    browser
-      .url(browser.launch_url + 'signin')
-      .waitForElementVisible('body', 3000)
-      .url(browser.launch_url + '/admin')
-      .pause(2000)
-      .waitForElementVisible('#toast-container', 2000)
       .end()
   }
 }
