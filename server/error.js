@@ -19,7 +19,7 @@ function log (error, cb) {
   if (typeof cb !== 'function') {
     cb = function () {}
   }
-
+  console.log(error)
   try {
     ErrorsModel = ErrorsModel || mongoose.model('error')
   } catch (e) {
