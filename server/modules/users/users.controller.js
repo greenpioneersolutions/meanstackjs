@@ -59,6 +59,7 @@ exports.postAuthenticate = function (req, res, next) {
                 authenticated: true,
                 user: {
                   profile: user.profile,
+                  connected: user.connected || {},
                   roles: user.roles,
                   gravatar: user.gravatar,
                   email: user.email,
@@ -96,6 +97,7 @@ exports.getAuthenticate = function (req, res) {
     return res.status(200).send({
       user: {
         profile: req.user.profile,
+        connected: req.user.connected || {},
         roles: req.user.roles,
         gravatar: req.user.gravatar,
         email: req.user.email,
@@ -162,6 +164,7 @@ exports.postLogin = function (req, res, next) {
         authenticated: true,
         user: {
           profile: user.profile,
+          connected: user.connected || {},
           roles: user.roles,
           gravatar: user.gravatar,
           email: user.email,
@@ -242,6 +245,7 @@ exports.postSignup = function (req, res, next) {
               authenticated: true,
               user: {
                 profile: user.profile,
+                connected: user.connected || {},
                 roles: user.roles,
                 gravatar: user.gravatar,
                 email: user.email,
@@ -501,4 +505,39 @@ exports.postPhoto = function (req, res, next) {
     debug('end postPhoto')
     return res.status(400).send()
   }
+}
+
+exports.getUserAzure = function (req, res, next) {
+  var outlook = require('node-outlook')
+  var token = req.user.azure ? req.user.azure.token : ''
+  outlook.base.setApiEndpoint('https://outlook.office.com/api/v2.0')
+  var queryParams = {
+    '$select': 'DisplayName, EmailAddress'
+  }
+  outlook.base.getUser({token: token, odataParams: queryParams}, function (error, result) {
+    if (error) {
+      console.log('getUser returned an error: ' + error)
+      res.send(error)
+    } else if (result) {
+      console.log('User name:', result.DisplayName)
+      console.log('User email:', result.EmailAddress)
+      console.log('result :', result)
+      res.send(result)
+    }
+  })
+}
+exports.postCallbackAzure = function (req, res, next) {
+  res.redirect('/account')
+}
+exports.getUnlinkAzure = function (req, res, next) {
+  var mongoose = require('mongoose')
+  var User = mongoose.model('users')
+  User.findById(req.user._id, (err, user) => {
+    if (err) { return next(err) }
+    user.azure = {}
+    user.save((err) => {
+      if (err) { return next(err) }
+      res.redirect('/account')
+    })
+  })
 }

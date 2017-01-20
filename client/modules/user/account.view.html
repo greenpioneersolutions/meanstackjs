@@ -55,6 +55,15 @@
             </div>
         </div>
     </form>
+
+    <div class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-6">
+                <p ng-show="!vm.editProfile.connected.azure"><a href="/api/auth/link/azure" target="_parent">Link your Azure account</a></p>
+                <p ng-show="vm.editProfile.connected.azure"><a href="/api/auth/unlink/azure" target="_parent">Unlink your Azure account</a></p>
+            </div>
+        </div>
+    </div>
     <!-- <div class="page-header">
         <h3>Change Password</h3></div>
     <form action="/account/password" method="POST" class="form-horizontal">
@@ -71,7 +80,7 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-sm-offset-3 col-sm-4">
+            <div class="col-sm-offset-2 col-sm-6">
                 <button type="submit" class="btn btn btn-primary"><i class="fa fa-lock"></i>Change Password</button>
             </div>
         </div>
