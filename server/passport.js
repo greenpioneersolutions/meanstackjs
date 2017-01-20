@@ -62,7 +62,7 @@ exports.OIDCStrategy = new OIDCStrategy(
       // isB2C: config.creds.isB2C,
       // issuer: config.creds.issuer,
     passReqToCallback: false,
-    scope: ['email', 'profile', 'offline_access'],
+    scope: ['openid', 'https://outlook.office.com/mail.read'],
     loggingLevel: 'warn',
     nonceLifetime: 3600,
     clockSkew: 300
@@ -94,7 +94,7 @@ exports.OIDCStrategy = new OIDCStrategy(
         email: 'webdev@test.onmicrosoft.com'
       }
 
-      outlook.mail.getMessages({token: params.id_token, folderId: 'Inbox', odataParams: queryParams, user: userInfo},
+      outlook.mail.getMessages({token: accessToken, folderId: 'Inbox', odataParams: queryParams, user: userInfo},
       function (error, result) {
         console.log(error, result, 'res')
         if (error) {
