@@ -53,7 +53,7 @@ var baseLine = {
     // is used to compute a JWT SIGN
     secret: 'MEANSTACKJS',
     options: {
-      expiresIn: 60 * 120 // 60 seconds * 120  = 2 hours
+      expiresIn: 86400 // 24 hours.   or  the old way//60 * 120 // 60 seconds * 120  = 2 hours
     }
   },
   // is used to compute a session hash

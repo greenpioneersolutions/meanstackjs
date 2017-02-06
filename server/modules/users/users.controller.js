@@ -8,173 +8,35 @@ var fs = require('fs')
 var path = require('path')
 var settings = require('../../../configs/settings.js').get()
 var mail = require('../../mail.js')
-var jwt = require('jsonwebtoken')
 var debug = require('debug')('meanstackjs:users')
+var uuid = require('node-uuid')
+var tokenApi = require('./../../token.js')
 
 exports.postAuthenticate = function (req, res, next) {
   debug('start postAuthenticate')
-
   var redirect = req.body.redirect || false
-  req.assert('email', 'Email is not valid').isEmail()
-  req.assert('password', 'Password cannot be blank').notEmpty()
-
-  var errors = req.validationErrors()
-  if (errors) {
-    debug('end postAuthenticate - Authentication failed. ' + errors[0].msg)
-    return res.status(401).send({
-      success: false,
-      authenticated: false,
-      msg: errors[0].msg,
-      redirect: '/signin'
-    })
-  } else {
-    User.findOne({
-      email: req.body.email
-    }, function (err, user) {
-      if (err) throw err
-      if (!user) {
-        debug('end postAuthenticate - Authentication failed. User not found.')
-        res.send({
-          success: false,
-          authenticated: false,
-          msg: 'Authentication failed. User not found.',
-          redirect: '/signin'
-        })
-      } else {
-        user.comparePassword(req.body.password, function (err, isMatch) {
-          if (isMatch && !err) {
-            req.logIn(user, function (err) {
-              if (err) {
-                return next(err)
-              }
-              delete user['password']
-              var token = jwt.sign({
-                _id: user._id
-              }, settings.jwt.secret, settings.jwt.options) // good for two hours
-              res.cookie('token', token)
-              debug('end postAuthenticate - Logged In')
-
-              res.json({
-                success: true,
-                authenticated: true,
-                user: {
-                  profile: user.profile,
-                  connected: user.connected || {},
-                  roles: user.roles,
-                  gravatar: user.gravatar,
-                  email: user.email,
-                  _id: user._id
-                },
-                token: 'JWT ' + token,
-                redirect: redirect
-              })
-            })
-          } else {
-            debug('end postAuthenticate - Authentication failed. Wrong password.')
-
-            res.send({
-              success: false,
-              authenticated: false,
-              msg: 'Authentication failed. Wrong password.',
-              redirect: '/signin'
-            })
-          }
-        })
-      }
-    })
-  }
+  var token = tokenApi.createKey(req.user)
+  res.cookie('token', token)
+  debug('end postAuthenticate - Logged In')
+  return res.status(200).send(exports.createResponseObject(req.user, token, redirect))
 }
 
 exports.getAuthenticate = function (req, res) {
   debug('start getAuthenticate')
-
   var redirect = req.body.redirect || false
-  if (req.user) {
-    var token = jwt.sign({
-      _id: req.user._id
-    }, settings.jwt.secret, settings.jwt.options)
-    debug('end getAuthenticate')
-    return res.status(200).send({
-      user: {
-        profile: req.user.profile,
-        connected: req.user.connected || {},
-        roles: req.user.roles,
-        gravatar: req.user.gravatar,
-        email: req.user.email,
-        _id: req.user._id
-      },
-      token: token,
-      success: true,
-      authenticated: true,
-      redirect: redirect
+  var token = req.headers.authorization || req.query.token || req.body.token || ''// || req.headers['x-access-token']
+  if (req.isAuthenticated()) {
+    return res.status(200).send(exports.createResponseObject(req.user, tokenApi.createKey(req.user), redirect))
+  } else if (token) {
+    tokenApi.checkKey(token, function (err, user) {
+      if (err) return res.status(200).send(exports.createResponseObject(req.user, '', redirect))
+      req.user = user
+      return res.status(200).send(exports.createResponseObject(req.user, token, redirect))
     })
   } else {
-    debug('end getAuthenticate')
-    return res.status(200).send({
-      user: {},
-      success: false,
-      authenticated: false,
-      redirect: redirect
-    })
+    return res.status(200).send(exports.createResponseObject(req.user, '', redirect))
   }
-}
-
-exports.postLogin = function (req, res, next) {
-  debug('start getAuthenticate')
-
-  req.assert('email', 'Email is not valid').isEmail()
-  req.assert('password', 'Password cannot be blank').notEmpty()
-
-  var errors = req.validationErrors()
-  var redirect = req.body.redirect || false
-  if (errors) {
-    debug('end getAuthenticate')
-    return res.status(400).send({
-      success: false,
-      authenticated: false,
-      msg: errors[0].msg,
-      redirect: '/signin'
-    })
-  }
-  passport.authenticate('local', function (err, user, info) {
-    if (err) {
-      return next(err)
-    }
-    if (!user) {
-      debug('end getAuthenticate')
-      return res.status(400).send({
-        success: false,
-        authenticated: false,
-        msg: info.message,
-        redirect: false
-      })
-    }
-    req.logIn(user, function (err) {
-      if (err) {
-        return next(err)
-      }
-      delete user['password']
-      var token = jwt.sign({
-        _id: user._id
-      }, settings.jwt.secret, settings.jwt.options) // good for two hours
-      res.cookie('token', token)
-      debug('end getAuthenticate')
-      res.json({
-        success: true,
-        authenticated: true,
-        user: {
-          profile: user.profile,
-          connected: user.connected || {},
-          roles: user.roles,
-          gravatar: user.gravatar,
-          email: user.email,
-          _id: user._id
-        },
-        token: 'JWT ' + token,
-        redirect: redirect
-      })
-    })
-  })(req, res, next)
+  debug('end getAuthenticate')
 }
 
 exports.logout = function (req, res) {
@@ -235,25 +97,10 @@ exports.postSignup = function (req, res, next) {
             return next(err)
           } else {
             delete user['password']
-            var token = jwt.sign({
-              _id: user._id
-            }, settings.jwt.secret, settings.jwt.options) // good for two hours
+            var token = tokenApi.createKey(user)
             res.cookie('token', token)
             debug('end postSignup')
-            res.json({
-              success: true,
-              authenticated: true,
-              user: {
-                profile: user.profile,
-                connected: user.connected || {},
-                roles: user.roles,
-                gravatar: user.gravatar,
-                email: user.email,
-                _id: user._id
-              },
-              token: 'JWT ' + token,
-              redirect: redirect
-            })
+            return res.status(200).send(exports.createResponseObject(user, token, redirect))
           }
         })
       }
@@ -263,8 +110,6 @@ exports.postSignup = function (req, res, next) {
 
 exports.putUpdateProfile = function (req, res, next) {
   debug('start putUpdateProfile')
-
-  var redirect = req.body.redirect || false
   User.findById(req.user.id, function (err, user) {
     if (err) {
       return next(err)
@@ -279,12 +124,9 @@ exports.putUpdateProfile = function (req, res, next) {
       if (err) {
         return next(err)
       }
-      // req.flash('success', { msg: 'Profile information updated.' })
+      req.user = user
       debug('end putUpdateProfile')
-      res.status(200).send({
-        user: user,
-        redirect: redirect
-      })
+      return res.status(200).send()
     })
   })
 }
@@ -310,7 +152,7 @@ exports.putUpdatePassword = function (req, res, next) {
       if (err) {
         return next(err)
       }
-      req.flash('success', { msg: 'Password has been changed.' })
+
       debug('end putUpdatePassword')
       res.status(200).send()
     })
@@ -348,7 +190,6 @@ exports.getReset = function (req, res) {
           return res.status(400).send(err)
         }
         if (!user) {
-          // req.flash('errors', { msg: 'Password reset token is invalid or has expired.' })
           debug('end getReset')
           return res.status(400).send({
             msg: 'Password reset token is invalid or has expired.',
@@ -372,7 +213,6 @@ exports.postReset = function (req, res, next) {
   var errors = req.validationErrors()
 
   if (errors) {
-    // req.flash('errors', errors)
     debug('end postReset')
     return res.status(400).send({msg: errors})
   } else {
@@ -417,12 +257,7 @@ exports.postReset = function (req, res, next) {
       delete user.password
       var redirect = req.body.redirect || '/'
       debug('end postReset')
-      res.status(200).send({
-        success: true,
-        authenticated: true,
-        user: user,
-        redirect: redirect
-      })
+      return res.status(200).send(exports.createResponseObject(user, '', redirect))
     })
   }
 }
@@ -476,8 +311,85 @@ exports.postForgot = function (req, res, next) {
       return next(err)
     }
     debug('end postForgot')
-    res.status(200).send({ msg: 'Email has been sent' })
+    return res.status(200).send({ msg: 'Email has been sent' })
   })
+}
+
+exports.getKey = function (req, res, next) {
+  debug('start getKey')
+  return res.json({token: tokenApi.createKey(req.user)})
+}
+exports.postKey = function (req, res, next) {
+  debug('start postKey')
+  var token = tokenApi.createKey(req.user)
+  res.cookie('token', token)
+  debug('start postKey')
+  return res.json({token: token})
+}
+
+exports.getKeyReset = function (req, res, next) {
+  debug('start getKeyReset')
+  req.user.apikey = uuid.v4()
+  req.user.save(function (err) {
+    debug('start getKeyReset')
+    if (err) return res.status(500).send(err)
+    return res.json({token: tokenApi.createKey(req.user)})
+  })
+}
+
+exports.checkLoginInformation = function (req, res, next) {
+  debug('start checkLoginInformation')
+  var redirect = req.body.redirect || false
+  req.assert('email', 'Email is not valid').isEmail()
+  req.assert('password', 'Password cannot be blank').notEmpty()
+  req.sanitize('email').normalizeEmail({ remove_dots: false })
+
+  var errors = req.validationErrors()
+  if (errors) {
+    debug('end checkLoginInformation - Authentication failed. ' + errors[0].msg)
+    return res.status(401).send({
+      success: false,
+      authenticated: false,
+      msg: errors[0].msg,
+      redirect: '/signin'
+    })
+  } else {
+    passport.authenticate('local', function (err, user, info) {
+      if (err) return next(err)
+      if (!user) {
+        debug('end checkLoginInformation')
+        return res.status(400).send({
+          success: false,
+          authenticated: false,
+          msg: info.message,
+          redirect: redirect
+        })
+      }
+      req.logIn(user, function (err) {
+        if (err) return next(err)
+        debug('end checkLoginInformation')
+        next()
+      })
+    })(req, res, next)
+  }
+}
+
+exports.createResponseObject = function (user, token, redirect) {
+  debug('start createResponseObject')
+  return {
+    success: !!user,
+    authenticated: !!user,
+    user: user ? {
+      profile: user.profile,
+      connected: user.connected || {},
+      roles: user.roles,
+      gravatar: user.gravatar,
+      email: user.email,
+      _id: user._id
+    } : {},
+    token: token,
+    redirect: redirect || false
+  }
 }
 
 exports.postPhoto = function (req, res, next) {
@@ -507,37 +419,35 @@ exports.postPhoto = function (req, res, next) {
   }
 }
 
-exports.getUserAzure = function (req, res, next) {
-  var outlook = require('node-outlook')
-  var token = req.user.azure ? req.user.azure.token : ''
-  outlook.base.setApiEndpoint('https://outlook.office.com/api/v2.0')
-  var queryParams = {
-    '$select': 'DisplayName, EmailAddress'
-  }
-  outlook.base.getUser({token: token, odataParams: queryParams}, function (error, result) {
-    if (error) {
-      console.log('getUser returned an error: ' + error)
-      res.send(error)
-    } else if (result) {
-      console.log('User name:', result.DisplayName)
-      console.log('User email:', result.EmailAddress)
-      console.log('result :', result)
-      res.send(result)
-    }
-  })
-}
-exports.postCallbackAzure = function (req, res, next) {
-  res.redirect('/account')
-}
-exports.getUnlinkAzure = function (req, res, next) {
-  var mongoose = require('mongoose')
-  var User = mongoose.model('users')
-  User.findById(req.user._id, (err, user) => {
-    if (err) { return next(err) }
-    user.azure = {}
-    user.save((err) => {
-      if (err) { return next(err) }
-      res.redirect('/account')
-    })
-  })
-}
+// AZURE
+// exports.getUserAzure = function (req, res, next) {
+//   var outlook = require('node-outlook')
+//   var token = req.user.azure ? req.user.azure.token : ''
+//   outlook.base.setApiEndpoint('https://outlook.office.com/api/v2.0')
+//   var queryParams = {
+//     '$select': 'DisplayName, EmailAddress'
+//   }
+//   outlook.base.getUser({token: token, odataParams: queryParams}, function (error, result) {
+//     if (error) {
+//       res.send(error)
+//     } else if (result) {
+//       res.send(result)
+//     }
+//   })
+// }
+// exports.postCallbackAzure = function (req, res, next) {
+//   res.redirect('/account')
+// }
+// exports.getUnlinkAzure = function (req, res, next) {
+//   var mongoose = require('mongoose')
+//   var User = mongoose.model('users')
+//   User.findById(req.user._id, (err, user) => {
+//     if (err) { return next(err) }
+//     user.azure = {}
+//     user.save((err) => {
+//       if (err) { return next(err) }
+//       res.redirect('/account')
+//     })
+//   })
+// }
+// LOOK AT CREATING SERVICE ACCOUNTS

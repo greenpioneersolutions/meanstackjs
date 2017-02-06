@@ -43,7 +43,7 @@ function config (self) {
   passport.serializeUser(auth.serializeUser)
   passport.deserializeUser(auth.deserializeUser)
   passport.use(auth.passportStrategy)
-  passport.use(auth.OIDCStrategy)
+  // passport.use(auth.OIDCStrategy)
   queryParameters.config({
     settings: {
       schema: ['_id', 'id', '__v', 'created', 'title', 'content', 'user', 'email', 'roles'], // the names people can search

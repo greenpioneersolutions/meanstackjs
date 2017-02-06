@@ -8,6 +8,7 @@ var validate = require('mongoose-validator')
 var timestamps = require('mongoose-timestamp')
 var debug = require('debug')('meanstackjs:users')
 var _ = require('lodash')
+var uuid = require('node-uuid')
 
 var userSchema = new mongoose.Schema({
   email: {
@@ -90,6 +91,14 @@ var userSchema = new mongoose.Schema({
   },
   resetPasswordExpires: {
     type: Date
+  },
+  apikey: {
+    type: String,
+    default: uuid.v4()
+  },
+  type: {
+    type: String,
+    default: 'user' // Service Accounts later
   }
 })
 

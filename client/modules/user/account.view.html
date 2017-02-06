@@ -58,15 +58,28 @@
 
     <div class="form-horizontal">
         <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-6">
+            <label for="token" class="col-sm-2 control-label">API Token</label>
+            <div class="col-sm-4">
+              <textarea type="text" rows="5" name="token" id="token" ng-model="vm.UserFactory.token" class="form-control" disabled="disabled"></textarea>
+            </div>
+            <div class="col-sm-offset-2 col-sm-8">
+                <button class="btn btn btn-info" ng-click="vm.refreshApiToken()"><i class="fa fa-refresh"></i>Refresh API Token</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <!-- <div class="col-sm-offset-2 col-sm-6">
                 <p ng-show="!vm.editProfile.connected.azure"><a href="/api/auth/link/azure" target="_parent">Link your Azure account</a></p>
                 <p ng-show="vm.editProfile.connected.azure"><a href="/api/auth/unlink/azure" target="_parent">Unlink your Azure account</a></p>
             </div>
+            <div class="col-sm-offset-2 col-sm-6">
+                <p ng-show="!vm.editProfile.connected.google"><a href="/api/auth/link/google" target="_parent">Link your Google account</a></p>
+                <p ng-show="vm.editProfile.connected.google"><a href="/api/auth/unlink/google" target="_parent">Unlink your Google account</a></p>
+            </div> -->
         </div>
     </div>
     <!-- <div class="page-header">
         <h3>Change Password</h3></div>
-    <form action="/account/password" method="POST" class="form-horizontal">
+    <form action="/user/password" method="POST" class="form-horizontal">
         <div class="form-group">
             <label for="password" class="col-sm-3 control-label">New Password</label>
             <div class="col-sm-4">
@@ -88,8 +101,8 @@
     <div class="page-header">
         <h3>Delete Account</h3></div>
     <p>You can delete your account, but keep in mind this action is irreversible.</p>
-    <form action="/account/delete" method="POST">
-        <input type="hidden" name="_csrf" value="QLYIBDmu6z6uVBmLttJULTW+KxTL04K6X3j8s=">
+    <form action="/user/delete" method="POST">
+        <input type="hidden" >
         <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i>Delete my account</button>
     </form> -->
     

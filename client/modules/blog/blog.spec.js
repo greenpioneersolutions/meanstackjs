@@ -92,7 +92,7 @@ describe('BLOG Testing', function () {
       $httpBackend = _$httpBackend_
       $stateParams = _$stateParams_
       $location = _$location_
-      $httpBackend.when('GET', /\/api\/authenticate\?noCache=\d+/)
+      $httpBackend.when('GET', /\/api\/user\/authenticate\?noCache=\d+/)
         .respond(200, authResponse)
       $httpBackend.when('GET', /\/api\/seo\/*/)
         .respond(200, {})
