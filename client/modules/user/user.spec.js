@@ -243,7 +243,6 @@ describe('USER Testing', function () {
         })
       UserController.update(true)
       $httpBackend.flush()
-      console.log(UserFactory.user.profile)
       expect(UserFactory.user.email).to.equal('test@user.com')
       expect(UserFactory.user.profile.name).to.equal('Test User')
       expect(UserFactory.user.profile.gender).to.equal('Male')

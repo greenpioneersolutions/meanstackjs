@@ -12,8 +12,13 @@ var sass = require('node-sass')
 var path = require('path')
 var pathExists = require('is-there')
 var dir = __dirname
+var validator = require('validator')
+var request = require('request')
+
 function Register (self, done) {
   // Start Build Process
+  // getDownloadContents > Used to dynamically get all of the content in the assets that are not on this server.
+  this.getDownloadContents(self)
   // getFolderContents > Used to dynamically get all of the contents of all module folders.
   this.getFolderContents(self)
   // setupFrontendDirectories > Used to set up all directories need & to remove the previously compiled files.
@@ -36,6 +41,26 @@ function Register (self, done) {
   return self.frontendFiles
 }
 
+Register.prototype.getDownloadContents = function (self) {
+  debug('started getDownloadContents')
+  self.settings.assets.css.forEach(function (ms) {
+    if (validator.isURL(ms)) {
+      request({url: ms}, function (error, response, body) {
+        if (error)console.log('Error Downloading Content', error)
+        fs.writeFileSync(path.join(dir, '../client/styles/downloaded/' + path.basename(ms)), body)
+      })
+    }
+  })
+  self.settings.assets.js.forEach(function (ms) {
+    if (validator.isURL(ms)) {
+      request({url: ms}, function (error, response, body) {
+        if (error)console.log('Error Downloading Content', error)
+        fs.writeFileSync(path.join(dir, '../client/scripts/downloaded/' + path.basename(ms)), body)
+      })
+    }
+  })
+  debug('end getDownloadContents')
+}
 Register.prototype.getFolderContents = function (self) {
   debug('started Info')
 
@@ -146,8 +171,14 @@ Register.prototype.setupFrontendDirectories = function (self) {
   if (!pathExists(dir + '/../client/styles/compiled/')) {
     fs.mkdirSync(dir + '/../client/styles/compiled/')
   }
+  if (!pathExists(dir + '/../client/styles/downloaded/')) {
+    fs.mkdirSync(dir + '/../client/styles/downloaded/')
+  }
   if (!pathExists(dir + '/../client/scripts/compiled/')) {
     fs.mkdirSync(dir + '/../client/scripts/compiled/')
+  }
+  if (!pathExists(dir + '/../client/scripts/downloaded/')) {
+    fs.mkdirSync(dir + '/../client/scripts/downloaded/')
   }
   if (!pathExists(dir + '/../client/uploads/')) {
     fs.mkdirSync(dir + '/../client/uploads/')
@@ -384,12 +415,36 @@ Register.prototype.renderFrontendFiles = function (self) {
 
   self.settings.assets.css.forEach(function (ms) {
     self.frontendFilesFinal.css.unshift(ms)
-    self.frontendFilesAggregate.css.unshift(path.join(dir, '../client/' + ms))
+    if (validator.isURL(ms)) {
+      fs.access(path.join(dir, '../client/styles/downloaded/' + path.basename(ms)), fs.constants.R_OK | fs.constants.W_OK, (err) => {
+        if (err) {
+          chalksay.red('Please Restart your system')
+          chalksay.red('The system is still downloading \n')
+          chalksay.red('source:' + ms)
+          chalksay.green('destination:' + path.join(dir, '../client/styles/downloaded/' + path.basename(ms)))
+        }
+      })
+      self.frontendFilesAggregate.css.unshift(path.join(dir, '../client/styles/downloaded/' + path.basename(ms)))
+    } else {
+      self.frontendFilesAggregate.css.unshift(path.join(dir, '../client/' + ms))
+    }
   })
 
   self.settings.assets.js.forEach(function (ms) {
     self.frontendFilesFinal.js.unshift(ms)
-    self.frontendFilesAggregate.js.unshift(path.join(dir, '../client/' + ms))
+    if (validator.isURL(ms)) {
+      fs.access(path.join(dir, '../client/scripts/downloaded/' + path.basename(ms)), fs.constants.R_OK | fs.constants.W_OK, (err) => {
+        if (err) {
+          chalksay.red('Please Restart your system')
+          chalksay.red('The system is still downloading\n')
+          chalksay.red('source:' + ms)
+          chalksay.green('destination:' + path.join(dir, '../client/scripts/downloaded/' + path.basename(ms)))
+        }
+      })
+      self.frontendFilesAggregate.js.unshift(path.join(dir, '../client/scripts/downloaded/' + path.basename(ms)))
+    } else {
+      self.frontendFilesAggregate.js.unshift(path.join(dir, '../client/' + ms))
+    }
   })
   debug('end createFrontend')
 
@@ -418,7 +473,6 @@ Register.prototype.renderFrontendFiles = function (self) {
         debug('Script generated and saved:', 'concat.min.css')
       }
     })
-
     var uglifiedjs = uglify.minify(self.frontendFilesAggregate.js, {
       mangle: false
     })
@@ -441,7 +495,6 @@ Register.prototype.renderFrontendFiles = function (self) {
 
 Register.prototype.updateFrontendCdn = function (self) {
   debug('started cdn')
-  // var self = this
 
   if (self.settings.cdn) {
     var FilesFinal = {

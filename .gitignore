@@ -77,6 +77,8 @@ files/
 # --------------------
 client/styles/compiled
 client/scripts/compiled
+client/styles/downloaded
+client/scripts/downloaded
 
 # --------------------
 # Babel Compiled files
