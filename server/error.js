@@ -19,7 +19,6 @@ function log (error, cb) {
   if (typeof cb !== 'function') {
     cb = function () {}
   }
-  console.log(error)
   try {
     ErrorsModel = ErrorsModel || mongoose.model('error')
   } catch (e) {
@@ -53,6 +52,7 @@ function log (error, cb) {
       })
       errors.save(function (err) {
         if (checkError(err, cb)) { return }
+        console.log('New Error ^')
         cb(false)
       })
     } else {
@@ -60,6 +60,7 @@ function log (error, cb) {
       data.history.push(Date.now())
       data.save(function (err) {
         if (checkError(err, cb)) { return }
+        console.log('Previous Error ^')
         cb(false)
       })
     }
