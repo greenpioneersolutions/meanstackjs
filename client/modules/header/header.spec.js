@@ -13,9 +13,9 @@ describe('HEADER Testing', function () {
     beforeEach(inject(function (_$httpBackend_, $controller, $rootScope, _UserFactory_) {
       UserFactory = _UserFactory_
       $httpBackend = _$httpBackend_
-      $httpBackend.whenGET(/\/api\/logout\?noCache=\d+/)
+      $httpBackend.whenGET(/\/api\/user\/logout\?noCache=\d+/)
         .respond(200, '')
-      $httpBackend.whenGET(/\/api\/authenticate\?noCache=\d+/)
+      $httpBackend.whenGET(/\/api\/user\/authenticate\?noCache=\d+/)
         .respond(200, authResponse)
       $httpBackend.when('GET', /\/api\/seo\/*/)
         .respond(200, {})

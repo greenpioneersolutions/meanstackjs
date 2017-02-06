@@ -19,7 +19,7 @@ function log (error, cb) {
   if (typeof cb !== 'function') {
     cb = function () {}
   }
-
+  console.log(error)
   try {
     ErrorsModel = ErrorsModel || mongoose.model('error')
   } catch (e) {
@@ -35,7 +35,6 @@ function log (error, cb) {
   if (!(error instanceof Error)) {
     error = new Error(error)
   }
-
   // error instanceof Error - maybe implement something last that is more specific to only Error's
   ErrorsModel.findOne({
     message: error.message
@@ -53,7 +52,7 @@ function log (error, cb) {
       })
       errors.save(function (err) {
         if (checkError(err, cb)) { return }
-        chalksay.red(errors)
+        chalksay.red('New Error ^')
         cb(false)
       })
     } else {
@@ -61,7 +60,7 @@ function log (error, cb) {
       data.history.push(Date.now())
       data.save(function (err) {
         if (checkError(err, cb)) { return }
-        chalksay.red(data)
+        chalksay.red('Previous Error ^')
         cb(false)
       })
     }

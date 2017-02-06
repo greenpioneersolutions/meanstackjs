@@ -53,7 +53,7 @@ var baseLine = {
     // is used to compute a JWT SIGN
     secret: 'MEANSTACKJS',
     options: {
-      expiresIn: 60 * 120 // 60 seconds * 120  = 2 hours
+      expiresIn: 86400 // 24 hours.   or  the old way//60 * 120 // 60 seconds * 120  = 2 hours
     }
   },
   // is used to compute a session hash
@@ -113,6 +113,7 @@ var baseLine = {
   // OR USE INTERNAL FILES - '/bower_components/jquery/dist/jquery.js'
   assets: {
     js: [
+      '/bower_components/ngBrowserInfo/dist/ngBrowserInfo.js',
       '/bower_components/angular-jwt/dist/angular-jwt.js',
       '/bower_components/socket.io-client/socket.io.js',
       '/bower_components/ng-file-upload/ng-file-upload-all.js',
