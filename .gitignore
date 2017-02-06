@@ -96,3 +96,6 @@ tools/nightwatch/reports/index.html
 database/
 downloads/
 backups/
+
+# ENV
+.env
