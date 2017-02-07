@@ -15,6 +15,9 @@ exports.pug = function (settings) {
     res.send(pug.renderFile(path.join(__dirname, 'setting.view.pug'), {settings: settings}))
   }
 }
+exports.status = function (req, res, next) {
+  res.status(200).send()
+}
 exports.proxy = function (req, res, next) {
   try {
     var url = _.replace(req.originalUrl, '/api/proxy/', '')

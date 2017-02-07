@@ -10,7 +10,11 @@
   /* @ngInject */
   function UserController ($scope, $http, $cookies, config, $state, $timeout, UserFactory, logger, Upload, $stateParams) {
     var vm = this
-    vm.resetCred = vm.editProfile = vm.loginCred = vm.loginError = {}
+    vm.resetCred = vm.editProfile = vm.loginCred = {}
+    vm.UserFactory = UserFactory
+    vm.refreshApiToken = function () {
+      UserFactory.resetApiToken()
+    }
     vm.find = function () {
       vm.editProfile = angular.copy(UserFactory.user)
     }

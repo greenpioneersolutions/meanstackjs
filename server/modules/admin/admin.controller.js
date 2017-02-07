@@ -14,7 +14,7 @@ exports.getUsers = function (req, res, next) {
     .limit(req.queryParameters.limit || '')
     .skip(req.queryParameters.skip || '')
     .populate(req.queryParameters.populateId || 'user', req.queryParameters.populateItems || '')
-    .select('-password')
+    .select('-password -apikey')
     .exec(function (err, users) {
       if (err) return next(err)
       debug('end getUsers')

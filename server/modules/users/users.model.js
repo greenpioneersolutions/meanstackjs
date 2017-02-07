@@ -7,6 +7,8 @@ var mail = require('../../mail.js')
 var validate = require('mongoose-validator')
 var timestamps = require('mongoose-timestamp')
 var debug = require('debug')('meanstackjs:users')
+var _ = require('lodash')
+var uuid = require('node-uuid')
 
 var userSchema = new mongoose.Schema({
   email: {
@@ -79,6 +81,7 @@ var userSchema = new mongoose.Schema({
       default: ''
     }
   },
+  azure: {},
   lastLoggedIn: {
     type: Date,
     default: Date.now
@@ -88,6 +91,14 @@ var userSchema = new mongoose.Schema({
   },
   resetPasswordExpires: {
     type: Date
+  },
+  apikey: {
+    type: String,
+    default: uuid.v4()
+  },
+  type: {
+    type: String,
+    default: 'user' // Service Accounts later
   }
 })
 
@@ -157,6 +168,11 @@ userSchema.virtual('gravatar').get(function () {
   return 'https://gravatar.com/avatar/' + md5 + '?s=200&d=retro'
 })
 
+userSchema.virtual('connected').get(function () {
+  return {
+    azure: !_.isEmpty(this.azure)
+  }
+})
 userSchema.virtual('firstName').get(function () {
   return this.profile.name.split(' ')[0]
 })
