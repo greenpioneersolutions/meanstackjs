@@ -165,7 +165,7 @@
     "mocha": "^3.0.2",
     "multiline": "^1.0.2",
     "nightwatch": "^0.9.8",
-    "nightwatch-html-reporter": "^1.0.4",
+    "nightwatch-html-reporter": "^2.0.0",
     "nodemon": "^1.8.1",
     "phantomjs-prebuilt": "^2.1.7",
     "selenium-standalone": "^5.9.0",
