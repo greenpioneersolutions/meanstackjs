@@ -69,13 +69,13 @@
             var destination = (toState &&
               (toState.title || toState.name || toState.loadedTemplateUrl)) ||
               'unknown target'
-            var msg = 'Error routing to ' + destination + '. '
+            var message = 'Error routing to ' + destination + '. '
             if (error.data && error.statusText) {
-              msg += (error.data || '') + '. \n' + (error.statusText || '') +
+              message += (error.data || '') + '. \n' + (error.statusText || '') +
                 ': ' + (error.status || '')
             }
 
-            logger.warning(msg, [toState])
+            logger.warning(message, [toState])
             $state.go('index')
           }
         )

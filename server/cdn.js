@@ -1,5 +1,7 @@
-module.exports = cdn
+module.exports.maxCDN = cdn
+
 var MaxCDN = require('maxcdn')
+
 function cdn (self) {
   if (self.settings.maxcdn.zoneId) {
     var maxcdn = new MaxCDN(
@@ -7,16 +9,16 @@ function cdn (self) {
       self.settings.maxcdn.consumerKey,
       self.settings.maxcdn.consumerSecret
     )
-    maxcdn.del('zones/pull.json/' + self.settings.maxcdn.zoneId + '/cache', function (err, res) {
-      console.log('MAXCDN: STATUS')
-      if (err) {
-        console.error('PURGE ERROR: ', err.stack || err.message || err)
+    maxcdn.del('zones/pull.json/' + self.settings.maxcdn.zoneId + '/cache', function (error, res) {
+      self.logger.info('MAXCDN: STATUS')
+      if (error) {
+        self.logger.warn('PURGE ERROR: ', error.stack || error.message || error)
         return
       } else if (res.code !== 200) {
-        console.error('PURGE ERROR: ', res.code)
+        self.logger.warn('PURGE ERROR: ', res.code)
         return
       }
-      console.log('PURGE SUCCESS')
+      self.logger.info('PURGE SUCCESS')
     })
   }
 }

@@ -52,8 +52,9 @@ function rmdirSync (url) {
     fs.readdirSync(url).forEach(function (file, index) {
       var curPath = path.resolve(url + '/' + file)
       if (fs.lstatSync(curPath).isDirectory()) {
-          //
-      } else { // delete file
+        // do nothing
+      } else {
+        // delete file
         fs.unlinkSync(curPath)
       }
     })
@@ -61,14 +62,14 @@ function rmdirSync (url) {
   }
 }
 function emptyDirectory (url, callback) {
-  fs.readdir('./' + url, function (err, files) {
-    if (err && err.code !== 'ENOENT') throw new Error(err, 'THIS ERR')
+  fs.readdir('./' + url, function (error, files) {
+    if (error && error.code !== 'ENOENT') throw new Error(error, 'THIS error')
     callback(files === undefined)
   })
 }
 function readDirectory (url, callback) {
-  fs.readdir('./' + url, function (err, files) {
-    if (err && err.code !== 'ENOENT') throw new Error(err)
+  fs.readdir('./' + url, function (error, files) {
+    if (error && error.code !== 'ENOENT') throw new Error(error)
     callback(files)
   })
 }
@@ -280,24 +281,24 @@ module.exports = __name__Schema
 
 function findUser (cb) {
   inquirer.prompt(questions.user).then(function (answers) {
-    User.findOne({ email: answers.email }, function (err, existingUser) {
-      cb(err, existingUser)
+    User.findOne({ email: answers.email }, function (error, existingUser) {
+      cb(error, existingUser)
     })
   })
 }
 
 function updateUser (answers, cb) {
-  User.findOne({ _id: answers._id }, function (err, user) {
-    if (err) {
-      cb(err, null)
+  User.findOne({ _id: answers._id }, function (error, user) {
+    if (error) {
+      cb(error, null)
     }
     if (answers.user.profile)user.profile = answers.user.profile
     if (answers.user.email)user.email = answers.user.email
     if (answers.user.password)user.password = answers.user.password
     if (answers.user.roles)user.roles = answers.user.roles
-    user.save(function (err, data) {
-      if (err) {
-        cb(err, null)
+    user.save(function (error, data) {
+      if (error) {
+        cb(error, null)
       }
       cb(null, data)
     })
@@ -310,11 +311,11 @@ function updatePassword (user, cb) {
       user: {
         password: answers.password
       }
-    }, function (err, data) {
-      if (err) {
-        chalksay.red(err)
+    }, function (error, data) {
+      if (error) {
+        chalksay.red(error)
       }
-      cb(err, data)
+      cb(error, data)
     })
   })
 }
@@ -328,11 +329,11 @@ function addRoles (user, cb) {
       user: {
         roles: user.roles
       }
-    }, function (err, data) {
-      if (err) {
-        chalksay.red(err)
+    }, function (error, data) {
+      if (error) {
+        chalksay.red(error)
       }
-      cb(err, data)
+      cb(error, data)
     })
   })
 }
@@ -348,11 +349,11 @@ function removeRoles (user, cb) {
       user: {
         roles: user.roles
       }
-    }, function (err, data) {
-      if (err) {
-        chalksay.red(err)
+    }, function (error, data) {
+      if (error) {
+        chalksay.red(error)
       }
-      cb(err, data)
+      cb(error, data)
     })
   })
 }
@@ -425,8 +426,8 @@ function ask () {
           message: 'What Module do you want to delete?',
           choices: commandFiles.modules
         }).then(function (data) {
-          fs.readdir('./' + data.module, function (err, files) {
-            if (err && err.code !== 'ENOENT') throw new Error(err)
+          fs.readdir('./' + data.module, function (error, files) {
+            if (error && error.code !== 'ENOENT') throw new Error(error)
             chalksay.cyan(data.module + ' contains:')
             chalksay.green(files)
             inquirer.prompt({
@@ -484,8 +485,8 @@ function ask () {
             buildFront({
               location: location.location,
               name: modules.module
-            }, function (err) {
-              if (err)console.log(err)
+            }, function (error) {
+              if (error)console.error(error)
               ask()
             })
           })
@@ -499,8 +500,8 @@ function ask () {
                 location: location.location,
                 name: modules.module,
                 schema: data
-              }, function (err) {
-                if (err)console.log(err)
+              }, function (error) {
+                if (error)console.error(error)
                 ask()
               })
             })
@@ -514,15 +515,15 @@ function ask () {
               buildFront({
                 location: location.location,
                 name: modules.module
-              }, function (err) {
-                if (err)console.log(err)
+              }, function (error) {
+                if (error)console.error(error)
               })
               buildBack({
                 location: location.location,
                 name: modules.module,
                 schema: data
-              }, function (err) {
-                if (err)console.log(err)
+              }, function (error) {
+                if (error)console.error(error)
                 ask()
               })
             })
@@ -543,9 +544,9 @@ function ask () {
         })
         break
       // case 'Create User':
-      //   findUser(function (err, data) {
-      //     if (err) {
-      //       chalksay.red(err)
+      //   findUser(function (error, data) {
+      //     if (error) {
+      //       chalksay.red(error)
       //     } else {
       //       if (data === null) {
       //         chalksay.red('No User Found Under That Email')
@@ -556,18 +557,18 @@ function ask () {
       //   })
       //   break
       case 'Change Password':
-        findUser(function (err, user) {
-          if (err) {
-            chalksay.red('Starting Over - Error:', err)
+        findUser(function (error, user) {
+          if (error) {
+            chalksay.red('Starting Over - Error:', error)
             ask()
           } else {
             if (user === null) {
-              console.log(chalksay.red('No User Found Under That Email'))
+              console.error(chalksay.red('No User Found Under That Email'))
               ask()
             } else {
-              updatePassword(user, function (err, data) {
-                if (err) {
-                  chalksay.red('Starting Over - Error:', err)
+              updatePassword(user, function (error, data) {
+                if (error) {
+                  chalksay.red('Starting Over - Error:', error)
                   ask()
                 } else {
                   if (data === null) {
@@ -585,9 +586,9 @@ function ask () {
 
         break
       case 'Change User Roles':
-        findUser(function (err, user) {
-          if (err) {
-            chalksay.red('Starting Over - Error:', err)
+        findUser(function (error, user) {
+          if (error) {
+            chalksay.red('Starting Over - Error:', error)
             ask()
           } else {
             if (user === null) {
@@ -596,9 +597,9 @@ function ask () {
             } else {
               inquirer.prompt(questions.roles).then(function (answers) {
                 if (answers.role === 'Add Role') {
-                  addRoles(user, function (err, data) {
-                    if (err) {
-                      chalksay.red('Starting Over - Error:', err)
+                  addRoles(user, function (error, data) {
+                    if (error) {
+                      chalksay.red('Starting Over - Error:', error)
                       ask()
                     } else {
                       if (data === null) {
@@ -611,9 +612,9 @@ function ask () {
                     }
                   })
                 } else {
-                  removeRoles(user, function (err, data) {
-                    if (err) {
-                      chalksay.red('Starting Over - Error:', err)
+                  removeRoles(user, function (error, data) {
+                    if (error) {
+                      chalksay.red('Starting Over - Error:', error)
                       ask()
                     } else {
                       if (data === null) {
@@ -633,9 +634,9 @@ function ask () {
 
         break
       case 'View User':
-        findUser(function (err, user) {
-          if (err) {
-            chalksay.red('Starting Over - Error:', err)
+        findUser(function (error, user) {
+          if (error) {
+            chalksay.red('Starting Over - Error:', error)
             ask()
           } else {
             if (user === null) {

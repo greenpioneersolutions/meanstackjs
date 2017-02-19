@@ -39,8 +39,8 @@ module.exports = {
   asyncHookTimeout: 20000,
 
   before: function (done) {
-    run(MeanStack, function (err) {
-      if (err) console.log(err)
+    run(MeanStack, function (error) {
+      if (error) console.log(error)
       require('./seed.js')(function () {
         done()
       })

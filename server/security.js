@@ -1,4 +1,5 @@
-module.exports = security
+module.exports.middleware = security
+
 var cors = require('cors')
 var contentLength = require('express-content-length-validator')
 var helmet = require('helmet')

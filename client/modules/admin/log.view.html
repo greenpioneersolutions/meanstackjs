@@ -1,0 +1,15 @@
+<div class="row" ng-init="vm.listLogs()">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>Logs</h4>
+            </div>
+            <div class="panel-body">
+                <div ng-repeat="(key,log) in vm.logs">
+                    <h1>{{key}}</h1>
+                    <pre ng-repeat="message in log">{{message|json}}</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

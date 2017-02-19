@@ -1,9 +1,12 @@
+module.exports = setupToolSwagger
+
 var express = require('express')
 var debug = require('debug')('meanstackjs:tools')
 var path = require('path')
 var _ = require('lodash')
 var fs = require('fs')
-module.exports = function (self) {
+
+function setupToolSwagger (self) {
   debug('started setupToolSwagger')
 
   function handleIndex (req, res, next) {

@@ -5,9 +5,9 @@
     .module('app.admin', [])
     .controller('AdminController', AdminController)
 
-  AdminController.$inject = ['$http', '$stateParams', 'AdminUsersFactory', 'AdminErrorsFactory', 'logger', '$location', 'UserFactory']
+  AdminController.$inject = ['$http', '$stateParams', 'AdminUsersFactory', 'AdminErrorsFactory', 'AdminLogsFactory', 'logger', '$location', 'UserFactory']
   /* @ngInject */
-  function AdminController ($http, $stateParams, AdminUsersFactory, AdminErrorsFactory, logger, $location, UserFactory) {
+  function AdminController ($http, $stateParams, AdminUsersFactory, AdminErrorsFactory, AdminLogsFactory, logger, $location, UserFactory) {
     var vm = this
     vm.title = 'System'
     vm.view = $stateParams.view ? 'modules/admin/' + $stateParams.view + '.view.html' : 'modules/admin/home.view.html'
@@ -23,6 +23,13 @@
     vm.listErrors = function () {
       AdminErrorsFactory.query(function (success) {
         vm.errors = success
+      }, function (error) {
+        logger.error(error.statusText, error, error.data)
+      })
+    }
+    vm.listLogs = function () {
+      AdminLogsFactory.get(function (success) {
+        vm.logs = success
       }, function (error) {
         logger.error(error.statusText, error, error.data)
       })

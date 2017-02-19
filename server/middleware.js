@@ -1,39 +1,45 @@
+exports.checkAuthenticated = checkAuthenticated
+exports.isAuthenticated = isAuthenticated
+exports.isAuthorized = isAuthorized
+exports.hasRole = hasRole
+exports.isAdmin = isAdmin
+
 var _ = require('lodash')
 var debug = require('debug')('meanstackjs:middleware')
 var tokenAPI = require('./token.js')
 
-exports.checkAuthenticated = function (req, cb) {
+function checkAuthenticated (req, cb) {
   debug('middleware: checkAuthenticated')
   var token = req.headers.authorization || req.query.token || req.body.token // || req.headers['x-access-token']
   if (req.isAuthenticated()) {
     return cb()
   } else if (token) {
-    tokenAPI.checkKey(token, function (err, user) {
-      if (err) return cb(err)
+    tokenAPI.checkKey(token, function (error, user) {
+      if (error) return cb(error)
       req.user = user
       return cb()
     })
   } else {
     return cb({
       success: false,
-      msg: 'User needs to authenticated'
+      message: 'User needs to authenticated'
     })
   }
 }
 
-exports.isAuthenticated = function (req, res, next) {
+function isAuthenticated (req, res, next) {
   debug('middleware: isAuthenticated')
-  exports.checkAuthenticated(req, function (err) {
-    if (err) return res.status(401).send(err)
+  checkAuthenticated(req, function (error) {
+    if (error) return res.status(401).send(error)
     return next()
   })
 }
 
-exports.isAuthorized = function (name, extra) {
+function isAuthorized (name, extra) {
   return function (req, res, next) {
     debug('middleware: isAuthorized')
-    exports.checkAuthenticated(req, function (err) {
-      if (err) return res.status(401).send(err)
+    checkAuthenticated(req, function (error) {
+      if (error) return res.status(401).send(error)
       var user
       var reqName = req[name]
       if (extra) {
@@ -47,7 +53,7 @@ exports.isAuthorized = function (name, extra) {
           debug('middleware: is Not Authorized')
           return next({
             status: 401,
-            msg: 'User is not Authorized'
+            message: 'User is not Authorized'
           })
         } else {
           debug('middleware: isAuthenticated')
@@ -57,18 +63,18 @@ exports.isAuthorized = function (name, extra) {
         debug('middleware: is Not Authorized ')
         return res.status(401).send({
           success: false,
-          msg: 'User needs to re-authenticated'
+          message: 'User needs to re-authenticated'
         })
       }
     })
   }
 }
 
-exports.hasRole = function (role) {
+function hasRole (role) {
   return function (req, res, next) {
     debug('middleware: hasRole')
-    exports.checkAuthenticated(req, function (err) {
-      if (err) return res.status(401).send(err)
+    checkAuthenticated(req, function (error) {
+      if (error) return res.status(401).send(error)
       if (req.user) {
         if (_.includes(req.user.roles, role)) {
           return next()
@@ -76,16 +82,16 @@ exports.hasRole = function (role) {
       }
       return res.status(403).send({
         success: false,
-        msg: 'Forbidden'
+        message: 'Forbidden'
       })
     })
   }
 }
 
-exports.isAdmin = function (req, res, next) {
+function isAdmin (req, res, next) {
   debug('middleware: isAdmin')
-  exports.checkAuthenticated(req, function (err) {
-    if (err) return res.status(401).send(err)
+  checkAuthenticated(req, function (error) {
+    if (error) return res.status(401).send(error)
     if (req.user) {
       if (_.includes(req.user.roles, 'admin')) {
         return next()

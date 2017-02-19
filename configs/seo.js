@@ -52,8 +52,8 @@ module.exports = {
       self.models.blog.findOne({_id: data.params.id}).populate('user').then(function (blog) {
         data.blog = _.merge(data.blog, blog)
         cb(null, data)
-      }).catch(function (err) {
-        cb(err)
+      }).catch(function (error) {
+        cb(error)
       })
     }
   }

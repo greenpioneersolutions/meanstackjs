@@ -1,3 +1,5 @@
+module.exports.info = build
+
 var _ = require('lodash')
 // var babel = require('babel-core')
 var chalksay = require('chalksay')
@@ -5,7 +7,6 @@ var concat = require('serial-concat-files')
 var debug = require('debug')('meanstackjs:register')
 var fs = require('fs')
 var less = require('less')
-var mongoose = require('mongoose')
 var uglify = require('uglify-js')
 var uglifycss = require('uglifycss')
 var sass = require('node-sass')
@@ -29,10 +30,6 @@ function Register (self, done) {
   this.compileBackendScripts(self)
   // transformBabel > Used to transform files to es6 - commented out till the next release.
   // self.transformBabel()
-  // setupServerModels > Used to set up the mongoose modules.
-  this.setupServerModels(self)
-  // setupServerRoutes > Used to set up the module routes.
-  this.setupServerRoutes(self)
   // renderFrontendFiles > Used to render all of the frontend files based on all the information from above.
   this.renderFrontendFiles(self)
   // updateFrontendCdn > Used to update the files based of if your using a cdn. We Support MAXCDN.
@@ -46,7 +43,7 @@ Register.prototype.getDownloadContents = function (self) {
   self.settings.assets.css.forEach(function (ms) {
     if (validator.isURL(ms)) {
       request({url: ms}, function (error, response, body) {
-        if (error)console.log('Error Downloading Content', error)
+        if (error) self.logger.warn('Error Downloading Content', error)
         fs.writeFileSync(path.join(dir, '../client/styles/downloaded/' + path.basename(ms)), body)
       })
     }
@@ -54,7 +51,7 @@ Register.prototype.getDownloadContents = function (self) {
   self.settings.assets.js.forEach(function (ms) {
     if (validator.isURL(ms)) {
       request({url: ms}, function (error, response, body) {
-        if (error)console.log('Error Downloading Content', error)
+        if (error) self.logger.warn('Error Downloading Content', error)
         fs.writeFileSync(path.join(dir, '../client/scripts/downloaded/' + path.basename(ms)), body)
       })
     }
@@ -129,14 +126,14 @@ Register.prototype.setupFrontendDirectories = function (self) {
   debug('started directories')
 
   // var self = this
-
   function rmdirSync (url) {
     if (pathExists(url)) {
       fs.readdirSync(url).forEach(function (file, index) {
         var curPath = path.resolve(url + '/' + file)
         if (fs.lstatSync(curPath).isDirectory()) {
-          //
-        } else { // delete file
+          // do nothing
+        } else {
+          // delete file
           fs.unlinkSync(curPath)
         }
       })
@@ -281,9 +278,9 @@ Register.prototype.compileFrontendStylesScripts = function (self) {
             self.frontendFilesAggregate.css.push(path.join(dir, '../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css'))
           } else if (j.ext === 'less') {
             var lessContents = fs.readFileSync(path.join(dir, '/../client/modules/' + r.name + '/' + j.orginal), 'utf8')
-            less.render(lessContents, function (err, result) {
-              if (err) {
-                debug(err)
+            less.render(lessContents, function (error, result) {
+              if (error) {
+                debug(error)
               }
               fs.writeFileSync(path.join(dir, '/../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css'), result.css)
               self.frontendFiles.style.less.push({
@@ -350,32 +347,6 @@ Register.prototype.compileBackendScripts = function (self) {
   debug('end compileBackendScripts')
 }
 
-Register.prototype.setupServerModels = function (self) {
-  debug('started createBackendModels')
-  // var self = this
-  self.models = {}
-  self.backendFiles.model.forEach(function (n) {
-    debug('Model: %s - %s', n.name, n.url)
-    self.models[n.name] = mongoose.model(n.name, require(n.url))
-    self.models[n.name].on('index', function (err) {
-      if (err) throw err
-    })
-  })
-  debug('end createBackendModels')
-}
-
-Register.prototype.setupServerRoutes = function (self) {
-  debug('started createBackendRoutes')
-  // var self = this
-
-  self.backendFiles.routes.forEach(function (n) {
-    debug('Route : %s', n.url)
-    require(n.url)(self.app, self.middleware, self.mail, self.settings, self.models)
-  })
-
-  debug('end createBackendRoutes')
-}
-
 Register.prototype.transformBabel = function (self) {
   debug('babel:' + self.settings.babel.active)
   // var self = this
@@ -416,8 +387,8 @@ Register.prototype.renderFrontendFiles = function (self) {
   self.settings.assets.css.forEach(function (ms) {
     self.frontendFilesFinal.css.unshift(ms)
     if (validator.isURL(ms)) {
-      fs.access(path.join(dir, '../client/styles/downloaded/' + path.basename(ms)), fs.constants.R_OK | fs.constants.W_OK, (err) => {
-        if (err) {
+      fs.access(path.join(dir, '../client/styles/downloaded/' + path.basename(ms)), fs.constants.R_OK | fs.constants.W_OK, function (error) {
+        if (error) {
           chalksay.red('Please Restart your system')
           chalksay.red('The system is still downloading \n')
           chalksay.red('source:' + ms)
@@ -433,8 +404,8 @@ Register.prototype.renderFrontendFiles = function (self) {
   self.settings.assets.js.forEach(function (ms) {
     self.frontendFilesFinal.js.unshift(ms)
     if (validator.isURL(ms)) {
-      fs.access(path.join(dir, '../client/scripts/downloaded/' + path.basename(ms)), fs.constants.R_OK | fs.constants.W_OK, (err) => {
-        if (err) {
+      fs.access(path.join(dir, '../client/scripts/downloaded/' + path.basename(ms)), fs.constants.R_OK | fs.constants.W_OK, function (error) {
+        if (error) {
           chalksay.red('Please Restart your system')
           chalksay.red('The system is still downloading\n')
           chalksay.red('source:' + ms)
@@ -466,9 +437,9 @@ Register.prototype.renderFrontendFiles = function (self) {
         maxLineLen: 500
       }
     )
-    fs.writeFile(path.join(dir, '../client/styles/compiled/concat.min.css'), uglifiedcss, function (err) {
-      if (err) {
-        debug(err)
+    fs.writeFile(path.join(dir, '../client/styles/compiled/concat.min.css'), uglifiedcss, function (error) {
+      if (error) {
+        debug(error)
       } else {
         debug('Script generated and saved:', 'concat.min.css')
       }
@@ -476,9 +447,9 @@ Register.prototype.renderFrontendFiles = function (self) {
     var uglifiedjs = uglify.minify(self.frontendFilesAggregate.js, {
       mangle: false
     })
-    fs.writeFile(path.join(dir, '../client/scripts/compiled/concat.min.js'), uglifiedjs.code, function (err) {
-      if (err) {
-        debug(err)
+    fs.writeFile(path.join(dir, '../client/scripts/compiled/concat.min.js'), uglifiedjs.code, function (error) {
+      if (error) {
+        debug(error)
       } else {
         debug('Script generated and saved:', 'concat.min.js')
       }
@@ -516,4 +487,3 @@ function build (options) {
   return new Register(options)
 }
 
-module.exports = build

@@ -6,8 +6,8 @@ describe('USERS', function () {
     it('should be returning unauthenticated', function (done) {
       request('localhost:3000/')
         .get('api/user/authenticate')
-        .expect(200, function (err, res) {
-          if (err) return done(err)
+        .expect(200, function (error, res) {
+          if (error) return done(error)
           assert.equal(res.body.success, false)
           assert.equal(res.body.authenticated, false)
           assert.equal(res.body.redirect, false)
@@ -17,8 +17,8 @@ describe('USERS', function () {
     it('should be returning token', function (done) {
       request('localhost:3000/')
         .get('api/user/token')
-        .expect(401, function (err, res) {
-          if (err) return done(err)
+        .expect(401, function (error, res) {
+          if (error) return done(error)
           assert.equal(res.body.success, false)
           done()
         })
