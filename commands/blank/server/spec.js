@@ -1,5 +1,5 @@
-var assert = require('chai').assert
-var request = require('supertest')
+// var assert = require('chai').assert
+// var request = require('supertest')
 
-describe('<%= Name %>', function () {
-})
+// describe('<%= Name %>', function () {
+// })

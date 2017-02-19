@@ -1,3 +1,5 @@
+module.exports = setupToolLivereload
+
 var less = require('less')
 var chalksay = require('chalksay')
 var chokidar = require('chokidar')
@@ -6,7 +8,8 @@ var debug = require('debug')('meanstackjs:tools')
 var path = require('path')
 var fs = require('fs')
 var _ = require('lodash')
-module.exports = function (self) {
+
+function setupToolLivereload (self) {
   debug('started setupToolLivereload')
 
   if (self.environment === 'development') {

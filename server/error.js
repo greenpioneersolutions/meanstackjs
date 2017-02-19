@@ -1,70 +1,18 @@
 exports.log = log
 exports.middleware = middleware
 
-var chalksay = require('chalksay')
 var httpStatus = require('http-status-codes')
 var debug = require('debug')('meanstackjs:error')
-var mongoose = require('mongoose')
-var ErrorsModel = null
-
-function checkError (err, cb) {
-  if (err) {
-    chalksay.red('Error trying to record error', err.stack)
-    cb && cb(err)
-    return true
-  }
-}
+var logger = require('./logger.js').logger
 
 function log (error, cb) {
   if (typeof cb !== 'function') {
     cb = function () {}
   }
-  console.log(error)
-  try {
-    ErrorsModel = ErrorsModel || mongoose.model('error')
-  } catch (e) {
-    chalksay.red('This Error happend before mongoose could set up or you have deleted model')
-    chalksay.red('This Uncaught Exceptions will not be tracked in the database')
-    chalksay.red('Reason:')
-    chalksay.red(e.stack)
-    chalksay.red('Original error:')
-    chalksay.red(error.stack)
-    return cb(true)
-  }
-
   if (!(error instanceof Error)) {
     error = new Error(error)
   }
-  // error instanceof Error - maybe implement something last that is more specific to only Error's
-  ErrorsModel.findOne({
-    message: error.message
-  }, function (err, data) {
-    checkError(err)
-
-    if (!data) {
-      var errors = ErrorsModel({
-        code: error.code,
-        message: error.message,
-        name: error.name,
-        stack: error.stack,
-        type: error.type || 'exception',
-        history: [Date.now()]
-      })
-      errors.save(function (err) {
-        if (checkError(err, cb)) { return }
-        chalksay.red('New Error ^')
-        cb(false)
-      })
-    } else {
-      data.count++
-      data.history.push(Date.now())
-      data.save(function (err) {
-        if (checkError(err, cb)) { return }
-        chalksay.red('Previous Error ^')
-        cb(false)
-      })
-    }
-  })
+  logger.error(error.message, error)
 }
 
 function jsonStringify (obj) {
@@ -72,25 +20,25 @@ function jsonStringify (obj) {
 }
 
 function middleware (self) {
-  self.app.use(function (err, req, res, next) {
-    var code = typeof err.status === 'number' ? err.status : 500
-    var message = err.message || err.msg
+  self.app.use(function (error, req, res, next) {
+    var code = typeof error.status === 'number' ? error.status : 500
+    var message = error.message || error.msg
     var type = 'express'
     var ip = req.ip || req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.connection.remoteAddress
 
-    if (err.name === 'ValidationError') {
+    if (error.name === 'ValidationError') {
       code = 400
       message = 'Validation Error'
       type = 'mongo'
     }
-    if (err.name === 'CastError') {
+    if (error.name === 'CastError') {
       code = 400
       message = 'Invalid Cast'
       type = 'mongo'
     }
-    if (err.message === 'MongoError') {
+    if (error.message === 'MongoError') {
       code = 400
-      if (err.code === 11000) message = 'Duplicate key error '
+      if (error.code === 11000) message = 'Duplicate key error '
       else message = 'Database Error'
       type = 'mongo'
     }
@@ -107,14 +55,14 @@ function middleware (self) {
       'Params:\n' + '\n' + jsonStringify(req.params) + '\n \n' +
       'Body:\n' + '\n' + jsonStringify(req.body) + '\n \n' +
       'Session:\n' + '\n' + jsonStringify(req.session) + '\n \n' +
-      'Stack:\n' + err.stack + '\n'
+      'Stack:\n' + error.stack + '\n'
 
     res.status(code)
 
     if (code >= 500) {
-      err.type = type
-      err.stack = text
-      log(err)
+      error.type = type
+      error.stack = text
+      log(error)
     }
 
     var renderData = {

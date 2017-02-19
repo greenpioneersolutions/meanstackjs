@@ -1,3 +1,5 @@
+module.exports = SocketIO
+
 var express = require('express')
 var debug = require('debug')('meanstackjs:socketio')
 var fs = require('fs')
@@ -5,7 +7,7 @@ var settings = require('./configs/settings.js').get()
 
 function SocketIO (opts, done) {
   var self = this
-
+  self.logger = require('./server/logger.js').logger
   self.app = express()
   if (settings.https.active) {
     self.socketServer = require('https').createServer({
@@ -28,7 +30,7 @@ function SocketIO (opts, done) {
   self.socketServer.listen(self.app.get('port'))
 
   debug('Socketio listening on port %d', self.app.get('port'))
-  console.log('Socketio listening on port %d', self.app.get('port'))
+  self.logger.info('Socketio listening on port %d', self.app.get('port'))
   done(null)
 }
 
@@ -36,5 +38,3 @@ var run = require('./run.js')
 if (!module.parent) {
   run(SocketIO)
 }
-
-module.exports = SocketIO

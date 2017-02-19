@@ -1,4 +1,4 @@
-module.exports = headers
+module.exports.middleware = headers
 
 function headers (self) {
   self.app.use(function (req, res, next) {

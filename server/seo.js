@@ -3,8 +3,9 @@ module.exports = Seo
 var pathToRegexp = require('path-to-regexp')
 var _ = require('lodash')
 var ejs = require('ejs')
-// ADD AUTH TO ROUTES
+
 function Seo (self, req, path, cb) {
+  // ADD AUTH TO ROUTES
   var matched = false
   if (typeof path === 'function') {
     cb = path
@@ -27,8 +28,8 @@ function Seo (self, req, path, cb) {
         obj.params[keys[i - 1].name] = match[i]
       }
       if (pathSettings.hook) {
-        pathSettings.hook(self, obj, function (err, data) {
-          if (err) {
+        pathSettings.hook(self, obj, function (error, data) {
+          if (error) {
             return cb(self.settings.html)
           }
           if (!data) {
@@ -54,14 +55,14 @@ function compile (type, seo, data) {
       var propTemplate = _.template(value, type.options)
       try {
         compiled[prop] = propTemplate(data)
-      } catch (err) {
-        console.log(err.message, ' in seo compile lodash')
+      } catch (error) {
+        self.logger.warn(error.message, ' in seo compile lodash')
       }
     } else if (type.name === 'ejs') {
       try {
         compiled[prop] = ejs.render(value, data, type.options)
-      } catch (err) {
-        console.log(err.message, ' in seo compile ejs')
+      } catch (error) {
+        self.logger.warn(error.message, ' in seo compile ejs')
       }
     }
   })

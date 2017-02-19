@@ -1,6 +1,6 @@
 var <%= name %> = require('./<%= name %>.controller.js')
 
-module.exports = function (app, auth, mail, settings, models) {
+module.exports = function (app, auth, mail, settings, models, logger) {
   // GET
   app.get('/api/<%= name %>/', <%= name %>.get<%= Name %>)
   app.get('/api/<%= name %>/:<%= name %>Id', <%= name %>.get<%= Name %>ById)

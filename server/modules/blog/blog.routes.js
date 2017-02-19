@@ -1,6 +1,6 @@
 var blog = require('./blog.controller.js')
 
-module.exports = function (app, auth, mail, settings, models) {
+module.exports = function (app, auth, mail, settings, models, logger) {
   // GET
   app.get('/api/blog/', blog.getBlog)
   app.get('/api/blog/:blogId', blog.getBlogById)

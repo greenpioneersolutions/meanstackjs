@@ -7,10 +7,10 @@
   "author": "Green Pioneer <info@greenpioneersolutions.com>",
   "license": "MIT",
   "dependencies": {
-    "agenda": "^0.9.0",
-    "agendash": "^0.4.0",
-    "mongodb-backup": "^1.6.8",
-    "mongodb-restore": "^1.6.1"
+    "agenda": "0.9.0",
+    "agendash": "0.4.0",
+    "mongodb-backup": "1.6.8",
+    "mongodb-restore": "1.6.1"
   },
   "devDependencies": {},
   "repository": {

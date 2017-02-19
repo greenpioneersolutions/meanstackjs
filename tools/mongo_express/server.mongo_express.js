@@ -1,5 +1,6 @@
+module.exports = MongoExpress
+
 var express = require('express')
-// var settings = require('./configs/settings.js').get()
 var debug = require('debug')('meanstackjs:mongoExpress')
 
 function MongoExpress (self, done) {
@@ -129,9 +130,8 @@ function MongoExpress (self, done) {
   self.appMongoExpress.set('port', self.settings.mongoexpress.port)
   self.appMongoExpress.use('/', require('mongo-express/lib/middleware')(mongoexpress))
   self.appMongoExpress.listen(self.appMongoExpress.get('port'), function () {
-    console.log('Mongo-Express server listening on port %d ', self.appMongoExpress.get('port'))
+    self.logger.info('Mongo-Express server listening on port %d ', self.appMongoExpress.get('port'))
     debug('Express server listening on port %d', self.appMongoExpress.get('port'))
   })
   done(null)
 }
-module.exports = MongoExpress

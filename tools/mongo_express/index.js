@@ -1,5 +1,8 @@
+module.exports = setupToolNightwatch
+
 var debug = require('debug')('meanstackjs:tools')
-module.exports = function (self) {
+
+function setupToolNightwatch (self) {
   debug('started setupToolNightwatch')
   if (self.environment === 'development') {
     var MongoExpress = require('./server.mongo_express.js')

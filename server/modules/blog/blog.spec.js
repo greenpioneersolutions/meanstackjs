@@ -7,8 +7,8 @@ describe('BLOG', function () {
     it('should be returning array', function (done) {
       request('localhost:3000/')
         .get('api/blog')
-        .expect(200, function (err, res) {
-          if (err) return done(err)
+        .expect(200, function (error, res) {
+          if (error) return done(error)
           assert.isArray(res.body.blogs)
           blogid = res.body.blogs[0]._id
           done()
@@ -17,8 +17,8 @@ describe('BLOG', function () {
     it('should be returning object', function (done) {
       request('localhost:3000/')
         .get('api/blog/' + blogid)
-        .expect(200, function (err, res) {
-          if (err) return done(err)
+        .expect(200, function (error, res) {
+          if (error) return done(error)
           assert.isObject(res.body)
           done()
         })

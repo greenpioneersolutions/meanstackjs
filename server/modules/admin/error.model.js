@@ -1,38 +1,19 @@
 var mongoose = require('mongoose')
 
 var errorSchema = mongoose.Schema({
-  created: {
+  timestamp: {
     type: Date,
     default: Date.now
   },
-  code: {
+  level: {
     type: String,
-    default: 'No Code'
+    default: 'error'
   },
   message: {
     type: String,
     default: 'No message'
   },
-  name: {
-    type: String,
-    default: 'No name'
-  },
-  stack: {
-    type: String,
-    default: 'No stack'
-  },
-  type: {
-    type: String,
-    default: 'exception'
-  },
-  count: {
-    type: Number,
-    default: 1
-  },
-  history: [{
-    type: Date,
-    default: Date.now
-  }]
+  meta: {}
 })
 
 module.exports = errorSchema
