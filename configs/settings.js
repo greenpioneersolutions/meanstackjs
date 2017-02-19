@@ -192,7 +192,7 @@ var baseLine = {
         return _.toString(value)
       }
     },
-    errorFormatter: function (param, msg, value) {
+    errorFormatter: function (param, message, value) {
       var namespace = param.split('.')
       var root = namespace.shift()
       var formParam = root
@@ -202,7 +202,7 @@ var baseLine = {
       }
       return {
         param: formParam,
-        msg: msg,
+        message: message,
         value: value
       }
     }

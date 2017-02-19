@@ -1,3 +1,5 @@
+module.exports = SocketIO
+
 var express = require('express')
 var debug = require('debug')('meanstackjs:socketio')
 var fs = require('fs')
@@ -36,5 +38,3 @@ var run = require('./run.js')
 if (!module.parent) {
   run(SocketIO)
 }
-
-module.exports = SocketIO

@@ -11,8 +11,8 @@ exports.get<%= Name %> = function (req, res, next) {
         .find()
         .exec(cb)
     }
-  }, function (err, results) {
-    if (err) return next(err)
+  }, function (error, results) {
+    if (error) return next(error)
     return res.status(200).send(results.<%= name %>s)
   })
 }
@@ -28,20 +28,20 @@ exports.post<%= Name %> = function (req, res, next) {
   if (errors) {
     return res.status(400).send({
       success: false,
-      msg: errors[0].msg,
+      message: errors[0].message,
       redirect: '/'
     })
   }
   req.body.user = req.user._id
-  <%= name %>s.create(req.body, function (err, data) {
-    if (err) return next(err)
+  <%= name %>s.create(req.body, function (error, data) {
+    if (error) return next(error)
     return res.status(201).send(data)
   })
 }
 exports.put<%= Name %> = function (req, res, next) {
   req.<%= name %> = _.merge(req.<%= name %>, req.body)
-  req.<%= name %>.save(function (err) {
-    if (err) return next(err)
+  req.<%= name %>.save(function (error) {
+    if (error) return next(error)
     return res.status(200).send(req.<%= name %>)
   })
 }
@@ -57,7 +57,7 @@ exports.param<%= Name %> = function (req, res, next, id) {
   if (errors) {
     return res.status(400).send({
       success: false,
-      msg: errors[0].msg,
+      message: errors[0].message,
       redirect: '/'
     })
   }
@@ -67,8 +67,8 @@ exports.param<%= Name %> = function (req, res, next, id) {
         .findOne({_id: id})
         .exec(cb)
     }
-  }, function (err, results) {
-    if (err) return next(err)
+  }, function (error, results) {
+    if (error) return next(error)
     req.<%= name %> = results.<%= name %>
     next()
   })

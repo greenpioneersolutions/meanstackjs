@@ -110,13 +110,13 @@ userSchema.pre('save', function (next) {
     return next()
   }
   if (user.isModified('password')) {
-    bcrypt.genSalt(10, function (err, salt) {
-      if (err) {
-        return next(err)
+    bcrypt.genSalt(10, function (error, salt) {
+      if (error) {
+        return next(error)
       }
-      bcrypt.hash(user.password, salt, null, function (err, hash) {
-        if (err) {
-          return next(err)
+      bcrypt.hash(user.password, salt, null, function (error, hash) {
+        if (error) {
+          return next(error)
         }
         user.password = hash
         next()
@@ -133,8 +133,8 @@ userSchema.post('save', function (user) {
     message.to = user.email
     message.subject = settings.email.templates.welcome.subject
     message.text = settings.email.templates.welcome.text(user.profile.name.split(' ')[0])
-    mail.send(message, function (err) {
-      if (err) throw err
+    mail.send(message, function (error) {
+      if (error) throw error
     })
   }
 })
@@ -142,15 +142,15 @@ userSchema.post('save', function (user) {
 userSchema.methods.comparePassword = function (candidatePassword, cb) {
   debug('start comparePassword')
   var user = this
-  bcrypt.compare(candidatePassword, this.password, function (err, res) {
+  bcrypt.compare(candidatePassword, this.password, function (error, res) {
     if (res) {
       user.lastLoggedIn = Date.now()
-      user.save(function (err) {
-        if (err) self.logger.warn(err)
+      user.save(function (error) {
+        if (error) self.logger.warn(error)
       })
     }
     debug('end comparePassword')
-    cb(err, res)
+    cb(error, res)
   })
 }
 userSchema.set('toObject', {

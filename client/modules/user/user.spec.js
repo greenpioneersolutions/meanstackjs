@@ -78,8 +78,8 @@ describe('USER Testing', function () {
       try {
         UserFactory.login()
         $httpBackend.flush()
-      } catch (err) {
-        expect(err).to.exist
+      } catch (error) {
+        expect(error).to.exist
       }
     })
 
@@ -89,8 +89,8 @@ describe('USER Testing', function () {
       try {
         UserFactory.signup()
         $httpBackend.flush()
-      } catch (err) {
-        expect(err).to.exist
+      } catch (error) {
+        expect(error).to.exist
       }
     })
 

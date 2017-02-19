@@ -1,19 +1,22 @@
-module.exports = routes
+module.exports.build = routes
 
 var express = require('express')
 var ejs = require('ejs')
 var path = require('path')
 var seo = require('./seo')
+var debug = require('debug')('meanstackjs:routes')
+var glob = require('glob')
 
-function nothingFoundHandler (msg) {
+function nothingFoundHandler (message) {
   return function (req, res) {
     res.status(400).send({
-      error: msg
+      error: message
     })
   }
 }
 
 function routes (self) {
+  debug('started createBackendRoutes')
     // {
   //   app: self.app,
   //   settings: self.settings,
@@ -37,6 +40,11 @@ function routes (self) {
   //     self.app.use(m.route, m.app)
   //   })
   // })
+  var files = glob.sync('server/modules/**/*.routes.js')
+  files.forEach(function (router) {
+    debug('Route : %s', router)
+    require('../' + router)(self.app, self.middleware, self.mail, self.settings, self.models, self.logger)
+  })
   self.app.use(express.static(path.join(self.dir, 'client/'), {
     maxAge: 31557600000
   }))
@@ -62,10 +70,11 @@ function routes (self) {
         user: req.user ? req.user : {}
       }, {
         cache: true
-      }, function (err, str) {
-        if (err) next(err)
+      }, function (error, str) {
+        if (error) next(error)
         res.send(str)
       })
     })
   })
+  debug('end createBackendRoutes')
 }

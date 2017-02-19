@@ -1,32 +1,34 @@
+exports.serializeUser = serializeUser
+exports.deserializeUser = deserializeUser
+
 var LocalStrategy = require('passport-local').Strategy
 var mongoose = require('mongoose')
-
 var debug = require('debug')('meanstackjs:passport')
-// Passport serialize user function.
-exports.serializeUser = function (user, done) {
+
+function serializeUser (user, done) { // Passport serialize user function.
   process.nextTick(function () {
     done(null, user.id)
   })
 }
-// Passport deserialize user function.
-exports.deserializeUser = function (id, done) {
+
+function deserializeUser (id, done) { // Passport deserialize user function.
   var User = mongoose.model('users')
   User.findOne({
     _id: id
-  }, '-password', function (err, user) {
-    done(err, user)
+  }, '-password', function (error, user) {
+    done(error, user)
   })
 }
-// Sign in using Email and Password.
-exports.passportStrategy = new LocalStrategy({ usernameField: 'email' }, function (email, password, done) {
+
+exports.passportStrategy = new LocalStrategy({ usernameField: 'email' }, function (email, password, done) { // Sign in using Email and Password.
   var User = mongoose.model('users')
   email = email.toLowerCase()
   User.findOne({
     email: email
-  }, function (err, user) {
-    if (err) {
-      debug('passport: Error ' + err)
-      return done(err)
+  }, function (error, user) {
+    if (error) {
+      debug('passport: Error ' + error)
+      return done(error)
     }
     if (!user) {
       debug('passport: Email ' + email + ' not found')
@@ -34,9 +36,9 @@ exports.passportStrategy = new LocalStrategy({ usernameField: 'email' }, functio
         message: 'Email ' + email + ' not found'
       })
     }
-    user.comparePassword(password, function (err, isMatch) {
-      if (err) {
-        return done(err)
+    user.comparePassword(password, function (error, isMatch) {
+      if (error) {
+        return done(error)
       }
       if (isMatch) {
         debug('passport: Login isMatch')
@@ -68,35 +70,35 @@ exports.passportStrategy = new LocalStrategy({ usernameField: 'email' }, functio
 //     function (req, iss, sub, profile, accessToken, refreshToken, params, done) {
 //       var User = mongoose.model('users')
 //       if (!profile.oid) {
-//         return done({status: 400, msg: 'No oid found'}, null)
+//         return done({status: 400, message: 'No oid found'}, null)
 //       }
 //       if (req.user) {
-//         User.findOne({ 'azure.oid': profile.oid }, function (err, existingUser) {
-//           if (err) return done(err)
+//         User.findOne({ 'azure.oid': profile.oid }, function (error, existingUser) {
+//           if (error) return done(error)
 //           if (existingUser) {
 //             existingUser.azure.token = accessToken
 //             existingUser.azure.refreshToken = refreshToken
-//             existingUser.save(function (err) {
-//               if (err) return done(err)
-//               done(err, existingUser)
+//             existingUser.save(function (error) {
+//               if (error) return done(error)
+//               done(error, existingUser)
 //             })
 //           } else {
-//             User.findById(req.user._id,function (err, user) {
-//               if (err) { return done(err) }
+//             User.findById(req.user._id,function (error, user) {
+//               if (error) { return done(error) }
 //               user.azure = {
 //                 token: accessToken,
 //                 refreshToken: refreshToken,
 //                 oid: profile.oid
 //               }
-//               user.save(function (err) {
-//                 if (err) return done(err)
-//                 done(err, user)
+//               user.save(function (error) {
+//                 if (error) return done(error)
+//                 done(error, user)
 //               })
 //             })
 //           }
 //         })
 //       } else {
-//         done({status: 400, msg: 'There is no account to link your azure account too.' })
+//         done({status: 400, message: 'There is no account to link your azure account too.' })
 //       }
 //     }
 //   )

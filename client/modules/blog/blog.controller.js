@@ -25,7 +25,7 @@
         //  window.location.href
         $location.url('/blog/list')
       }, function (error) {
-        logger.error(error.data.msg || error.data.message, error, 'Blog')
+        logger.error(error.data.message, error, 'Blog')
       })
     }
     vm.find = function () {
@@ -34,7 +34,7 @@
       }, function (success) {
         vm.blog = success
       }, function (error) {
-        logger.error(error.data.msg || error.data.message, error, 'Blog')
+        logger.error(error.data.message, error, 'Blog')
       })
     }
     vm.list = function () {
@@ -42,7 +42,7 @@
         vm.blogs = success.blogs
         vm.count = success.count
       }, function (error) {
-        logger.error(error.data.msg || error.data.message, error, 'Blog')
+        logger.error(error.data.message, error, 'Blog')
       })
     }
     vm.update = function (validated) {
@@ -57,7 +57,7 @@
           $location.url('/blog/view/' + $stateParams.id)
         },
         function (error) {
-          logger.error(error.data.msg || error.data.message, error, 'Blog')
+          logger.error(error.data.message, error, 'Blog')
         })
     }
     vm.delete = function (blogId) {
@@ -76,7 +76,7 @@
             }
           },
           function (error) {
-            logger.error(error.data.msg || error.data.message, error, 'Blog')
+            logger.error(error.data.message, error, 'Blog')
           })
       }
     }

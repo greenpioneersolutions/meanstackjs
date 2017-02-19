@@ -15,7 +15,7 @@ var <%= name %>Schema = mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.ObjectId,
-    ref: 'user'
+    ref: 'users'
   }
 })
 

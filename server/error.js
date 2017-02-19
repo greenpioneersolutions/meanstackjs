@@ -20,25 +20,25 @@ function jsonStringify (obj) {
 }
 
 function middleware (self) {
-  self.app.use(function (err, req, res, next) {
-    var code = typeof err.status === 'number' ? err.status : 500
-    var message = err.message || err.msg
+  self.app.use(function (error, req, res, next) {
+    var code = typeof error.status === 'number' ? error.status : 500
+    var message = error.message || error.msg
     var type = 'express'
     var ip = req.ip || req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.connection.remoteAddress
 
-    if (err.name === 'ValidationError') {
+    if (error.name === 'ValidationError') {
       code = 400
       message = 'Validation Error'
       type = 'mongo'
     }
-    if (err.name === 'CastError') {
+    if (error.name === 'CastError') {
       code = 400
       message = 'Invalid Cast'
       type = 'mongo'
     }
-    if (err.message === 'MongoError') {
+    if (error.message === 'MongoError') {
       code = 400
-      if (err.code === 11000) message = 'Duplicate key error '
+      if (error.code === 11000) message = 'Duplicate key error '
       else message = 'Database Error'
       type = 'mongo'
     }
@@ -55,14 +55,14 @@ function middleware (self) {
       'Params:\n' + '\n' + jsonStringify(req.params) + '\n \n' +
       'Body:\n' + '\n' + jsonStringify(req.body) + '\n \n' +
       'Session:\n' + '\n' + jsonStringify(req.session) + '\n \n' +
-      'Stack:\n' + err.stack + '\n'
+      'Stack:\n' + error.stack + '\n'
 
     res.status(code)
 
     if (code >= 500) {
-      err.type = type
-      err.stack = text
-      log(err)
+      error.type = type
+      error.stack = text
+      log(error)
     }
 
     var renderData = {

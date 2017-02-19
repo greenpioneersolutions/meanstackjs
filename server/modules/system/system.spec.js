@@ -6,8 +6,8 @@ describe('SYSTEM', function () {
     it('should be returning object', function (done) {
       request('localhost:3000/')
         .get('api/testing')
-        .expect(200, function (err, res) {
-          if (err) return done(err)
+        .expect(200, function (error, res) {
+          if (error) return done(error)
           assert.isObject(res.body.query)
           done()
         })

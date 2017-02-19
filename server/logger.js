@@ -72,8 +72,8 @@ function middleware (self) {
   if (self.settings.logger) {
     self.app.use(morgan(self.settings.logger, {
       stream: {
-        write: function (msg) {
-          self.logger.info(msg)
+        write: function (message) {
+          self.logger.info(message)
         }
       }
     }))

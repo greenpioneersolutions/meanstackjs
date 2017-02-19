@@ -34,8 +34,8 @@ module.exports = function (app, auth, mail, settings, models, logger) {
       start: req.query.start || 0,
       order: req.query.order || 'desc',
       fields: req.query.fields || undefined
-    }, function (err, results) {
-      if (err) return next(err)
+    }, function (error, results) {
+      if (error) return next(error)
       if (req.query.select) return res.status(200).send(results[req.query.select])
       return res.status(200).send(results)
     })

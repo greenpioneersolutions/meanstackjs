@@ -1,11 +1,11 @@
 module.exports = Mean
+
 var debug = require('debug')('meanstackjs:server')
 var forceSSL = require('express-force-ssl')
 var fs = require('fs')
-var glob = require('glob')
 var https = require('https')
-var _ = require('lodash')
 var run = require('./run.js')
+var express = require('express')
 
 function Mean (opts, done) {
   var self = this
@@ -18,34 +18,29 @@ function Mean (opts, done) {
   self.port = self.opts.port || self.settings.https.active ? self.settings.https.port : self.settings.http.port
   self.middleware = require('./server/middleware.js')
   self.mail = require('./server/mail.js')
-  // Connect to MongoDb
-  require('./server/db.js')(self)
-  // Start of the build process
+  self.app = express()
+  // Connect to MongoDb & Register mongoose schemas
+  require('./server/db.js').mongoDB(self)
+  // setupRegister > Used to gather all modules to gether and to register them properly
+  require('./server/register.js').info(self)
   // setupExpressConfigs > Used to set up expressjs initially, middleware & passport.
-  require('./server/config.js')(self)
+  require('./server/config.js').middleware(self)
+  // setupAuthentication > Used to set up passport authentication & sessions
+  require('./server/authentication.js').passport(self)
   // setupExpressSecurity > Used to set up helmet, hpp, cors & content length.
-  require('./server/security.js')(self)
+  require('./server/security.js').middleware(self)
   // setupExpressHeaders > Used to set up the headers that go out on every route.
-  require('./server/headers.js')(self)
+  require('./server/headers.js').middleware(self)
   // setupExpressLogger > Used to set up our morgan logger & debug statements on all routes.
   require('./server/logger.js').middleware(self)
   // setupTools > Used to set up every tool in the tools directory.
-  var files = glob.sync('./tools/*/package.json')
-  files.forEach(function (n, k) {
-    var packageInfo = require(n)
-    if (packageInfo.active || _.isUndefined(packageInfo.active)) {
-      var mainPath = _.replace(n, 'package.json', packageInfo.main)
-      require(mainPath)(self)
-    }
-  })
-  // setupRegister > Used to gather all modules to gether and to register them properly
-  require('./server/register.js')(self)
+  require('./server/tools.js').setup(self)
   // setupStaticRoutes > Used to set up all system static routes including the main '/*' route with ejs templating.
-  require('./server/routes.js')(self)
+  require('./server/routes.js').build(self)
   // setupExpressErrorHandler > Used to set up our customer error handler in the server folder. NOTE: This goes after routes because we do not want it potentally default to express error handler
   require('./server/error.js').middleware(self)
   // purgeMaxCdn - *** OPTIONAL ***  > Used to purge the max cdn cache of the file. We Support MAXCDN
-  require('./server/cdn.js')(self)
+  require('./server/cdn.js').maxCDN(self)
   // auto  - connectMongoDb :  server > Used to finsh the final set up of the server. at the same time we start connecting to mongo and turning on the server.
 
   if (self.settings.https.active) {

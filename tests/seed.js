@@ -19,8 +19,8 @@ function seed (cb) {
           })
         }
       },
-        function (err, results) {
-          if (err) throw err
+        function (error, results) {
+          if (error) throw error
           callback(null, true)
         })
     },
@@ -126,8 +126,8 @@ function seed (cb) {
         callback(null, blogs)
       })
     }]
-  }, function (err, results) {
-    if (err) throw err
+  }, function (error, results) {
+    if (error) throw error
     cb(results)
   })
 }

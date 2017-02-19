@@ -1,5 +1,6 @@
+module.exports = MongoExpress
+
 var express = require('express')
-// var settings = require('./configs/settings.js').get()
 var debug = require('debug')('meanstackjs:mongoExpress')
 
 function MongoExpress (self, done) {
@@ -134,4 +135,3 @@ function MongoExpress (self, done) {
   })
   done(null)
 }
-module.exports = MongoExpress

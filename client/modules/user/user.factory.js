@@ -25,7 +25,7 @@
           }
           $timeout(deferred.resolve(success.data))
         } else {
-          $timeout(deferred.reject({msg: 'No Response'}))
+          $timeout(deferred.reject({message: 'No Response'}))
         }
       }, function (error) {
         $timeout(deferred.reject(error))
@@ -98,7 +98,7 @@
     }
 
     UserClass.prototype.onIdFail = function (error) {
-      logger.error(error.data.msg || error.data.message, error, 'Login/Signup')
+      logger.error(error.data.message, error, 'Login/Signup')
       $rootScope.$emit('loginfailed')
       $rootScope.$emit('registerfailed')
       return ({
@@ -144,7 +144,7 @@
               vm.tokenCheck = false
             }
           }, function (response) {
-            logger.error(response.data.msg)
+            logger.error(response.data.message)
             vm.tokenCheck = true
           }
       )
