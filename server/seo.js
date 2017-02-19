@@ -4,7 +4,8 @@ var pathToRegexp = require('path-to-regexp')
 var _ = require('lodash')
 var ejs = require('ejs')
 
-function Seo (self, req, path, cb) { // ADD AUTH TO ROUTES
+function Seo (self, req, path, cb) {
+  // ADD AUTH TO ROUTES
   var matched = false
   if (typeof path === 'function') {
     cb = path

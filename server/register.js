@@ -126,14 +126,14 @@ Register.prototype.setupFrontendDirectories = function (self) {
   debug('started directories')
 
   // var self = this
-
   function rmdirSync (url) {
     if (pathExists(url)) {
       fs.readdirSync(url).forEach(function (file, index) {
         var curPath = path.resolve(url + '/' + file)
         if (fs.lstatSync(curPath).isDirectory()) {
-          //
-        } else { // delete file
+          // do nothing
+        } else {
+          // delete file
           fs.unlinkSync(curPath)
         }
       })

@@ -9,6 +9,7 @@ var express = require('express')
 
 function Mean (opts, done) {
   var self = this
+  // setupVariables > used throughout the entire system that dont require db access
   self.dir = __dirname
   self.opts = opts
   self.run = run
@@ -16,11 +17,12 @@ function Mean (opts, done) {
   self.environment = require('./configs/environment.js').get()
   self.settings = require('./configs/settings.js').get()
   self.port = self.opts.port || self.settings.https.active ? self.settings.https.port : self.settings.http.port
-  self.middleware = require('./server/middleware.js')
-  self.mail = require('./server/mail.js')
   self.app = express()
   // Connect to MongoDb & Register mongoose schemas
   require('./server/db.js').mongoDB(self)
+  // setupVariables > that require access to the db
+  self.middleware = require('./server/middleware.js')
+  self.mail = require('./server/mail.js')
   // setupRegister > Used to gather all modules to gether and to register them properly
   require('./server/register.js').info(self)
   // setupExpressConfigs > Used to set up expressjs initially, middleware & passport.
@@ -42,7 +44,6 @@ function Mean (opts, done) {
   // purgeMaxCdn - *** OPTIONAL ***  > Used to purge the max cdn cache of the file. We Support MAXCDN
   require('./server/cdn.js').maxCDN(self)
   // auto  - connectMongoDb :  server > Used to finsh the final set up of the server. at the same time we start connecting to mongo and turning on the server.
-
   if (self.settings.https.active) {
     https.createServer({
       key: fs.readFileSync(self.settings.https.key),

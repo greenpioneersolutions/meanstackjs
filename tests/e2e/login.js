@@ -83,7 +83,7 @@ module.exports = {
       .click('button[type=submit]')
       .pause(2000)
       .waitForElementVisible('#toast-container', 2000)
-      .assert.containsText('#toast-container', 'Authentication failed. User not found.')
+      .assert.containsText('#toast-container', 'Email fake@greenpioneersolutions.com not found')
       .pause(2000)
       .clearValue('#password')
       .clearValue('#email')
@@ -92,7 +92,7 @@ module.exports = {
       .click('button[type=submit]')
       .pause(1000)
       .waitForElementVisible('#toast-container', 2000)
-      .assert.containsText('#toast-container', 'Authentication failed. Wrong password')
+      .assert.containsText('#toast-container', 'Invalid email or password')
       .end()
   },
   'Localhost Action:signup': function (browser) {

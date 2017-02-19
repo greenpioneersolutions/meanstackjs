@@ -2,6 +2,7 @@ exports.createKey = createKey
 exports.checkKey = checkKey
 
 var mongoose = require('mongoose')
+var User = mongoose.model('users')
 var settings = require('../configs/settings').get()
 var jwt = require('jsonwebtoken')
 var debug = require('debug')('meanstackjs:users')
@@ -13,7 +14,6 @@ function createKey (user, apikey) {
 }
 
 function checkKey (token, cb) {
-  var User = mongoose.model('users')
   var decoded = jwt.decode(token, {complete: true})
   if (!decoded) return cb({message: 'Nothing to decode'})
   if (!decoded.payload) return cb({message: 'No payload to decode'})

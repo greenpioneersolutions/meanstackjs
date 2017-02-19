@@ -7,7 +7,7 @@ var _ = require('lodash')
 var path = require('path')
 
 function db (self) {
-// Connect to MongoDb
+  // Connect to MongoDb
   mongoose.Promise = global.Promise
   mongoose.set('debug', self.settings.mongodb.debug)
   mongoose.connect(self.settings.mongodb.uri, self.settings.mongodb.options)

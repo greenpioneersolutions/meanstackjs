@@ -437,9 +437,12 @@ function postPhoto (req, res, next) {
   }
 }
 
-// AZURE
-//  exports.getUserAzure =getUserAzure
-//  function getUserAzure(req, res, next) {
+// Azure
+// exports.getUserAzure = getUserAzure
+// exports.postCallbackAzure = postCallbackAzure
+// exports.getUnlinkAzure = getUnlinkAzure
+
+// function getUserAzure (req, res, next) {
 //   var outlook = require('node-outlook')
 //   var token = req.user.azure ? req.user.azure.token : ''
 //   outlook.base.setApiEndpoint('https://outlook.office.com/api/v2.0')
@@ -454,14 +457,12 @@ function postPhoto (req, res, next) {
 //     }
 //   })
 // }
-// exports.postCallbackAzure = postCallbackAzure
-// function postCallbackAzure(req, res, next) {
+
+// function postCallbackAzure (req, res, next) {
 //   res.redirect('/account')
 // }
-// exports.getUnlinkAzure = getUnlinkAzure
-// function getUnlinkAzure(req, res, next) {
-//   var mongoose = require('mongoose')
-//   var User = mongoose.model('users')
+
+// function getUnlinkAzure (req, res, next) {
 //   User.findById(req.user._id, function (error, user) {
 //     if (error) { return next(error) }
 //     user.azure = {}
@@ -471,4 +472,112 @@ function postPhoto (req, res, next) {
 //     })
 //   })
 // }
-// LOOK AT CREATING SERVICE ACCOUNTS
+
+// Instagram
+// exports.postCallbackInstagram = postCallbackInstagram
+// exports.getUnlinkInstagram = getUnlinkInstagram
+
+// function postCallbackInstagram (req, res, next) {
+//   res.redirect('/account')
+// }
+// function getUnlinkInstagram (req, res, next) {
+//   User.findById(req.user._id, function (error, user) {
+//     if (error) { return next(error) }
+//     user.instagram = {}
+//     user.save(function (error) {
+//       if (error) { return next(error) }
+//       res.redirect('/account')
+//     })
+//   })
+// }
+
+// Facebook
+// exports.postCallbackFacebook = postCallbackFacebook
+// exports.getUnlinkFacebook = getUnlinkFacebook
+
+// function postCallbackFacebook (req, res, next) {
+//   res.redirect('/account')
+// }
+// function getUnlinkFacebook (req, res, next) {
+//   User.findById(req.user._id, function (error, user) {
+//     if (error) { return next(error) }
+//     user.facebook = {}
+//     user.save(function (error) {
+//       if (error) { return next(error) }
+//       res.redirect('/account')
+//     })
+//   })
+// }
+
+// Twitter
+// exports.postCallbackTwitter = postCallbackTwitter
+// exports.getUnlinkTwitter = getUnlinkTwitter
+
+// function postCallbackTwitter (req, res, next) {
+//   res.redirect('/account')
+// }
+// function getUnlinkTwitter (req, res, next) {
+//   User.findById(req.user._id, function (error, user) {
+//     if (error) { return next(error) }
+//     user.twitter = {}
+//     user.save(function (error) {
+//       if (error) { return next(error) }
+//       res.redirect('/account')
+//     })
+//   })
+// }
+
+// GitHub
+// exports.postCallbackGitHub = postCallbackGitHub
+// exports.getUnlinkGitHub = getUnlinkGitHub
+
+// function postCallbackGitHub (req, res, next) {
+//   res.redirect('/account')
+// }
+// function getUnlinkGitHub (req, res, next) {
+//   User.findById(req.user._id, function (error, user) {
+//     if (error) { return next(error) }
+//     user.gitHub = {}
+//     user.save(function (error) {
+//       if (error) { return next(error) }
+//       res.redirect('/account')
+//     })
+//   })
+// }
+
+// Google
+// exports.postCallbackGoogle = postCallbackGoogle
+// exports.getUnlinkGoogle = getUnlinkGoogle
+
+// function postCallbackGoogle (req, res, next) {
+//   res.redirect('/account')
+// }
+// function getUnlinkGoogle (req, res, next) {
+//   User.findById(req.user._id, function (error, user) {
+//     if (error) { return next(error) }
+//     user.google = {}
+//     user.save(function (error) {
+//       if (error) { return next(error) }
+//       res.redirect('/account')
+//     })
+//   })
+// }
+
+// LinkedIn
+// exports.postCallbackLinkedIn = postCallbackLinkedIn
+// exports.getUnlinkLinkedIn = getUnlinkLinkedIn
+
+// function postCallbackLinkedIn (req, res, next) {
+//   res.redirect('/account')
+// }
+// function getUnlinkLinkedIn (req, res, next) {
+//   User.findById(req.user._id, function (error, user) {
+//     if (error) { return next(error) }
+//     user.linkedIn = {}
+//     user.save(function (error) {
+//       if (error) { return next(error) }
+//       res.redirect('/account')
+//     })
+//   })
+// }
+// LOOK AT CREATING SERVICE ACCOUNTS IN LATER VERSIONS

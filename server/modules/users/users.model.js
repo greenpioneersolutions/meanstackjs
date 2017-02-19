@@ -7,8 +7,8 @@ var mail = require('../../mail.js')
 var validate = require('mongoose-validator')
 var timestamps = require('mongoose-timestamp')
 var debug = require('debug')('meanstackjs:users')
-var _ = require('lodash')
 var uuid = require('node-uuid')
+// var _ = require('lodash')
 
 var userSchema = new mongoose.Schema({
   email: {
@@ -81,7 +81,13 @@ var userSchema = new mongoose.Schema({
       default: ''
     }
   },
-  azure: {},
+  // azure: {},
+  // facebook: {},
+  // twitter: {},
+  // github: {},
+  // google: {},
+  // linkedin: {},
+  // instagram: {},
   lastLoggedIn: {
     type: Date,
     default: Date.now
@@ -101,9 +107,8 @@ var userSchema = new mongoose.Schema({
     default: 'user' // Service Accounts later
   }
 })
-
-// Password hash middleware.
 userSchema.pre('save', function (next) {
+  // Password hash middleware.
   var user = this
   user.wasNew = user.isNew // for post-save
   if (!user.isModified('password')) {
@@ -138,8 +143,8 @@ userSchema.post('save', function (user) {
     })
   }
 })
-// Helper method for validating user's password.
 userSchema.methods.comparePassword = function (candidatePassword, cb) {
+  // Helper method for validating user's password.
   debug('start comparePassword')
   var user = this
   bcrypt.compare(candidatePassword, this.password, function (error, res) {
@@ -167,22 +172,25 @@ userSchema.virtual('gravatar').get(function () {
   var md5 = crypto.createHash('md5').update(this.email).digest('hex')
   return 'https://gravatar.com/avatar/' + md5 + '?s=200&d=retro'
 })
-
-userSchema.virtual('connected').get(function () {
-  return {
-    azure: !_.isEmpty(this.azure)
-  }
-})
+// userSchema.virtual('connected').get(function () {
+//   return {
+//     azure: !_.isEmpty(this.azure),
+//     facebook: !_.isEmpty(this.facebook),
+//     twitter: !_.isEmpty(this.twitter),
+//     github: !_.isEmpty(this.github),
+//     google: !_.isEmpty(this.google),
+//     linkedin: !_.isEmpty(this.linkedin),
+//     instagram: !_.isEmpty(this.instagram)
+//   }
+// })
 userSchema.virtual('firstName').get(function () {
   return this.profile.name.split(' ')[0]
 })
-
 userSchema.virtual('lastName').get(function () {
   return this.profile.name.split(' ').slice(1).join(' ')
 })
-
-// Trim whitespace
 userSchema.pre('validate', function (next) {
+  // Trim whitespace
   var self = this
   if (typeof self.email === 'string') {
     self.email = self.email.trim()
@@ -191,4 +199,5 @@ userSchema.pre('validate', function (next) {
   next()
 })
 userSchema.plugin(timestamps)
+
 module.exports = userSchema

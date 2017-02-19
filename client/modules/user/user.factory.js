@@ -58,7 +58,8 @@
       getAuthenticate().then(function (data) {
         if (data !== '0') {
           vm.editProfile = data
-        } else { // Not Authenticated
+        } else {
+          // Not Authenticated
           $state.go('signin')
           logger.error('Not Authenticated', data, 'Login')
         }
