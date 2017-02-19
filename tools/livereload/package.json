@@ -10,6 +10,7 @@
     "chalksay": "^1.1.0",
     "chokidar": "^1.6.1",
     "less": "^2.7.1",
+    "livereload": "^0.6.0",
     "lodash": "^4.17.2",
     "node-sass": "^4.1.1"
   },
