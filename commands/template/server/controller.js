@@ -1,10 +1,17 @@
+exports.get<%= Name %> = get<%= Name %>
+exports.delete<%= Name %> = delete<%= Name %>
+exports.post<%= Name %> = post<%= Name %>
+exports.put<%= Name %> = put<%= Name %>
+exports.get<%= Name %>ById = get<%= Name %>ById
+exports.param<%= Name %> = param<%= Name %>
+
 var auto = require('run-auto')
 var mongoose = require('mongoose')
 var <%= name %>s = mongoose.model('<%= name %>')
 var _ = require('lodash')
-var logger = require('./../../logger.js').logger
+//var logger = require('./../../logger.js').logger
 
-exports.get<%= Name %> = function (req, res, next) {
+function get<%= Name %> (req, res, next) {
   auto({
     <%= name %>s: function (cb) {
       <%= name %>s
@@ -16,12 +23,14 @@ exports.get<%= Name %> = function (req, res, next) {
     return res.status(200).send(results.<%= name %>s)
   })
 }
-exports.delete<%= Name %> = function (req, res, next) {
+
+function delete<%= Name %> (req, res, next) {
   req.<%= name %>.remove(function () {
     res.status(204).send()
   })
 }
-exports.post<%= Name %> = function (req, res, next) {
+
+function post<%= Name %> (req, res, next) {
   // req.assert('name', 'The name cannot be blank').notEmpty()
 
   var errors = req.validationErrors()
@@ -38,7 +47,8 @@ exports.post<%= Name %> = function (req, res, next) {
     return res.status(201).send(data)
   })
 }
-exports.put<%= Name %> = function (req, res, next) {
+
+function put<%= Name %> (req, res, next) {
   req.<%= name %> = _.merge(req.<%= name %>, req.body)
   req.<%= name %>.save(function (error) {
     if (error) return next(error)
@@ -46,10 +56,12 @@ exports.put<%= Name %> = function (req, res, next) {
   })
 }
 
-exports.get<%= Name %>ById = function (req, res, next) {
+
+function get<%= Name %>ById (req, res, next) {
   res.send(req.<%= name %>)
 }
-exports.param<%= Name %> = function (req, res, next, id) {
+
+function param<%= Name %> (req, res, next, id) {
   req.assert('<%= name %>Id', 'Your <%= Name %> ID cannot be blank').notEmpty()
   req.assert('<%= name %>Id', 'Your <%= Name %> ID has to be a real id').isMongoId()
 
