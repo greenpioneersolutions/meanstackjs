@@ -31,7 +31,7 @@ function routes (self) {
   //     auth: [self.middleware.verify, self.middleware.isAuthenticated]
   //   }
   // }, function (error, data) {
-  //   if (error) console.log(error)
+  //   if (error)  self.logger.warn(error)
   //   _.forEach(data, function (m) {
   //     debug('Route Built by NPM buildreq:', m.route)
   //     self.app.use(m.route, m.app)
@@ -51,7 +51,7 @@ function routes (self) {
   self.app.get('/scripts/*', nothingFoundHandler('nothing found in scripts'))
   self.app.get('/styles/*', nothingFoundHandler('nothing found in styles'))
   self.app.get('/uploads/*', nothingFoundHandler('nothing found in uploads'))
-  self.app.get('/*', function (req, res) {
+  self.app.get('/*', function (req, res, next) {
     seo(self, req, function (seoSettings) {
       ejs.renderFile(path.join(__dirname, './layout/index.html'), {
         html: seoSettings,
@@ -63,7 +63,7 @@ function routes (self) {
       }, {
         cache: true
       }, function (err, str) {
-        if (err)console.log(err)
+        if (err) next(err)
         res.send(str)
       })
     })

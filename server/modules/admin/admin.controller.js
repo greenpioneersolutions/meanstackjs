@@ -45,7 +45,6 @@ exports.postUsers = function (req, res, next) {
 exports.putUsers = function (req, res, next) {
   req.adminUser = _.merge(req.adminUser, req.body)
   req.adminUser.save(function (err) {
-    console.log('err', err)
     if (err) return next(err)
     return res.status(200).send(req.adminUser)
   })
@@ -60,7 +59,6 @@ exports.paramUsers = function (req, res, next, id) {
 
   var errors = req.validationErrors()
   if (errors) {
-    console.log(errors)
     return res.status(400).send({
       success: false,
       msg: errors[0].msg,
@@ -126,7 +124,6 @@ exports.postErrors = function (req, res, next) {
 exports.putErrors = function (req, res, next) {
   req.error = _.merge(req.error, req.body)
   req.error.save(function (err) {
-    console.log('err', err)
     if (err) return next(err)
     return res.status(200).send(req.error)
   })
@@ -141,7 +138,6 @@ exports.paramErrors = function (req, res, next, id) {
 
   var errors = req.validationErrors()
   if (errors) {
-    console.log(errors)
     return res.status(400).send({
       success: false,
       msg: errors[0].msg,

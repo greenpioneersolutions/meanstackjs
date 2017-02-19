@@ -2,7 +2,7 @@ var user = require('./users.controller.js')
 var multer = require('multer')
 var upload = multer({ dest: 'client/uploads/' })
 
-module.exports = function (app, auth, mail, settings, models) {
+module.exports = function (app, auth, mail, settings, models, logger) {
   app.post('/api/user/photos/upload', upload.single('file'), user.postPhoto)
   app.post('/api/user/authenticate', user.checkLoginInformation, user.postAuthenticate)
   app.get('/api/user/authenticate', user.getAuthenticate)

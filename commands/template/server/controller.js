@@ -2,6 +2,7 @@ var auto = require('run-auto')
 var mongoose = require('mongoose')
 var <%= name %>s = mongoose.model('<%= name %>')
 var _ = require('lodash')
+var logger = require('./../../logger.js').logger
 
 exports.get<%= Name %> = function (req, res, next) {
   auto({
@@ -40,7 +41,6 @@ exports.post<%= Name %> = function (req, res, next) {
 exports.put<%= Name %> = function (req, res, next) {
   req.<%= name %> = _.merge(req.<%= name %>, req.body)
   req.<%= name %>.save(function (err) {
-    console.log('err', err)
     if (err) return next(err)
     return res.status(200).send(req.<%= name %>)
   })
@@ -55,7 +55,6 @@ exports.param<%= Name %> = function (req, res, next, id) {
 
   var errors = req.validationErrors()
   if (errors) {
-    console.log(errors)
     return res.status(400).send({
       success: false,
       msg: errors[0].msg,

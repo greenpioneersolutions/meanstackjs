@@ -10,38 +10,28 @@
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>Timestamp</th>
+                            <th>Level</th>
                             <th>Message</th>
-                            <th>Name</th>
-                            <th>Code</th>
-                            <th>Stack</th>
-                            <th>Type</th>
-                            <th>Count</th>
-                            <th>History</th>
+                            <th>Meta</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="(key, value) in vm.errors track by $index">
                             <th scope="row">{{$index + 1}}</th>
                             <td>
+                                <span>{{value.timestamp}}</span>
+                            </td>
+                            <td>
+                                <span>{{value.level}}</span>
+                            </td>
+                            <td>
                                 <span>{{value.message}}</span>
                             </td>
                             <td>
-                                <span>{{value.name}}</span>
-                            </td>
-                            <td>
-                                <span>{{value.code}}</span>
-                            </td>
-                            <td>
-                                <pre>{{value.stack}}</pre>
-                            </td>
-                            <td>
-                                <span>{{value.type}}</span>
-                            </td>
-                            <td>
-                                <span>{{value.count}}</span>
-                            </td>
-                            <td> 
-                                <div ng-repeat="history in value.history track by $index">{{history}}</div>
+                                <a ng-show="expand" ng-click="expand=false">Collapse</a>
+                                <a ng-show="!expand" ng-click="expand=true">Expand</a>
+                                <pre ng-show="expand">{{value.meta.stack}}</pre>
                             </td>
                         </tr>
                     </tbody>

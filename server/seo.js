@@ -55,13 +55,13 @@ function compile (type, seo, data) {
       try {
         compiled[prop] = propTemplate(data)
       } catch (err) {
-        console.log(err.message, ' in seo compile lodash')
+        self.logger.warn(err.message, ' in seo compile lodash')
       }
     } else if (type.name === 'ejs') {
       try {
         compiled[prop] = ejs.render(value, data, type.options)
       } catch (err) {
-        console.log(err.message, ' in seo compile ejs')
+        self.logger.warn(err.message, ' in seo compile ejs')
       }
     }
   })

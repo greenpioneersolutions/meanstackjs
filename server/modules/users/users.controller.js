@@ -441,10 +441,10 @@ exports.postPhoto = function (req, res, next) {
 // exports.getUnlinkAzure = function (req, res, next) {
 //   var mongoose = require('mongoose')
 //   var User = mongoose.model('users')
-//   User.findById(req.user._id, (err, user) => {
+//   User.findById(req.user._id, function (err, user) {
 //     if (err) { return next(err) }
 //     user.azure = {}
-//     user.save((err) => {
+//     user.save(function (err) {
 //       if (err) { return next(err) }
 //       res.redirect('/account')
 //     })

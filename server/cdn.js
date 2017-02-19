@@ -8,15 +8,15 @@ function cdn (self) {
       self.settings.maxcdn.consumerSecret
     )
     maxcdn.del('zones/pull.json/' + self.settings.maxcdn.zoneId + '/cache', function (err, res) {
-      console.log('MAXCDN: STATUS')
+      self.logger.info('MAXCDN: STATUS')
       if (err) {
-        console.error('PURGE ERROR: ', err.stack || err.message || err)
+        self.logger.warn('PURGE ERROR: ', err.stack || err.message || err)
         return
       } else if (res.code !== 200) {
-        console.error('PURGE ERROR: ', res.code)
+        self.logger.warn('PURGE ERROR: ', res.code)
         return
       }
-      console.log('PURGE SUCCESS')
+      self.logger.info('PURGE SUCCESS')
     })
   }
 }

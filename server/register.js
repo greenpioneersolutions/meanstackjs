@@ -46,7 +46,7 @@ Register.prototype.getDownloadContents = function (self) {
   self.settings.assets.css.forEach(function (ms) {
     if (validator.isURL(ms)) {
       request({url: ms}, function (error, response, body) {
-        if (error)console.log('Error Downloading Content', error)
+        if (error) self.logger.warn('Error Downloading Content', error)
         fs.writeFileSync(path.join(dir, '../client/styles/downloaded/' + path.basename(ms)), body)
       })
     }
@@ -54,7 +54,7 @@ Register.prototype.getDownloadContents = function (self) {
   self.settings.assets.js.forEach(function (ms) {
     if (validator.isURL(ms)) {
       request({url: ms}, function (error, response, body) {
-        if (error)console.log('Error Downloading Content', error)
+        if (error) self.logger.warn('Error Downloading Content', error)
         fs.writeFileSync(path.join(dir, '../client/scripts/downloaded/' + path.basename(ms)), body)
       })
     }
@@ -370,7 +370,7 @@ Register.prototype.setupServerRoutes = function (self) {
 
   self.backendFiles.routes.forEach(function (n) {
     debug('Route : %s', n.url)
-    require(n.url)(self.app, self.middleware, self.mail, self.settings, self.models)
+    require(n.url)(self.app, self.middleware, self.mail, self.settings, self.models, self.logger)
   })
 
   debug('end createBackendRoutes')
@@ -416,7 +416,7 @@ Register.prototype.renderFrontendFiles = function (self) {
   self.settings.assets.css.forEach(function (ms) {
     self.frontendFilesFinal.css.unshift(ms)
     if (validator.isURL(ms)) {
-      fs.access(path.join(dir, '../client/styles/downloaded/' + path.basename(ms)), fs.constants.R_OK | fs.constants.W_OK, (err) => {
+      fs.access(path.join(dir, '../client/styles/downloaded/' + path.basename(ms)), fs.constants.R_OK | fs.constants.W_OK, function (err) {
         if (err) {
           chalksay.red('Please Restart your system')
           chalksay.red('The system is still downloading \n')
@@ -433,7 +433,7 @@ Register.prototype.renderFrontendFiles = function (self) {
   self.settings.assets.js.forEach(function (ms) {
     self.frontendFilesFinal.js.unshift(ms)
     if (validator.isURL(ms)) {
-      fs.access(path.join(dir, '../client/scripts/downloaded/' + path.basename(ms)), fs.constants.R_OK | fs.constants.W_OK, (err) => {
+      fs.access(path.join(dir, '../client/scripts/downloaded/' + path.basename(ms)), fs.constants.R_OK | fs.constants.W_OK, function (err) {
         if (err) {
           chalksay.red('Please Restart your system')
           chalksay.red('The system is still downloading\n')

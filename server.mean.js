@@ -12,6 +12,7 @@ function Mean (opts, done) {
   self.dir = __dirname
   self.opts = opts
   self.run = run
+  self.logger = require('./server/logger.js').logger
   self.environment = require('./configs/environment.js').get()
   self.settings = require('./configs/settings.js').get()
   self.port = self.opts.port || self.settings.https.active ? self.settings.https.port : self.settings.http.port
@@ -27,7 +28,7 @@ function Mean (opts, done) {
   // setupExpressHeaders > Used to set up the headers that go out on every route.
   require('./server/headers.js')(self)
   // setupExpressLogger > Used to set up our morgan logger & debug statements on all routes.
-  require('./server/logger.js')(self)
+  require('./server/logger.js').middleware(self)
   // setupTools > Used to set up every tool in the tools directory.
   var files = glob.sync('./tools/*/package.json')
   files.forEach(function (n, k) {
@@ -52,7 +53,7 @@ function Mean (opts, done) {
       key: fs.readFileSync(self.settings.https.key),
       cert: fs.readFileSync(self.settings.https.cert)
     }, self.app).listen(self.settings.https.port, function () {
-      console.log('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
+      self.logger.info('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
       debug('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
       // Force SSL if the http is not active
       if (!self.settings.http.active) {
@@ -62,7 +63,7 @@ function Mean (opts, done) {
         })
         app.use('/*', forceSSL)
         app.listen(self.settings.http.port, function () {
-          console.log('HTTP FORCE SSL Express server listening on port %d in %s mode', self.settings.http.port, self.app.get('env'))
+          self.logger.info('HTTP FORCE SSL Express server listening on port %d in %s mode', self.settings.http.port, self.app.get('env'))
           debug('HTTP FORCE SSL Express server listening on port %d in %s mode', self.settings.http.port, self.app.get('env'))
           done()
         })
@@ -72,7 +73,7 @@ function Mean (opts, done) {
   // check if you set both to false we default to turn on http
   if (self.settings.http.active || (self.settings.https.active === false) === (self.settings.http.active === false)) {
     self.app.listen(self.app.get('port'), function () {
-      console.log('HTTP Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
+      self.logger.info('HTTP Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
       debug('HTTP Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
       done()
     })

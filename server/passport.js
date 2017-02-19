@@ -71,24 +71,24 @@ exports.passportStrategy = new LocalStrategy({ usernameField: 'email' }, functio
 //         return done({status: 400, msg: 'No oid found'}, null)
 //       }
 //       if (req.user) {
-//         User.findOne({ 'azure.oid': profile.oid }, (err, existingUser) => {
+//         User.findOne({ 'azure.oid': profile.oid }, function (err, existingUser) {
 //           if (err) return done(err)
 //           if (existingUser) {
 //             existingUser.azure.token = accessToken
 //             existingUser.azure.refreshToken = refreshToken
-//             existingUser.save((err) => {
+//             existingUser.save(function (err) {
 //               if (err) return done(err)
 //               done(err, existingUser)
 //             })
 //           } else {
-//             User.findById(req.user._id, (err, user) => {
+//             User.findById(req.user._id,function (err, user) {
 //               if (err) { return done(err) }
 //               user.azure = {
 //                 token: accessToken,
 //                 refreshToken: refreshToken,
 //                 oid: profile.oid
 //               }
-//               user.save((err) => {
+//               user.save(function (err) {
 //                 if (err) return done(err)
 //                 done(err, user)
 //               })

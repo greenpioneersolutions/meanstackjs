@@ -485,7 +485,7 @@ function ask () {
               location: location.location,
               name: modules.module
             }, function (err) {
-              if (err)console.log(err)
+              if (err)console.error(err)
               ask()
             })
           })
@@ -500,7 +500,7 @@ function ask () {
                 name: modules.module,
                 schema: data
               }, function (err) {
-                if (err)console.log(err)
+                if (err)console.error(err)
                 ask()
               })
             })
@@ -515,14 +515,14 @@ function ask () {
                 location: location.location,
                 name: modules.module
               }, function (err) {
-                if (err)console.log(err)
+                if (err)console.error(err)
               })
               buildBack({
                 location: location.location,
                 name: modules.module,
                 schema: data
               }, function (err) {
-                if (err)console.log(err)
+                if (err)console.error(err)
                 ask()
               })
             })
@@ -562,7 +562,7 @@ function ask () {
             ask()
           } else {
             if (user === null) {
-              console.log(chalksay.red('No User Found Under That Email'))
+              console.error(chalksay.red('No User Found Under That Email'))
               ask()
             } else {
               updatePassword(user, function (err, data) {
