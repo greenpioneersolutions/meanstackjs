@@ -73,7 +73,7 @@ function middleware (self) {
     self.app.use(morgan(self.settings.logger, {
       stream: {
         write: function (message) {
-          self.logger.info(message)
+          self.logger.info(message.replace(/\n$/, ''))
         }
       }
     }))
