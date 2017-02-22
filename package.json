@@ -163,7 +163,7 @@
     "blessed": "^0.1.81",
     "bower": "^1.7.1",
     "chai": "^3.4.1",
-    "inquirer": "^2.0.0",
+    "inquirer": "^3.0.2",
     "karma": "^1.2.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.0.0",
