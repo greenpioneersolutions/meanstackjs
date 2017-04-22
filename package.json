@@ -178,6 +178,6 @@
     "selenium-standalone": "^5.9.0",
     "shelljs": "^0.7.6",
     "standard": "latest",
-    "supertest": "^2.0.0"
+    "supertest": "^3.0.0"
   }
 }
