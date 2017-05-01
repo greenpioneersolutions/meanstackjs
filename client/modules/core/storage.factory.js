@@ -19,7 +19,7 @@
         $window.localStorage[key] = JSON.stringify(value)
       },
       getObject: function (key) {
-        if ($window.localStorage[key] != undefined) {
+        if ($window.localStorage[key] !== undefined) {
           return JSON.parse($window.localStorage[key] || false)
         }
         return false
