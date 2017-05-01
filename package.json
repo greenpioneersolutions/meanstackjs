@@ -56,10 +56,7 @@
     "selenium:start": "node_modules/.bin/selenium-standalone start",
     "update": "node scripts/update-meanstackjs.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/greenpioneersolutions/meanstackjs.git"
-  },
+  "repository": "git+https://github.com/greenpioneersolutions/meanstackjs.git",
   "homepage": "https://github.com/greenpioneersolutions/meanstackjs#readme",
   "keywords": [
     "Mean",

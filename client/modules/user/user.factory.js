@@ -174,7 +174,7 @@
     }
 
     UserClass.prototype.logout = function (vm) {
-      $http.get('/api/user/logout').then(function (data) {
+      $http.post('/api/user/logout').then(function (data) {
         localStorage.removeItem('JWT')
         $rootScope.$emit('logout')
         // ANGULAR WAY
