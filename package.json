@@ -162,7 +162,7 @@
   "devDependencies": {
     "blessed": "^0.1.81",
     "bower": "^1.7.1",
-    "chai": "^3.4.1",
+    "chai": "^4.0.1",
     "inquirer": "^2.0.0",
     "karma": "^1.2.0",
     "karma-chai": "^0.1.0",
