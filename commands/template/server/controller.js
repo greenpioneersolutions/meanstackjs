@@ -49,7 +49,7 @@ function post<%= Name %> (req, res, next) {
 }
 
 function put<%= Name %> (req, res, next) {
-  req.<%= name %> = _.merge(req.<%= name %>, req.body)
+  req.<%= name %> = _.assign(req.<%= name %>, req.body)
   req.<%= name %>.save(function (error) {
     if (error) return next(error)
     return res.status(200).send(req.<%= name %>)

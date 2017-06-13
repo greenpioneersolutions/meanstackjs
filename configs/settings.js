@@ -301,13 +301,13 @@ var baseLine = {
   }
 }
 if (environment === 'test') {
-  baseLine = _.merge(baseLine, require('./environments/test.js'))
+  baseLine = _.assign(baseLine, require('./environments/test.js'))
 } else if (environment === 'production') {
-  baseLine = _.merge(baseLine, require('./environments/production.js'))
+  baseLine = _.assign(baseLine, require('./environments/production.js'))
 } else if (environment === 'nightwatch') {
-  baseLine = _.merge(baseLine, require('./environments/nightwatch.js'))
+  baseLine = _.assign(baseLine, require('./environments/nightwatch.js'))
 } else {
-  baseLine = _.merge(baseLine, require('./environments/development.js'))
+  baseLine = _.assign(baseLine, require('./environments/development.js'))
 }
 
 exports.get = function (env) {
