@@ -34,12 +34,12 @@ function proxy (req, res, next) {
       method: req.method,
       headers: _.assign({
         'content-type': 'application/json'
-      },req.headers),
-      rejectUnauthorized:false,
-      json:true
+      }, req.headers),
+      rejectUnauthorized: false,
+      json: true
     }
-    if(req.query.proxy){
-      obj.proxy = req.query.proxy
+    if (req.query.proxy) {
+      requestOptions.proxy = req.query.proxy
       delete req.query.proxy
       requestOptions.qs = req.query
     }

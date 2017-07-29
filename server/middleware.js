@@ -100,4 +100,3 @@ function isAdmin (req, res, next) {
     return res.status(401).send('User is not authorized')
   })
 }
-

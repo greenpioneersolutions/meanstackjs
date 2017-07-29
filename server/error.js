@@ -78,4 +78,3 @@ function middleware (self) {
     return res.send(renderData)
   })
 }
-

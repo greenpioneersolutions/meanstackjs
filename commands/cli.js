@@ -651,7 +651,6 @@ function ask () {
         break
       case 'Exit':
         process.exit()
-        break
     }
   })
 }

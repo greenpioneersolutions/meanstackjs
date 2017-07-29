@@ -486,4 +486,3 @@ Register.prototype.updateFrontendCdn = function (self) {
 function build (options) {
   return new Register(options)
 }
-
