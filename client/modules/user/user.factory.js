@@ -150,7 +150,7 @@
         confirmPassword: vm.resetCred.confirmPassword
       }).then(function (success) {
         self.onIdentity.bind(self)(success.data)
-        logger.success('Password reset successfully', response)
+        logger.success('Password reset successfully', success.data)
       }, function (error) {
         self.onIdFail.bind(self)(error)
       })
