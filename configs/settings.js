@@ -7,6 +7,50 @@ var baseLine = {
   app: {
     name: 'MeanStackJS'
   },
+  cache: {
+    maxAge: 0,
+    headers: true
+  },
+  security: {
+    cors: {
+      active: true,
+      options: {
+        // origin: function (origin, callback) {
+        //   var originIsWhitelisted = ['http://localhost:3000', 'localhost:3000'].indexOf(origin) !== -1
+        //   callback(null, originIsWhitelisted)
+        // }
+      },
+      preflight: true
+    },
+    contentLength: {
+      active: true,
+      options: {
+        max: 99999,
+        status: 400,
+        message: 'Please make a small payload'
+      }
+    },
+    helmet: {
+      active: true,
+      options: {}
+    },
+    hpp: {
+      active: true,
+      options: {}
+    },
+    contentSecurityPolicy: {
+      active: false,
+      options: {}
+    },
+    hpkp: {
+      active: false,
+      options: {}
+    },
+    throttler: {
+      active: false,
+      options: {}
+    }
+  },
   minify: 'default',
   render: {
     cli: 'lodash', // __ or ejs or lodash.
@@ -141,9 +185,6 @@ var baseLine = {
   bodyparser: {
     json: {limit: '100kb'},
     urlencoded: {limit: '100kb', extended: true}
-  },
-  helmet: {
-    // https://github.com/helmetjs/helmet
   },
   expresValidator: {
     customValidators: {
