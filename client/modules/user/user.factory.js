@@ -93,18 +93,12 @@
         $location.url(data.redirect)
       }
       $rootScope.$emit('loggedin')
-      return ({
-        error: false
-      })
     }
 
     UserClass.prototype.onIdFail = function (error) {
-      logger.error(error.data.message, error, 'Login/Signup')
+      logger.error(error.data.message, error, 'User Management')
       $rootScope.$emit('loginfailed')
       $rootScope.$emit('registerfailed')
-      return ({
-        error: true
-      })
     }
 
     UserClass.prototype.updateProfile = function (data, response) {
@@ -154,12 +148,12 @@
       $http.post('/api/user/reset/' + vm.resetToken, {
         password: vm.resetCred.password,
         confirmPassword: vm.resetCred.confirmPassword
-      }).then(self.onIdentity.bind(this), self.onIdFail.bind(this))
-        .then(function (response) {
-          if (!response.error) {
-            logger.success('Password successfully Reset', response)
-          }
-        })
+      }).then(function (success) {
+        self.onIdentity.bind(self)(success.data)
+        logger.success('Password reset successfully', success.data)
+      }, function (error) {
+        self.onIdFail.bind(self)(error)
+      })
     }
 
     UserClass.prototype.forgot = function (vm) {
@@ -174,7 +168,7 @@
     }
 
     UserClass.prototype.logout = function (vm) {
-      $http.get('/api/user/logout').then(function (data) {
+      $http.post('/api/user/logout').then(function (data) {
         localStorage.removeItem('JWT')
         $rootScope.$emit('logout')
         // ANGULAR WAY

@@ -32,9 +32,16 @@ function proxy (req, res, next) {
       url: url,
       qs: req.query,
       method: req.method,
-      headers: {
+      headers: _.assign({
         'content-type': 'application/json'
-      }
+      }, req.headers),
+      rejectUnauthorized: false,
+      json: true
+    }
+    if (req.query.proxy) {
+      requestOptions.proxy = req.query.proxy
+      delete req.query.proxy
+      requestOptions.qs = req.query
     }
     if (req.method === 'POST' || req.method === 'PUT') {
       requestOptions.body = JSON.stringify(req.body)

@@ -68,7 +68,7 @@ function postBlog (req, res, next) {
 }
 
 function putBlog (req, res, next) {
-  req.blog = _.merge(req.blog, req.body)
+  req.blog = _.assign(req.blog, req.body)
   req.blog.save(function (error) {
     if (error) return next(error)
     return res.status(200).send(req.blog)

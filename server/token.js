@@ -21,7 +21,7 @@ function checkKey (token, cb) {
   User.findOne({
     _id: decoded.payload._id
   }, function (error, user) {
-    if (error) throw error
+    if (error) cb(error)
     if (!user) {
       cb({message: 'Authentication failed. User not found.'})
     } else {

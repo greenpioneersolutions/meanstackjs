@@ -1,0 +1,16 @@
+<div class="container" ng-init="vm.list()">
+  <div class="row">
+    <div class="col-sm-12 chat-header text-center">
+      <h1 class="chat-title">MeanStackJS Chatroom</h1>
+    </div>
+  </div> 
+  <div class="row">
+    <div class="input-group">
+      <input ng-model="vm.message" ng-enter="vm.chat()" type="text" class="form-control" placeholder="Enter Message Here...">
+      <span class="input-group-btn">
+        <button ng-click="vm.chat()" class="btn btn-primary" type="button">Send</button>
+      </span>
+    </div>
+    <p ng-repeat="chat in vm.messages| limitTo:10">{{chat.message}} - by {{chat.user}} on {{chat.date|date:'medium'}}</p>
+  </div>    
+</div>

@@ -21,7 +21,7 @@
 
     $rootScope.$on('profileUpdated', function () {
       // if you want to do anything extra
-      // vm.UserFactory = _.merge(vm.UserFactory, UserFactory)
+      // vm.UserFactory = _.assign(vm.UserFactory, UserFactory)
     })
     $rootScope.$on('loggedin', function () {
       // if you want to do anything extra

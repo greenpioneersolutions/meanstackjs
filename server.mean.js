@@ -3,9 +3,11 @@ module.exports = Mean
 var debug = require('debug')('meanstackjs:server')
 var forceSSL = require('express-force-ssl')
 var fs = require('fs')
+var http = require('http')
 var https = require('https')
 var run = require('./run.js')
 var express = require('express')
+var auto = require('run-auto')
 
 function Mean (opts, done) {
   var self = this
@@ -44,36 +46,40 @@ function Mean (opts, done) {
   // purgeMaxCdn - *** OPTIONAL ***  > Used to purge the max cdn cache of the file. We Support MAXCDN
   require('./server/cdn.js').maxCDN(self)
   // auto  - connectMongoDb :  server > Used to finsh the final set up of the server. at the same time we start connecting to mongo and turning on the server.
-  if (self.settings.https.active) {
-    https.createServer({
-      key: fs.readFileSync(self.settings.https.key),
-      cert: fs.readFileSync(self.settings.https.cert)
-    }, self.app).listen(self.settings.https.port, function () {
-      self.logger.info('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
-      debug('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.app.get('env'))
-      // Force SSL if the http is not active
-      if (!self.settings.http.active) {
-        var app = require('express')()
-        app.set('forceSSLOptions', {
-          httpsPort: self.settings.https.port
-        })
-        app.use('/*', forceSSL)
-        app.listen(self.settings.http.port, function () {
-          self.logger.info('HTTP FORCE SSL Express server listening on port %d in %s mode', self.settings.http.port, self.app.get('env'))
-          debug('HTTP FORCE SSL Express server listening on port %d in %s mode', self.settings.http.port, self.app.get('env'))
-          done()
-        })
-      }
-    })
-  }
-  // check if you set both to false we default to turn on http
-  if (self.settings.http.active || (self.settings.https.active === false) === (self.settings.http.active === false)) {
-    self.app.listen(self.app.get('port'), function () {
-      self.logger.info('HTTP Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
-      debug('HTTP Express server listening on port %d in %s mode', self.app.get('port'), self.app.get('env'))
-      done()
-    })
-  }
+  auto({
+    http: function (cb) {
+      if (!self.settings.http.active && (self.settings.https.active === false) !== (self.settings.http.active === false)) return cb()
+      http.createServer(self.app).listen(self.settings.http.port, function () {
+        self.logger.info('HTTP Express server listening on port %d in %s mode', self.settings.http.port, self.environment)
+        debug('HTTP Express server listening on port %d in %s mode', self.settings.http.port, self.environment)
+        cb()
+      })
+    },
+    https: function (cb) {
+      if (!self.settings.https.active) return cb()
+      https.createServer({
+        key: fs.readFileSync(self.settings.https.key),
+        cert: fs.readFileSync(self.settings.https.cert)
+      }, self.app).listen(self.settings.https.port, function () {
+        self.logger.info('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.environment)
+        debug('HTTPS Express server listening on port %d in %s mode', self.settings.https.port, self.environment)
+        cb()
+      })
+    },
+    redirect: function (cb) {
+      if (self.settings.http.active || !self.settings.https.redirect || !self.settings.https.active) return cb()
+      var app = require('express')()
+      app.set('forceSSLOptions', {
+        httpsPort: self.settings.https.port
+      })
+      app.use('/*', forceSSL)
+      http.createServer(app).listen(self.settings.http.port, function () {
+        self.logger.info('HTTP FORCE SSL Express server listening on port %d in %s mode', self.settings.http.port, self.environment)
+        debug('HTTP FORCE SSL Express server listening on port %d in %s mode', self.settings.http.port, self.environment)
+        cb()
+      })
+    }
+  }, done)
 }
 
 if (!module.parent) {

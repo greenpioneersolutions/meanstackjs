@@ -60,7 +60,7 @@ function postUsers (req, res, next) {
 }
 
 function putUsers (req, res, next) {
-  req.adminUser = _.merge(req.adminUser, req.body)
+  req.adminUser = _.assign(req.adminUser, req.body)
   req.adminUser.save(function (error) {
     if (error) return next(error)
     return res.status(200).send(req.adminUser)
@@ -143,7 +143,7 @@ function postErrors (req, res, next) {
 }
 
 function putErrors (req, res, next) {
-  req.error = _.merge(req.error, req.body)
+  req.error = _.assign(req.error, req.body)
   req.error.save(function (error) {
     if (error) return next(error)
     return res.status(200).send(req.error)

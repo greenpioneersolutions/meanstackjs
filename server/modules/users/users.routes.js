@@ -6,7 +6,7 @@ module.exports = function (app, auth, mail, settings, models, logger) {
   app.post('/api/user/photos/upload', upload.single('file'), user.postPhoto)
   app.post('/api/user/authenticate', user.checkLoginInformation, user.postAuthenticate)
   app.get('/api/user/authenticate', user.getAuthenticate)
-  app.get('/api/user/logout', user.logout)
+  app.post('/api/user/logout', user.logout)
   app.post('/api/user/forgot', user.postForgot)
   app.get('/api/user/reset/:token', user.getReset)
   app.post('/api/user/reset/:token', user.postReset)
