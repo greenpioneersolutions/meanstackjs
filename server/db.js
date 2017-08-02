@@ -32,6 +32,6 @@ function mongoDB (self) {
   })
 }
 function disconnect (cb) {
-  if(!cb)cb = function(){}
+  if (!cb)cb = function () {}
   mongoose.disconnect(cb)
 }

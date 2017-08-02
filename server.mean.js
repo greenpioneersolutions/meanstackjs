@@ -56,7 +56,7 @@ function Mean (opts, done) {
       })
     },
     https: function (cb) {
-      if(!self.settings.https.active) return cb()
+      if (!self.settings.https.active) return cb()
       https.createServer({
         key: fs.readFileSync(self.settings.https.key),
         cert: fs.readFileSync(self.settings.https.cert)
@@ -66,8 +66,8 @@ function Mean (opts, done) {
         cb()
       })
     },
-    redirect:function (cb) {
-      if (self.settings.http.active || !self.settings.https.redirect || !self.settings.https.active ) return cb()
+    redirect: function (cb) {
+      if (self.settings.http.active || !self.settings.https.redirect || !self.settings.https.active) return cb()
       var app = require('express')()
       app.set('forceSSLOptions', {
         httpsPort: self.settings.https.port
@@ -76,12 +76,10 @@ function Mean (opts, done) {
       http.createServer(app).listen(self.settings.http.port, function () {
         self.logger.info('HTTP FORCE SSL Express server listening on port %d in %s mode', self.settings.http.port, self.environment)
         debug('HTTP FORCE SSL Express server listening on port %d in %s mode', self.settings.http.port, self.environment)
-        done()
+        cb()
       })
     }
-  }, function(err, results) {
-    return done()
-  })
+  }, done)
 }
 
 if (!module.parent) {
