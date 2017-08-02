@@ -35,10 +35,10 @@ function Seo (self, req, path, cb) {
           if (!data) {
             data = obj
           }
-          return cb(_.merge(self.settings.html, compile({name: self.settings.render.seo.toLowerCase(), options: self.settings.render[self.settings.render.seo.toLowerCase()].options}, pathSettings, data)))
+          return cb(_.assign(self.settings.html, compile({name: self.settings.render.seo.toLowerCase(), options: self.settings.render[self.settings.render.seo.toLowerCase()].options}, pathSettings, data)))
         })
       } else {
-        return cb(_.merge(self.settings.html, compile({name: self.settings.render.seo.toLowerCase(), options: self.settings.render[self.settings.render.seo.toLowerCase()].options}, pathSettings, obj)))
+        return cb(_.assign(self.settings.html, compile({name: self.settings.render.seo.toLowerCase(), options: self.settings.render[self.settings.render.seo.toLowerCase()].options}, pathSettings, obj)))
       }
       return false
     }

@@ -50,7 +50,7 @@ module.exports = {
         tags: ['Add', 'Tags', 'To Blog', 'Mean Stack JS']
       }
       self.models.blog.findOne({_id: data.params.id}).populate('user').then(function (blog) {
-        data.blog = _.merge(data.blog, blog)
+        data.blog = _.assign(data.blog, blog)
         cb(null, data)
       }).catch(function (error) {
         cb(error)

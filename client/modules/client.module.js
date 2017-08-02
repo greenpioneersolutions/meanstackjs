@@ -8,6 +8,7 @@
     'app.footer',
     'app.user',
     'app.blog',
-    'app.admin' // DONT REMOVE - APP GENERATOR
+    'app.admin',
+    'app.chat' // DONT REMOVE - APP GENERATOR
   ])
 })()

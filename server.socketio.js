@@ -4,6 +4,7 @@ var express = require('express')
 var debug = require('debug')('meanstackjs:socketio')
 var fs = require('fs')
 var settings = require('./configs/settings.js').get()
+var glob = require('glob')
 
 function SocketIO (opts, done) {
   var self = this
@@ -21,8 +22,13 @@ function SocketIO (opts, done) {
   self.io = require('socket.io')(self.socketServer)
 
   self.io.on('connection', function (socket) {
-    socket.on('message', function (msg) {
-      self.io.emit('message', msg)
+    var files = glob.sync('server/modules/**/*.socket.js')
+    files.forEach(function (socketFile) {
+      debug('Sockets: %s', socketFile)
+      require('./' + socketFile)(self.io, socket)
+    })
+    socket.on('system', function (msg) {
+      io.emit('system', msg)
     })
   })
 

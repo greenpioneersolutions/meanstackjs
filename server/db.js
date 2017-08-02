@@ -1,4 +1,5 @@
-module.exports.mongoDB = db
+module.exports.mongoDB = mongoDB
+module.exports.disconnect = disconnect
 
 var mongoose = require('mongoose')
 var debug = require('debug')('meanstackjs:db')
@@ -6,7 +7,7 @@ var glob = require('glob')
 var _ = require('lodash')
 var path = require('path')
 
-function db (self) {
+function mongoDB (self) {
   // Connect to MongoDb
   mongoose.Promise = global.Promise
   mongoose.set('debug', self.settings.mongodb.debug)
@@ -29,4 +30,8 @@ function db (self) {
       if (error) throw error
     })
   })
+}
+function disconnect (cb) {
+  if (!cb)cb = function () {}
+  mongoose.disconnect(cb)
 }

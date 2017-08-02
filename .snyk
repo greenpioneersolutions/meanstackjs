@@ -1,0 +1,50 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.7.0
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:ms:20170412':
+    - compression > debug > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - mongoose > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - mongo-throttle > mongoose > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - express-status-monitor > socket.io > engine.io > debug > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - socket.io > socket.io-adapter > debug > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - express-status-monitor > socket.io > socket.io-adapter > debug > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - socket.io > socket.io-client > debug > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - express-status-monitor > socket.io > socket.io-client > debug > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - express-status-monitor > socket.io > debug > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - express-status-monitor > socket.io > socket.io-client > engine.io-client > debug > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - buildreq > mongoose > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - morgan > debug > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - buildreq > compression > debug > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - buildreq > helmet > connect > debug > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - buildreq > helmet > connect > finalhandler > debug > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - mongoose > mquery > debug > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - mongo-throttle > mongoose > mquery > debug > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - buildreq > mongoose > mquery > debug > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - express-status-monitor > socket.io > socket.io-parser > debug > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - socket.io > socket.io-adapter > socket.io-parser > debug > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - express-status-monitor > socket.io > socket.io-adapter > socket.io-parser > debug > ms:
+        patched: '2017-05-23T01:35:11.139Z'
+    - express-status-monitor > socket.io > socket.io-client > socket.io-parser > debug > ms:
+        patched: '2017-05-23T01:35:11.139Z'

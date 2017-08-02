@@ -37,7 +37,7 @@ describe('USER Testing', function () {
       .respond(200, '')
     $httpBackend.when('GET', /modules\/index\/[\d\w]+\.view\.html\?noCache=\d+/)
       .respond(200, '')
-    $httpBackend.when('GET', /\/api\/user\/logout\?noCache=\d+/)
+    $httpBackend.when('POST', /\/api\/user\/logout/)
       .respond(200, '')
     // Constructor contains http.get
     UserFactory = _UserFactory_

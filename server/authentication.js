@@ -39,4 +39,3 @@ function authentication (self) {
   // OpenID Strategy
   // passport.use(auth.passportOpenIDStrategy)
 }
-

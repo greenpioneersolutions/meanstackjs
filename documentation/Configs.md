@@ -30,7 +30,7 @@ Example below of how totally control the seo of a dynamic route. In the hook if 
         tags: ['Add', 'Tags', 'To Blog', 'Mean Stack JS']
       }
       self.models.blog.findOne({_id: data.params.id}).populate('user').then(function (blog) {
-        data.blog = _.merge(data.blog, blog)
+        data.blog = _.assign(data.blog, blog)
         cb(null, data)
       }).catch(function (err) {
         cb(err)
@@ -422,13 +422,13 @@ var baseLine = {
   }
 }
 if (environment === 'test') {
-  baseLine = _.merge(baseLine, require('./environments/test.js'))
+  baseLine = _.assign(baseLine, require('./environments/test.js'))
 } else if (environment === 'production') {
-  baseLine = _.merge(baseLine, require('./environments/production.js'))
+  baseLine = _.assign(baseLine, require('./environments/production.js'))
 } else if (environment === 'nightwatch') {
-  baseLine = _.merge(baseLine, require('./environments/nightwatch.js'))
+  baseLine = _.assign(baseLine, require('./environments/nightwatch.js'))
 } else {
-  baseLine = _.merge(baseLine, require('./environments/development.js'))
+  baseLine = _.assign(baseLine, require('./environments/development.js'))
 }
 
 exports.get = function (env) {
