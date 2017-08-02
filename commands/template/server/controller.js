@@ -4,6 +4,7 @@ exports.post<%= Name %> = post<%= Name %>
 exports.put<%= Name %> = put<%= Name %>
 exports.get<%= Name %>ById = get<%= Name %>ById
 exports.param<%= Name %> = param<%= Name %>
+exports.on<%= Name %> = on<%= Name %>
 
 var auto = require('run-auto')
 var mongoose = require('mongoose')
@@ -84,4 +85,10 @@ function param<%= Name %> (req, res, next, id) {
     req.<%= name %> = results.<%= name %>
     next()
   })
+}
+
+function on<%= Name %> (io, socket) {
+  return function (msg) {
+    io.emit('<%= name %>', msg)
+  }
 }
