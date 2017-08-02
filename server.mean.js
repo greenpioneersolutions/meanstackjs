@@ -80,7 +80,7 @@ function Mean (opts, done) {
       })
     }
   }, function(err, results) {
-    done()
+    return done()
   })
 }
 
