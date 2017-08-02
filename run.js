@@ -31,7 +31,13 @@ process.on('unhandledRejection', function (reason) {
 })
 
 process.on('uncaughtException', function (err) {
-  require('mongoose').disconnect()
+  try{
+    require('./server/db.js').disconnect(function(){
+      console.log('Disconnected Database')
+    })
+  }catch(disconnectError){
+    console.log('Error Trying to disconnect from the DB',disconnectError)
+  }
   debug('System Error uncaughtException:' + err)
   console.error('[UNCAUGHT EXCEPTION] - ', err.message)
   console.log()
