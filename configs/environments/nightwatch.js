@@ -24,6 +24,7 @@ module.exports = {
   },
   https: {
     active: false,
+    redirect: true,
     port: process.env.HTTPSPORT || 3043,
     key: './configs/certificates/keyExample.pem',
     cert: './configs/certificates/certExample.pem'
