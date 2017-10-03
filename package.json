@@ -107,7 +107,7 @@
     "express-query-parameters": "^1.0.1",
     "express-session": "^1.12.1",
     "express-sitemap": "^1.6.3",
-    "express-status-monitor": "^0.1.7",
+    "express-status-monitor": "^1.0.0",
     "express-validator": "^3.0.0",
     "glob": "^7.1.1",
     "helmet": "^3.1.0",
@@ -157,7 +157,7 @@
     "winston": "^2.3.1",
     "winston-daily-rotate-file": "^1.4.4",
     "winston-mongodb": "^2.0.7",
-    "snyk": "^1.30.1"
+    "snyk": "^1.42.3"
   },
   "devDependencies": {
     "blessed": "^0.1.81",
