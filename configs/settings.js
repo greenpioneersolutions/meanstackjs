@@ -5,7 +5,7 @@ var _ = require('lodash')
 var environment = require('./environment.js').get()
 var baseLine = {
   app: {
-    name: 'MeanStackJS'
+    name: process.env.APP_NAME || 'MeanStackJS'
   },
   cache: {
     maxAge: 0,
@@ -95,13 +95,13 @@ var baseLine = {
   // JWT Object https://github.com/auth0/node-jsonwebtoken
   jwt: {
     // is used to compute a JWT SIGN
-    secret: 'MEANSTACKJS',
+    secret: process.env.JWT_SECRET || 'MEANSTACKJS',
     options: {
       expiresIn: 86400 // 24 hours.   or  the old way//60 * 120 // 60 seconds * 120  = 2 hours
     }
   },
   // is used to compute a session hash
-  sessionSecret: 'MEANSTACKJS',
+  sessionSecret: process.env.SESSION_SECRET || 'MEANSTACKJS',
   // The name of the MongoDB collection to store sessions in
   sessionCollection: 'sessions',
   // The session cookie settings
@@ -125,26 +125,26 @@ var baseLine = {
     consumerSecret: process.env.MAXCDN_CONSUMER_SECRET || ''
   },
   // SEO - Default html setup
-  googleAnalytics: 'UA-71654331-1',
+  googleAnalytics: process.env.GOOGLE_ANALYTICS || 'UA-71654331-1',
   html: {
-    title: 'Mean Stack JS Demo',
-    keywords: 'MEAN, MEANSTACKJS, mongodb, expressjs, angularjs,nodejs, javascript',
-    description: 'Mean Stack JS was built for ease of use with javascript at its core. MeanStackJS is a full stack javascript framework that will give you the power to develop web applications',
-    ogUrl: 'https://meanstackjs.herokuapp.com/',
-    ogType: 'website',
-    ogTitle: 'Mean Stack JS Demo',
-    ogDescription: 'Mean Stack JS was built for ease of use with javascript at its core. MeanStackJS is a full stack javascript framework that will give you the power to develop web applications',
-    ogImage: 'http://meanstackjs.com/images/logo/header.png',
-    fbAppId: '1610630462580116',
-    twitterCreator: '@greenpioneerdev',
-    twitterCard: 'summary_large_image',
-    twitterTitle: 'Mean Stack JS Demo',
-    twitterDescription: 'Mean Stack JS was built for ease of use with javascript at its core. MeanStackJS is a full stack javascript framework that will give you the power to develop web applications',
-    twitterUrl: 'https://meanstackjs.herokuapp.com/',
-    twitterImage: 'http://meanstackjs.com/images/logo/header.png',
-    twitterSite: '@meanstackjs',
-    canonical: 'https://meanstackjs.herokuapp.com/',
-    author: 'Green Pioneer Solutions'
+    title: process.env.HTML_META_TITLE || 'Mean Stack JS Demo',
+    keywords: process.env.HTML_META_KEYWORDS || 'MEAN, MEANSTACKJS, mongodb, expressjs, angularjs,nodejs, javascript',
+    description: process.env.HTML_META_DESCRIPTION || 'Mean Stack JS was built for ease of use with javascript at its core. MeanStackJS is a full stack javascript framework that will give you the power to develop web applications',
+    ogUrl: process.env.HTML_META_OG_URL || 'https://meanstackjs.herokuapp.com/',
+    ogType: process.env.HTML_META_OG_TYPE || 'website',
+    ogTitle: process.env.HTML_META_OG_TITLE || 'Mean Stack JS Demo',
+    ogDescription: process.env.HTML_META_OG_DESCRIPTION || 'Mean Stack JS was built for ease of use with javascript at its core. MeanStackJS is a full stack javascript framework that will give you the power to develop web applications',
+    ogImage: process.env.HTML_META_OG_IMAGE || 'http://meanstackjs.com/images/logo/header.png',
+    fbAppId: process.env.HTML_META_FB_APPID || '1610630462580116',
+    twitterCreator: process.env.HTML_META_TWITTER_CREATOR || '@greenpioneerdev',
+    twitterCard: process.env.HTML_META_TWITTER_CARD || 'summary_large_image',
+    twitterTitle: process.env.HTML_META_TWITTER_TITLE || 'Mean Stack JS Demo',
+    twitterDescription: process.env.HTML_META_TWITTER_DESCRIPTION || 'Mean Stack JS was built for ease of use with javascript at its core. MeanStackJS is a full stack javascript framework that will give you the power to develop web applications',
+    twitterUrl: process.env.HTML_META_TWITTER_URL || 'https://meanstackjs.herokuapp.com/',
+    twitterImage: process.env.HTML_META_TWITTER_IMAGE || 'http://meanstackjs.com/images/logo/header.png',
+    twitterSite: process.env.HTML_META_TWITTER_SITE || '@meanstackjs',
+    canonical: process.env.HTML_META_CANONICAL || 'https://meanstackjs.herokuapp.com/',
+    author: process.env.HTML_META_AUTHOR || 'Green Pioneer Solutions'
   },
   seo: require('./seo.js'),
   // AGGREGATION
@@ -303,9 +303,9 @@ var baseLine = {
   email: {
     templates: {
       welcome: {
-        subject: 'Welcome to Mean Stack JS',
+        subject: process.env.EMAIL_WELCOME_SUB || 'Welcome to Mean Stack JS',
         text: function (username) {
-          return 'Hi ' + username + ',\n\n' +
+          return process.env.EMAIL_WELCOME_TEXT_STRING || 'Hi ' + username + ',\n\n' +
           'Thanks for signing up for Mean Stack JS.\n\n' +
           'If you have any questions about the site, you can reply to this ' +
           'email.\n\n' +
@@ -313,30 +313,30 @@ var baseLine = {
         }
       },
       reset: {
-        subject: 'Reset your password on MEANSTACKJS ',
+        subject: process.env.EMAIL_RESET_SUB || 'Reset your password on MEANSTACKJS ',
         text: function (email) {
-          return 'Hello,\n\n' +
+          return process.env.EMAIL_RESET_TEXT_STRING || 'Hello,\n\n' +
           'This is a confirmation that the password for your account ' + email + ' has just been changed.\n'
         }
       },
       forgot: {
-        subject: 'Welcome to Mean Stack JS',
+        subject: process.env.EMAIL_FORGOT_SUB || 'Welcome to Mean Stack JS',
         text: function (host, token) {
-          return 'You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n' +
+          return process.env.EMAIL_FORGOT_TEXT_STRING || 'You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n' +
           'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
           'http://' + host + '/reset/' + token + '\n\n' +
           'If you did not request this, please ignore this email and your password will remain unchanged.\n'
         }
       }
     },
-    from: 'MEANSTACKJS@localhost.com',
-    error: 'MEANSTACKJS@localhost.com',
+    from: process.env.EMAIL_FROM || 'MEANSTACKJS@localhost.com',
+    error: process.env.EMAIL_ERROR || 'MEANSTACKJS@localhost.com',
     connect: {
-      host: 'smtp.mandrillapp.com', // Gmail, SMTP
-      port: '587',
+      host: process.env.EMAIL_HOST || 'smtp.mandrillapp.com', // Gmail, SMTP
+      port: process.env.EMAIL_PORT || '587',
       auth: {
-        user: 'hackathonstarterdemo',
-        pass: 'E1K950_ydLR4mHw12a0ldA'
+        user: process.env.EMAIL_USER || 'hackathonstarterdemo',
+        pass: process.env.EMAIL_PASS || 'E1K950_ydLR4mHw12a0ldA'
       }
     }
   }
