@@ -2,7 +2,7 @@ var mongodbUri = process.env.DB_PORT_27017_TCP_ADDR || process.env.MONGODB || pr
 module.exports = {
   minify: process.env.MINIFY || 'default', // 'concat' all files or 'minify' concat and minfy  or 'default' leave as is - Added process env for testing
   html: {
-    title: 'Nightwatch E2E MEANSTACKJS'
+    title: process.env.HTML_TITLE || 'Nightwatch E2E MEANSTACKJS'
   },
   logger: false,
   cdn: process.env.CDN || false,
@@ -19,15 +19,15 @@ module.exports = {
     port: process.env.SOCKETIOPORT || 8282
   },
   http: {
-    active: true,
+    active: process.env.HTTP_ACTIVE || true,
     port: process.env.PORT || 3000
   },
   https: {
-    active: false,
+    active: process.env.HTTPS_ACTIVE || false,
     redirect: true,
     port: process.env.HTTPSPORT || 3043,
-    key: './configs/certificates/keyExample.pem',
-    cert: './configs/certificates/certExample.pem'
+    key: process.env.HTTPS_KEY || './configs/certificates/keyExample.pem',
+    cert: process.env.HTTPS_CERT || './configs/certificates/certExample.pem'
   },
   throttle: {
     rateLimit: {

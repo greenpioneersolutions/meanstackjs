@@ -1,8 +1,8 @@
 var mongodbUri = process.env.DB_PORT_27017_TCP_ADDR || process.env.MONGODB || process.env.MONGOLAB_URI || 'mongodb://localhost/test'
 module.exports = {
-  minify: 'concat', // 'concat' all files or 'minify' concat and minfy  or 'default' leave as is
+  minify: process.env.MINIFY || 'concat', // 'concat' all files or 'minify' concat and minfy  or 'default' leave as is
   html: {
-    title: 'Test MEANSTACKJS'
+    title: process.env.HTML_TITLE || 'Test MEANSTACKJS'
   },
   logger: 'common',
   cdn: process.env.CDN || false,
@@ -19,15 +19,15 @@ module.exports = {
     port: process.env.SOCKETIOPORT || 8282
   },
   http: {
-    active: true,
+    active: process.env.HTTP_ACTIVE || true,
     port: process.env.PORT || 3000
   },
   https: {
-    active: false,
+    active: process.env.HTTPS_ACTIVE || false,
     redirect: true,
     port: process.env.HTTPSPORT || 3043,
-    key: './configs/certificates/keyExample.pem',
-    cert: './configs/certificates/certExample.pem'
+    key: process.env.HTTPS_KEY || './configs/certificates/keyExample.pem',
+    cert: process.env.HTTPS_CERT || './configs/certificates/certExample.pem'
   },
   throttle: {
     rateLimit: {
