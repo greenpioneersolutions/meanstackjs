@@ -2,37 +2,37 @@
 var _ = require('lodash')
 module.exports = {
   '/': {
-    title: 'Mean Stack JS Demo'
+    title: process.env.SEO_TITLE || 'Mean Stack JS Demo'
   },
   '/404': {
-    title: 'Page Not Found'
+    title: process.env.SEO_404 || 'Page Not Found'
   },
   '/500': {
-    title: 'Server Side Error'
+    title: process.env.SEO_500 || 'Server Side Error'
   },
   '/signin': {
-    title: 'Signin to Mean Stack JS'
+    title: process.env.SEO_LOG_IN || 'Signin to Mean Stack JS'
   },
   '/signup': {
-    title: 'Join Mean Stack JS '
+    title: process.env.SEO_SIGN_UP || 'Join Mean Stack JS '
   },
   '/account': {
-    title: '<%= user.profile.name %> Account'
+    title: process.env.SEO_ACCOUNT || '<%= user.profile.name %> Account'
   },
   '/forgot': {
-    title: 'Forgot Your Password '
+    title: process.env.SEO_FORGOT || 'Forgot Your Password '
   },
   '/reset/': {
-    title: 'reset '
+    title: process.env.SEO_RESET || 'reset '
   },
   '/blog/create': {
-    title: 'Create a New Blog'
+    title: process.env.SEO_CREATE || 'Create a New Blog'
   },
   '/blog/edit/': {
-    title: 'Edit Your Blog'
+    title: process.env.SEO_EDIT || 'Edit Your Blog'
   },
   '/blog/list': {
-    title: 'Blog List'
+    title: process.env.SEO_LIST || 'Blog List'
   },
   '/blog/view/:id': {
     title: '<%=  blog.title  %> -  <%=  blog.user.profile.name %> ',
@@ -47,7 +47,7 @@ module.exports = {
     twitterDescription: '<%=  blog.content  %> ',
     hook: function (self, data, cb) {
       data.blog = {
-        tags: ['Add', 'Tags', 'To Blog', 'Mean Stack JS']
+        tags: process.env.SEO_TAGS || ['Add', 'Tags', 'To Blog', 'Mean Stack JS']
       }
       self.models.blog.findOne({_id: data.params.id}).populate('user').then(function (blog) {
         data.blog = _.assign(data.blog, blog)
