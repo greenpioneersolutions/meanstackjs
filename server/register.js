@@ -420,44 +420,50 @@ Register.prototype.renderFrontendFiles = function (self) {
   debug('end createFrontend')
 
   debug('started env')
-  if (self.settings.minify === 'concat') {
+  if (self.settings.minify === 'concat' || self.settings.minify === 'minify') {
+    if (self.settings.minify === 'minify') {
+      self.app.locals.frontendFilesFinal = {
+        js: ['scripts/compiled/concat.min.js'],
+        css: ['styles/compiled/concat.min.css']
+      }
+    } else {
+      self.app.locals.frontendFilesFinal = {
+        js: ['scripts/compiled/concat.js'],
+        css: ['styles/compiled/concat.css']
+      }
+    }
     concat(self.frontendFilesAggregate.css, path.join(dir, '../client/styles/compiled/concat.css'), function (error) {
       if (error)debug(error, 'concat')
+      if (self.settings.minify === 'minify') {
+        var uglifiedcss = uglifycss.processFiles(
+          [path.join(dir, '../client/styles/compiled/concat.css')], {
+            maxLineLen: 500
+          }
+        )
+        fs.writeFile(path.join(dir, '../client/styles/compiled/concat.min.css'), uglifiedcss, function (error) {
+          if (error) {
+            debug(error)
+          } else {
+            debug('Script generated and saved:', 'concat.min.css')
+          }
+        })
+      }
     })
     concat(self.frontendFilesAggregate.js, path.join(dir, '../client/scripts/compiled/concat.js'), function (error) {
       if (error)debug(error, 'concat')
-    })
-    self.app.locals.frontendFilesFinal = {
-      js: ['scripts/compiled/concat.js'],
-      css: ['styles/compiled/concat.css']
-    }
-  } else if (self.settings.minify === 'minify') {
-    var uglifiedcss = uglifycss.processFiles(
-      self.frontendFilesAggregate.css, {
-        maxLineLen: 500
-      }
-    )
-    fs.writeFile(path.join(dir, '../client/styles/compiled/concat.min.css'), uglifiedcss, function (error) {
-      if (error) {
-        debug(error)
-      } else {
-        debug('Script generated and saved:', 'concat.min.css')
+      if (self.settings.minify === 'minify') {
+        var uglifiedjs = uglify.minify(fs.readFileSync(path.join(dir, '../client/scripts/compiled/concat.js'), 'utf8'), {
+          mangle: false
+        })
+        fs.writeFile(path.join(dir, '../client/scripts/compiled/concat.min.js'), uglifiedjs.code, function (error) {
+          if (error) {
+            debug(error)
+          } else {
+            debug('Script generated and saved:', 'concat.min.js')
+          }
+        })
       }
     })
-    var uglifiedjs = uglify.minify(self.frontendFilesAggregate.js, {
-      mangle: false
-    })
-    fs.writeFile(path.join(dir, '../client/scripts/compiled/concat.min.js'), uglifiedjs.code, function (error) {
-      if (error) {
-        debug(error)
-      } else {
-        debug('Script generated and saved:', 'concat.min.js')
-      }
-    })
-    self.app.locals.frontendFilesFinal = {
-      js: ['scripts/compiled/concat.min.js'],
-      css: ['styles/compiled/concat.min.css']
-    }
   } else {
     self.app.locals.frontendFilesFinal = self.frontendFilesFinal
   }
