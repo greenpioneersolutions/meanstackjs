@@ -108,7 +108,7 @@
     "express-session": "^1.12.1",
     "express-sitemap": "^1.6.3",
     "express-status-monitor": "^1.0.1",
-    "express-validator": "^4.3.0",
+    "express-validator": "^5.0.3",
     "glob": "^7.1.1",
     "helmet": "^3.1.0",
     "hpp": "^0.2.1",
@@ -154,7 +154,7 @@
     "socket.io": "^2.0.2",
     "uglify-js": "^2.8.29",
     "uglifycss": "0.0.27",
-    "validator": "^9.2.0",
+    "validator": "^9.4.1",
     "winston": "^2.3.1",
     "winston-daily-rotate-file": "^1.4.4",
     "winston-mongodb": "^3.0.2"
