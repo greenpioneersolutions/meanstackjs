@@ -444,7 +444,7 @@ Register.prototype.renderFrontendFiles = function (self) {
           if (error) {
             debug(error)
           } else {
-            debug('Script generated and saved:', 'concat.min.css')
+            console.log('Script generated and saved:', 'concat.min.css')
           }
         })
       }
@@ -459,7 +459,7 @@ Register.prototype.renderFrontendFiles = function (self) {
           if (error) {
             debug(error)
           } else {
-            debug('Script generated and saved:', 'concat.min.js')
+            console.log('Script generated and saved:', 'concat.min.js')
           }
         })
       }
