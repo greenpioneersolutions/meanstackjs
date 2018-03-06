@@ -119,7 +119,7 @@
     "less": "^2.7.2",
     "lodash": "^4.17.4",
     "maxcdn": "^0.2.0",
-    "method-override": "^2.3.5",
+    "method-override": "^2.3.10",
     "mongo-throttle": "^1.2.0",
     "mongoose": "^4.7.4",
     "mongoose-timestamp": "^0.6.0",
