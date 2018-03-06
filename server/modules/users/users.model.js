@@ -64,7 +64,7 @@ var userSchema = new mongoose.Schema({
       type: String,
       index: true,
       required: 'We need a name to create your account.',
-      validate: passwordValidator
+      validate: profileNameValidator
     },
     gender: {
       type: String,
