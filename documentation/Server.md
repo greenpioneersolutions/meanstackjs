@@ -228,53 +228,105 @@ How it works
 var mongoose = require('mongoose')
 var validate = require('mongoose-validator')
 
+var emailValidator = [
+  validate({
+    validator: 'isEmail',
+    message: 'Your email address is invalid.'
+  }),
+  validate({
+    validator: 'isLength',
+    arguments: 3,
+    message: 'We need an email address to create your account.'
+  })
+]
+var passwordValidator = [
+  validate({
+    validator: 'isLength',
+    arguments: [ 6, 255 ],
+    message: 'Your password must be at least 6 characters.'
+  })
+]
+var profileNameValidator = [
+  validate({
+    validator: 'contains',
+    arguments: ' ',
+    message: 'Please use your full name.'
+  }),
+  validate({
+    validator: 'isLength',
+    arguments: 3,
+    message: 'We need a name to create your account.'
+  })
+]
 var userSchema = new mongoose.Schema({
   email: {
     type: String,
     lowercase: true,
     unique: true,
     required: 'We need an email address to create your account.',
-    validate: [
-      validate({
-        validator: 'isEmail',
-        message: 'Your email address is invalid.'
-      }),
-      validate({
-        validator: 'isLength',
-        arguments: 3,
-        message: 'We need an email address to create your account.'
-      })
-    ]
+    validate: emailValidator
   },
   password: {
     type: String,
     required: true,
-    validate: [
-      validate({
-        validator: 'isLength',
-        arguments: [ 6, 255 ],
-        message: 'Your password must be at least 6 characters.'
-      })
-    ]
+    validate: passwordValidator
   },
-  name: {
+  tokens: {
+    type: Array
+  },
+  roles: {
+    type: Array,
+    default: []
+  },
+  profile: {
+    name: {
+      type: String,
+      index: true,
+      required: 'We need a name to create your account.',
+      validate: passwordValidator
+    },
+    gender: {
+      type: String,
+      default: ''
+    },
+    location: {
+      type: String,
+      default: ''
+    },
+    website: {
+      type: String,
+      default: ''
+    },
+    picture: {
+      type: String,
+      default: ''
+    }
+  },
+  // azure: {},
+  // facebook: {},
+  // twitter: {},
+  // github: {},
+  // google: {},
+  // linkedin: {},
+  // instagram: {},
+  lastLoggedIn: {
+    type: Date,
+    default: Date.now
+  },
+  resetPasswordToken: {
+    type: String
+  },
+  resetPasswordExpires: {
+    type: Date
+  },
+  apikey: {
     type: String,
-    index: true,
-    required: 'We need a name to create your account.',
-    validate: [
-      validate({
-        validator: 'contains',
-        arguments: ' ',
-        message: 'Please use your full name.'
-      }),
-      validate({
-        validator: 'isLength',
-        arguments: 3,
-        message: 'We need a name to create your account.'
-      })
-    ]
+    default: uuid.v4()
+  },
+  type: {
+    type: String,
+    default: 'user' // Service Accounts later
   }
-    
 })
 
 // Trim whitespace

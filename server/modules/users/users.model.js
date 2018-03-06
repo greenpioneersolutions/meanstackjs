@@ -9,35 +9,48 @@ var timestamps = require('mongoose-timestamp')
 var debug = require('debug')('meanstackjs:users')
 var uuid = require('node-uuid')
 // var _ = require('lodash')
-
+var emailValidator = [
+  validate({
+    validator: 'isEmail',
+    message: 'Your email address is invalid.'
+  }),
+  validate({
+    validator: 'isLength',
+    arguments: 3,
+    message: 'We need an email address to create your account.'
+  })
+]
+var passwordValidator = [
+  validate({
+    validator: 'isLength',
+    arguments: [ 6, 255 ],
+    message: 'Your password must be at least 6 characters.'
+  })
+]
+var profileNameValidator = [
+  validate({
+    validator: 'contains',
+    arguments: ' ',
+    message: 'Please use your full name.'
+  }),
+  validate({
+    validator: 'isLength',
+    arguments: 3,
+    message: 'We need a name to create your account.'
+  })
+]
 var userSchema = new mongoose.Schema({
   email: {
     type: String,
     lowercase: true,
     unique: true,
     required: 'We need an email address to create your account.',
-    validate: [
-      validate({
-        validator: 'isEmail',
-        message: 'Your email address is invalid.'
-      }),
-      validate({
-        validator: 'isLength',
-        arguments: 3,
-        message: 'We need an email address to create your account.'
-      })
-    ]
+    validate: emailValidator
   },
   password: {
     type: String,
     required: true,
-    validate: [
-      validate({
-        validator: 'isLength',
-        arguments: [ 6, 255 ],
-        message: 'Your password must be at least 6 characters.'
-      })
-    ]
+    validate: passwordValidator
   },
   tokens: {
     type: Array
@@ -51,18 +64,7 @@ var userSchema = new mongoose.Schema({
       type: String,
       index: true,
       required: 'We need a name to create your account.',
-      validate: [
-        validate({
-          validator: 'contains',
-          arguments: ' ',
-          message: 'Please use your full name.'
-        }),
-        validate({
-          validator: 'isLength',
-          arguments: 3,
-          message: 'We need a name to create your account.'
-        })
-      ]
+      validate: passwordValidator
     },
     gender: {
       type: String,
