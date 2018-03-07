@@ -14,7 +14,7 @@ function setupToolLivereload (self) {
 
   if (self.environment === 'development') {
     var Livereload = require('./server.livereload.js')
-    self.run(Livereload)
+    self.run(Livereload, self)
     var scssLessWatcher = chokidar.watch('file, dir, glob, or array', {
       ignored: /[\/\\]\./,
       persistent: true
