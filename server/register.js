@@ -5,7 +5,7 @@ var _ = require('lodash')
 var chalksay = require('chalksay')
 var concat = require('serial-concat-files')
 var debug = require('debug')('meanstackjs:register')
-var fs = require('fs')
+var fs = require('fs-extra')
 var less = require('less')
 var uglify = require('uglify-js')
 var uglifycss = require('uglifycss')
@@ -180,6 +180,9 @@ Register.prototype.setupFrontendDirectories = function (self) {
   if (!pathExists(dir + '/../client/uploads/')) {
     fs.mkdirSync(dir + '/../client/uploads/')
   }
+  if (!pathExists(dir + '/../client/components/')) {
+    fs.mkdirSync(dir + '/../client/components/')
+  }
 
   // DELETE ALL PREVIOUSLY COMPILED
   rmdirSync(dir + '/../client/styles/compiled/')
@@ -259,7 +262,15 @@ Register.prototype.compileFrontendStylesScripts = function (self) {
             var scssContents = fs.readFileSync(path.join(dir, '/../client/modules/' + r.name + '/' + j.orginal), 'utf8')
             // PLACED includePaths: so that @import 'global-variables.styles.scss'; work properly
             var result = sass.renderSync({
-              includePaths: [path.join(dir, '../client/modules'), path.join(dir, '../client/styles'), path.join(dir, '../client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(dir, '../client/bower_components/Materialize/sass'), path.join(dir, '../client/bower_components/foundation/scss'), path.join(dir, '../client/bower_components/font-awesome/scss')],
+              includePaths: [
+                path.join(dir, '../client/modules'),
+                path.join(dir, '../client/styles'),
+                path.join(dir, '../client/components'),
+                path.join(dir, '../node_modules/bootstrap-sass/assets/stylesheets'),
+                path.join(dir, '../node_modules/materialize-css/sass'),
+                path.join(dir, '../node_modules/foundation-sites/scss'),
+                path.join(dir, '../node_modules/font-awesome/scss')
+              ],
               data: scssContents
             })
             fs.writeFileSync(path.join(dir, '/../client/styles/compiled/' + j.name + '.' + j.type + '.' + j.ext + '.css'), result.css)
@@ -361,31 +372,11 @@ Register.prototype.transformBabel = function (self) {
 }
 
 Register.prototype.renderFrontendFiles = function (self) {
-  debug('started createGlobalStyle')
-  // var self = this
-
-  var globalContents = fs.readFileSync(dir + '/../client/styles/global.style.scss', 'utf8')
-  var result = sass.renderSync({
-    includePaths: [
-      path.join(dir, '../client/modules'),
-      path.join(dir, '../client/styles'),
-      path.join(dir, '../client/bower_components/bootstrap-sass/assets/stylesheets'),
-      path.join(dir, '../client/bower_components/Materialize/sass'),
-      path.join(dir, '../client/bower_components/foundation/scss'),
-      path.join(dir, '../client/bower_components/font-awesome/scss')
-    ],
-    data: globalContents
-  })
-
-  fs.writeFileSync(dir + '/../client/styles/compiled/global.style.css', result.css)
-  debug('end createGlobalStyle')
-
   debug('started createFrontend')
   self.frontendFilesFinal.js.unshift(/modules/ + self.mainFrontendFile)
   self.frontendFilesAggregate.js.unshift(path.join(dir, '../client/modules/' + self.mainFrontendFile))
 
   self.settings.assets.css.forEach(function (ms) {
-    self.frontendFilesFinal.css.unshift(ms)
     if (validator.isURL(ms)) {
       fs.access(path.join(dir, '../client/styles/downloaded/' + path.basename(ms)), fs.constants.R_OK | fs.constants.W_OK, function (error) {
         if (error) {
@@ -396,13 +387,20 @@ Register.prototype.renderFrontendFiles = function (self) {
         }
       })
       self.frontendFilesAggregate.css.unshift(path.join(dir, '../client/styles/downloaded/' + path.basename(ms)))
+      self.frontendFilesFinal.css.unshift('/styles/downloaded/' + path.basename(ms))
     } else {
-      self.frontendFilesAggregate.css.unshift(path.join(dir, '../client/' + ms))
+      if (fs.existsSync(path.join(dir, '../node_modules/' + ms))) {
+        fs.copySync(path.join(dir, '../node_modules/' + ms), path.join(dir, '../client/components/' + ms), {overwrite: true}) // Options { preserveTimestamps:true,errorOnExist:true}
+        self.frontendFilesAggregate.css.unshift(path.join(dir, '../client/components/' + ms))
+        self.frontendFilesFinal.css.unshift('/components' + ms)
+      } else {
+        self.frontendFilesAggregate.css.unshift(path.join(dir, '../client/' + ms))
+        self.frontendFilesFinal.css.unshift(ms)
+      }
     }
   })
 
   self.settings.assets.js.forEach(function (ms) {
-    self.frontendFilesFinal.js.unshift(ms)
     if (validator.isURL(ms)) {
       fs.access(path.join(dir, '../client/scripts/downloaded/' + path.basename(ms)), fs.constants.R_OK | fs.constants.W_OK, function (error) {
         if (error) {
@@ -413,11 +411,43 @@ Register.prototype.renderFrontendFiles = function (self) {
         }
       })
       self.frontendFilesAggregate.js.unshift(path.join(dir, '../client/scripts/downloaded/' + path.basename(ms)))
+      self.frontendFilesFinal.js.unshift('/scripts/downloaded/' + path.basename(ms))
     } else {
-      self.frontendFilesAggregate.js.unshift(path.join(dir, '../client/' + ms))
+      if (fs.existsSync(path.join(dir, '../node_modules/' + ms))) {
+        fs.copySync(path.join(dir, '../node_modules/' + ms), path.join(dir, '../client/components/' + ms), {overwrite: true}) // Options { preserveTimestamps:true,errorOnExist:true}
+        self.frontendFilesAggregate.js.unshift(path.join(dir, '../client/components/' + ms))
+        self.frontendFilesFinal.js.unshift('/components' + ms)
+      } else {
+        self.frontendFilesAggregate.js.unshift(path.join(dir, '../client/' + ms))
+        self.frontendFilesFinal.js.unshift(ms)
+      }
+    }
+  })
+  self.settings.assets.copy.forEach(function (ms) {
+    if (fs.existsSync(path.join(dir, '../node_modules/' + ms))) {
+      fs.copySync(path.join(dir, '../node_modules/' + ms), path.join(dir, '../client/components/' + ms), {overwrite: true}) // Options { preserveTimestamps:true,errorOnExist:true}
     }
   })
   debug('end createFrontend')
+
+  debug('started createGlobalStyle')
+
+  var globalContents = fs.readFileSync(dir + '/../client/styles/global.style.scss', 'utf8')
+  var result = sass.renderSync({
+    includePaths: [
+      path.join(dir, '../client/modules'),
+      path.join(dir, '../client/styles'),
+      path.join(dir, '../client/components'),
+      path.join(dir, '../node_modules/bootstrap-sass/assets/stylesheets'),
+      path.join(dir, '../node_modules/materialize-css/sass'),
+      path.join(dir, '../node_modules/foundation-sites/scss'),
+      path.join(dir, '../node_modules/font-awesome/scss')
+    ],
+    data: globalContents
+  })
+
+  fs.writeFileSync(dir + '/../client/styles/compiled/global.style.css', result.css)
+  debug('end createGlobalStyle')
 
   debug('started env')
   if (self.settings.minify === 'concat' || self.settings.minify === 'minify') {

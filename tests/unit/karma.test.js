@@ -1,9 +1,15 @@
 module.exports = function (config) {
   var path = require('path')
   var _ = require('lodash')
-  var dependencies = require('../../configs/settings.js').get().assets.js
+  var settings = require('../../configs/settings.js').get()
+  var fs = require('fs')
+  var dependencies = settings.assets.js
   var dependencyFiles = _.map(dependencies, function (dependency) {
-    return path.resolve('./client/' + dependency).toString()
+    if (fs.existsSync(path.resolve('./node_modules/' + dependency))) {
+      return path.resolve('./client/components/' + dependency).toString()
+    } else {
+      return path.resolve('./client/' + dependency).toString()
+    }
   })
   var clientPath = '../../client'
   var srcFiles = [

@@ -41,7 +41,15 @@ function setupToolLivereload (self) {
         console.log(url)
         var scssContents = fs.readFileSync(path.resolve(url), 'utf8')
         var result = sass.renderSync({
-          includePaths: [path.join(self.dir, './client/modules'), path.join(self.dir, './client/styles'), path.join(self.dir, './client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(self.dir, './client/bower_components/Materialize/sass'), path.join(self.dir, './client/bower_components/foundation/scss'), path.join(self.dir, './client/bower_components/font-awesome/scss')],
+          includePaths: [
+            path.join(self.dir, '../client/modules'),
+            path.join(self.dir, '../client/styles'),
+            path.join(self.dir, '../client/components'),
+            path.join(self.dir, '../node_modules/bootstrap-sass/assets/stylesheets'),
+            path.join(self.dir, '../node_modules/materialize-css/sass'),
+            path.join(self.dir, '../node_modules/foundation-sites/scss'),
+            path.join(self.dir, '../node_modules/font-awesome/scss')
+          ],
           data: scssContents
         })
         fs.writeFileSync(path.resolve('./client/styles/compiled/' + fileData[fileData.length - 3] + '.' + fileData[fileData.length - 2] + '.' + fileData[fileData.length - 1] + '.css'), result.css)
@@ -70,9 +78,17 @@ function setupToolLivereload (self) {
         chalksay.green('Recompiled LESS')
       } else {
         // RENDER THE GLOBAL STYLE
-        var globalContents = fs.readFileSync(path.join(self.dir, '/client/styles/global.style.scss'), 'utf8')
+        var globalContents = fs.readFileSync(path.join(self.dir, './client/styles/global.style.scss'), 'utf8')
         var result = sass.renderSync({
-          includePaths: [path.join(self.dir, './client/modules'), path.join(self.dir, './client/styles'), path.join(self.dir, './client/bower_components/bootstrap-sass/assets/stylesheets'), path.join(self.dir, './client/bower_components/Materialize/sass'), path.join(self.dir, './client/bower_components/foundation/scss'), path.join(self.dir, './client/bower_components/font-awesome/scss')],
+          includePaths: [
+            path.join(self.dir, '../client/modules'),
+            path.join(self.dir, '../client/styles'),
+            path.join(self.dir, '../client/components'),
+            path.join(self.dir, '../node_modules/bootstrap-sass/assets/stylesheets'),
+            path.join(self.dir, '../node_modules/materialize-css/sass'),
+            path.join(self.dir, '../node_modules/foundation-sites/scss'),
+            path.join(self.dir, '../node_modules/font-awesome/scss')
+          ],
           data: globalContents
         })
         fs.writeFileSync(path.join(self.dir, '/client/styles/compiled/global.style.css'), result.css)
@@ -81,12 +97,13 @@ function setupToolLivereload (self) {
           // PLACED includePaths: so that @import 'global-variables.styles.scss'; work properly
           var result = sass.renderSync({
             includePaths: [
-              path.join(self.dir, './client/modules'),
-              path.join(self.dir, './client/styles'),
-              path.join(self.dir, './client/bower_components/bootstrap-sass/assets/stylesheets'),
-              path.join(self.dir, './client/bower_components/Materialize/sass'),
-              path.join(self.dir, './client/bower_components/foundation/scss'),
-              path.join(self.dir, './client/bower_components/font-awesome/scss')
+              path.join(self.dir, '../client/modules'),
+              path.join(self.dir, '../client/styles'),
+              path.join(self.dir, '../client/components'),
+              path.join(self.dir, '../node_modules/bootstrap-sass/assets/stylesheets'),
+              path.join(self.dir, '../node_modules/materialize-css/sass'),
+              path.join(self.dir, '../node_modules/foundation-sites/scss'),
+              path.join(self.dir, '../node_modules/font-awesome/scss')
             ],
             data: scssContents
           })

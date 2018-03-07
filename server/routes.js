@@ -41,7 +41,7 @@ function routes (self) {
       res.send(seoSettings)
     })
   })
-  self.app.get('/:url(api|images|scripts|styles|bower_components|uploads|modules)/*', function (req, res) {
+  self.app.get('/:url(api|images|scripts|styles|components|uploads|modules)/*', function (req, res) {
     res.status(400).send({
       error: 'nothing found at ' + req.path
     })
