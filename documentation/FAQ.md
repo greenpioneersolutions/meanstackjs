@@ -1,4 +1,4 @@
-### Frequently Asked Questions
+### Frequently Asked Questions (FAQ)
 
 #### 1. Error: listen EACCES 0.0.0.0
 

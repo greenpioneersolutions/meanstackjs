@@ -1,9 +1,11 @@
+### Roadmap
+
 Welcome to those of you here reading the roadmap. we are very open to feedback and to debate what would be a great fit in the stack. With that being said lets start the conversation right here and get it planned into the start. Please feel free to create a issue/feature request.
 
 There will be more info to come later in the roadmap.
 
-Meanstackjs 1.x - Goal is to support Enterprises
-----------------
+#### Meanstackjs 1.x - Goal is to support Enterprises
+
 
 We will default to what supports most of versions of node, browsers & users. 1.x will try to keep production ready at all time with the most stable code base.
 
@@ -16,8 +18,8 @@ We will default to what supports most of versions of node, browsers & users. 1.x
 * [John Papa Angular Style](https://github.com/johnpapa/angular-styleguide/tree/master/a1)
 * [NightwatchJS](http://nightwatchjs.org/) 0.x - 1.x
 
-Meanstackjs 2.x - Goal is to support Open Source Comp
-----------------
+#### Meanstackjs 2.x - Goal is to support Open Source Comp
+
 
 We plan to really use forward thinking technologies with the all the newest stuff.
 

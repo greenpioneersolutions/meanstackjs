@@ -1,4 +1,6 @@
-### Settings Usage
+### Configs
+
+#### Settings Usage
 
 you can programmatically set it in your code. Recommended you just change it in the settings or env config 
 
@@ -9,7 +11,7 @@ self.settings = require('./configs/settings.js').set({
 })
 ```
 
-### Seo.js
+#### Seo.js
 
 Example below of how totally control the seo of a dynamic route. In the hook if you chose to create one you have access to the `self` obj for the entire system, `data` object which will get sent to your templates & lastly if you need to call the callback to pass a error first or the data second. if there is a error the system will revert to the default seo. Note the data object will hold the values of the route before you do anything to it for example anything on the query or the params. In the env configs you can deem how you want to render by which template engine. Default - `lodash` which can handles es6 and ejs-like templating. If you wanted to you could switch right from the start to ejs and the templates are already compatible 
 
@@ -38,7 +40,7 @@ Example below of how totally control the seo of a dynamic route. In the hook if 
     }
   }
 ```
-### Environment.js
+#### Environment.js
 
 ``` javascript
 self.environment = require('./server/environment.js').get()
@@ -48,7 +50,7 @@ export NODE_ENV=test // LINUX
 set NODE_ENE=test // WINDOWS
 ```
 
-### Configs are based off env
+#### Configs are based off env
 
 ``` javascript
 // Development example
@@ -127,7 +129,7 @@ module.exports = {
 
 ```
 
-### Settings.js
+#### Settings.js
 
 We now have included [Dotenv](https://www.npmjs.com/package/dotenv) as you see below. In doing this it purposely fails silently because we want you to never source that info in github for security reasons. Please keep your configs safe and out of the public eye. `minify` is now configurable and no longer based on our env names so you have total control of your env names and how they build.
 
