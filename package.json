@@ -58,11 +58,11 @@
     "update": "node scripts/update-meanstackjs.js",
     "snyk-protect": "snyk protect",
     "prepublish": "npm run snyk-protect",
-    "documentation":"npm run documentation:api && npm run documentation:changelog && npm run documentation:development && npm run documentation:ops",
-    "documentation:api":"node scripts/generate-api-doc.js",
-    "documentation:changelog":"node scripts/generate-changelog.js",
-    "documentation:development":"node scripts/generate-development-doc.js",
-    "documentation:ops":"node scripts/generate-ops-doc.js"
+    "documentation": "npm run documentation:api && npm run documentation:changelog && npm run documentation:development && npm run documentation:ops",
+    "documentation:api": "node scripts/generate-api-doc.js",
+    "documentation:changelog": "node scripts/generate-changelog.js",
+    "documentation:development": "node scripts/generate-development-doc.js",
+    "documentation:ops": "node scripts/generate-ops-doc.js"
   },
   "repository": "git+https://github.com/greenpioneersolutions/meanstackjs.git",
   "homepage": "https://github.com/greenpioneersolutions/meanstackjs#readme",
@@ -89,7 +89,7 @@
     "url": "https://github.com/greenpioneersolutions/meanstackjs/issues"
   },
   "dependencies": {
-    "angular": "1.5.8",
+    "angular": "1.6.9",
     "angular-animate": "1.5.8",
     "angular-cookies": "1.5.8",
     "angular-jwt": "0.0.9",
@@ -143,7 +143,7 @@
     "materialize-css": "^1.0.0-alpha.4",
     "maxcdn": "^0.2.0",
     "method-override": "^2.3.10",
-    "moment": "2.14.1",
+    "moment": "2.19.3",
     "mongo-throttle": "^1.2.0",
     "mongoose": "^5.0.9",
     "mongoose-timestamp": "^0.6.0",
@@ -177,7 +177,7 @@
     "serial-concat-files": "^1.0.0",
     "snyk": "^1.30.1",
     "socket.io": "^2.0.2",
-    "socket.io-client": "1.4.5",
+    "socket.io-client": "2.0.2",
     "toastr": "^2.1.4",
     "uglify-js": "^3.3.13",
     "uglifycss": "^0.0.28",
