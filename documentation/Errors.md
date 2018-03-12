@@ -1,6 +1,6 @@
-# Errors
+### Errors
 
-## Where do we catch our errors ?
+#### Where do we catch our errors ?
 
 1. Run.js - uncaughtException
 
@@ -41,10 +41,10 @@ self.app.use(function (err, req, res, next) {
 })
 ```
 
-## How do we log our errors
+#### How do we log our errors
 
 `error.log()`
 
-### server.error.js:log - system error log
+#### server.error.js:log - system error log
 
 We log every issue for you now in the database under the `error` collection. In doing that we wanted to give admins a place to view there data instead of just in a log(we still log out the error too). check out the [Dashboard](http://localhost:3000/admin?view=errors). We know that some errors will repeat so we check for the same message seeing as that is our main indicator of what happened. If we find the same one again we will update the count and add a timestamp to the history. With this in place you will now have the ability to add back in the logic we have commented out to allowing you to email yourself when you think its worth knowing about with your own rules on the data. Check it out and let us know your thoughts.

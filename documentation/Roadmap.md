@@ -9,10 +9,10 @@ We will default to what supports most of versions of node, browsers & users. 1.x
 
 * ES5
 * [Expressjs 4](http://expressjs.com/en/4x/api.html)
-* [Boostrap 3](http://getbootstrap.com/)
+* [Boostrap 3](https://getbootstrap.com/docs/3.3/)
 * [Angular](https://angularjs.org/) 1.x
 * [MongoDB](https://www.mongodb.com/download-center#community) 3.x
-* [Nodejs](https://github.com/nodejs/LTS#lts_schedule) 4.x - 6.x
+* [Nodejs](https://github.com/nodejs/LTS#lts_schedule) 6.x - 9.x
 * [John Papa Angular Style](https://github.com/johnpapa/angular-styleguide/tree/master/a1)
 * [NightwatchJS](http://nightwatchjs.org/) 0.x - 1.x
 
@@ -23,10 +23,10 @@ We plan to really use forward thinking technologies with the all the newest stuf
 
 * ES6
 * [Expressjs 5](http://expressjs.com/en/guide/migrating-5.html)
-* [Boostrap 4](http://v4-alpha.getbootstrap.com/)
-* [Angular](https://angular.io/) 2.x
+* [Boostrap 4](https://getbootstrap.com/)
+* [Angular](https://angular.io/) 5.x > 
 * [MongoDB](https://www.mongodb.com/download-center#community) 3.x - 4.x
-* [Nodejs](https://github.com/nodejs/LTS#lts_schedule) 6.x - 8.x
+* [Nodejs](https://github.com/nodejs/LTS#lts_schedule) 10.x - 14.x
 * [John Papa Angular 2 Style ](https://github.com/johnpapa/angular-styleguide/tree/master/a2)
 * [NightwatchJS](http://nightwatchjs.org/) 1.x - 2.x
 

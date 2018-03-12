@@ -1,11 +1,11 @@
-File Naming Structure
------------------
+### File Naming Structure
 
-### Modules
+
+#### Modules
 
 We have implemented modules with a specific file naming convention for server & client side coding. Each module has a unique such as `blog`. Inside of each module you specific files named as such `UNIQUE_NAME.FILE_TYPE_IDENTIFIER.FILE_EXTENSION` 
 
-### Available Keywords to use for `FILE_TYPE_IDENTIFIER`
+#### Available Keywords to use for `FILE_TYPE_IDENTIFIER`
 
 | FRONTEND                                | BACKEND                                                  |
 | ----------------------------------  | ------------------------------------------------------------ |

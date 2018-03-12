@@ -6,8 +6,8 @@ $bootstrap-sass-asset-helper: false !default;
 // --------------------------------------------------
 
 //Paths
-$fa-font-path:        "/bower_components/font-awesome/fonts" !default;
-$icon-font-path: if($bootstrap-sass-asset-helper, "bootstrap/", "/bower_components/bootstrap-sass/assets/fonts/bootstrap/") !default;
+$fa-font-path:        "/components" !default;
+$icon-font-path: if($bootstrap-sass-asset-helper, "bootstrap/", "/components/") !default;
 
 //== Colors
 //## Gray and brand colors for use across Bootstrap.

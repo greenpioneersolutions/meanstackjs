@@ -1,4 +1,4 @@
-module.exports.middleware = middleware
+module.exports.loggerMiddleware = middleware
 
 var morgan = require('morgan')
 var pathExists = require('is-there')

@@ -1,5 +1,5 @@
 exports.log = log
-exports.middleware = middleware
+exports.errorMiddleware = middleware
 
 var httpStatus = require('http-status-codes')
 var debug = require('debug')('meanstackjs:error')

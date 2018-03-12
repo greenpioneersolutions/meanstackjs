@@ -11,7 +11,6 @@
       'ui.router',
       'angularMoment',
       'ngFileUpload',
-      'angular-jwt',
-      'ngBrowserInfo'
+      'angular-jwt'
     ])
 })()

@@ -157,29 +157,33 @@ var baseLine = {
   // OR USE INTERNAL FILES - '/bower_components/jquery/dist/jquery.js'
   assets: {
     js: [
-      '/bower_components/ngBrowserInfo/dist/ngBrowserInfo.js',
-      '/bower_components/angular-jwt/dist/angular-jwt.js',
-      '/bower_components/socket.io-client/socket.io.js',
-      '/bower_components/ng-file-upload/ng-file-upload-all.js',
-      '/bower_components/angular-mocks/angular-mocks.js',
-      '/bower_components/angular-cookies/angular-cookies.js',
-      '/bower_components/angular-sanitize/angular-sanitize.js',
-      '/bower_components/angular-animate/angular-animate.js',
-      '/bower_components/angular-resource/angular-resource.js',
-      '/bower_components/angular-ui-router/release/angular-ui-router.js',
-      '/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
-      '/bower_components/angular-moment/angular-moment.js',
-      '/bower_components/moment/moment.js',
-      '/bower_components/lodash/lodash.js',
-      '/bower_components/toastr/toastr.js',
-      '/bower_components/bootstrap-sass/assets/javascripts/bootstrap.js',
-      '/bower_components/angular/angular.js',
-      '/bower_components/jquery/dist/jquery.js'
+      '/angular-jwt/dist/angular-jwt.js',
+      '/socket.io-client/socket.io.js',
+      '/ng-file-upload/dist/ng-file-upload-all.js',
+      '/angular-mocks/angular-mocks.js',
+      '/angular-cookies/angular-cookies.js',
+      '/angular-sanitize/angular-sanitize.js',
+      '/angular-animate/angular-animate.js',
+      '/angular-resource/angular-resource.js',
+      '/angular-ui-router/release/angular-ui-router.js',
+      '/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
+      '/angular-moment/angular-moment.js',
+      '/moment/moment.js',
+      '/lodash/lodash.js',
+      '/toastr/toastr.js',
+      '/bootstrap-sass/assets/javascripts/bootstrap.js',
+      '/angular/angular.js',
+      '/jquery/dist/jquery.js'
     ],
     css: [
       '/styles/compiled/global.style.css',
-      '/bower_components/toastr/toastr.css'
-    // '/bower_components/font-awesome/css/font-awesome.min.css'
+      '/toastr/build/toastr.css'
+    ],
+    copy: [
+      '/font-awesome/fonts/fontawesome-webfont.woff2',
+      '/font-awesome/fonts/fontawesome-webfont.ttf',
+      '/bootstrap-sass/assets/fonts/bootstrap/glyphicons-halflings-regular.woff2',
+      '/bootstrap-sass/assets/fonts/bootstrap/glyphicons-halflings-regular.ttf'
     ]
   },
   bodyparser: {
