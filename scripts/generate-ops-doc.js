@@ -17,6 +17,12 @@ var server = fs.readFileSync('./documentation/Server.md')
 var servers = fs.readFileSync('./documentation/Servers.md')
 var testing = fs.readFileSync('./documentation/Testing.md')
 var tools = fs.readFileSync('./documentation/Tools.md')
+var api 
+if(fs.existsSync('./documentation/API.md')){
+    api = fs.readFileSync('./documentation/API.md')
+} else {
+    api = require('./generate-api-doc.js')
+}
 var packageJson = require('../package.json')
 var tool = glob.sync('./tools/*')
 var OperationsDocument = `
@@ -84,7 +90,8 @@ var OperationsDocument = `
     * Servers
         * server.mean.js
         * server.socketio.js
-3. [Tasks](#Tasks)
+3. [API](#API)
+4. [Tasks](#Tasks)
     * Errors
         * Where do we catch our errors ?
         * How do we log our errors
@@ -104,7 +111,7 @@ var OperationsDocument = `
         * Agenda
         * Swagger 
         * Plato
-4. [Information](#Information)
+5. [Information](#Information)
     * Versions
         * Dependencies
         * Dev Dependencies
@@ -140,6 +147,11 @@ for (let index = 0; index < tool.length; index++) {
 }
 OperationsDocument += home + '\n'
 OperationsDocument += `## Learn <a name="Learn"></a>\n` + gettingStarted + '\n' + fileNamingStructure + '\n' + folderStructure + '\n' + configs + '\n' + client + '\n' + server + '\n' + servers + '\n'
+OperationsDocument += `
+<a name="API"></a>\n
+${api}\n
+`
+
 OperationsDocument += `## Tasks <a name="Tasks"></a>\n` + errors + '\n' + testing + '\n' + scripts + '\n' + cli + '\n' + tools + '\n'
 OperationsDocument += `## Information <a name="Information"></a>\n` + ' ### Versions \n  #### Dependencies\n``` js \n' + ` ${JSON.stringify(packageJson.dependencies, null, 2)}` + '```\n#### Dev Dependencies\n``` js \n' + ` ${JSON.stringify(packageJson.devDependencies, null, 2)}` + '```\n' + faq + '\n' + roadMap + '\n' + changelog + '\n'
 
