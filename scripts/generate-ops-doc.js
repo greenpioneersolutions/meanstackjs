@@ -17,11 +17,11 @@ var server = fs.readFileSync('./documentation/Server.md')
 var servers = fs.readFileSync('./documentation/Servers.md')
 var testing = fs.readFileSync('./documentation/Testing.md')
 var tools = fs.readFileSync('./documentation/Tools.md')
-var api 
-if(fs.existsSync('./documentation/API.md')){
-    api = fs.readFileSync('./documentation/API.md')
+var api
+if (fs.existsSync('./documentation/API.md')) {
+  api = fs.readFileSync('./documentation/API.md')
 } else {
-    api = require('./generate-api-doc.js')
+  api = require('./generate-api-doc.js')
 }
 var packageJson = require('../package.json')
 var tool = glob.sync('./tools/*')

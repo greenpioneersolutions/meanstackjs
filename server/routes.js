@@ -1,4 +1,4 @@
-module.exports.build = routes
+module.exports.buildRoutes = routes
 
 var express = require('express')
 var ejs = require('ejs')

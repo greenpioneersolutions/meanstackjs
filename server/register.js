@@ -1,4 +1,4 @@
-module.exports.info = build
+module.exports.registerSystemInfo = build
 
 var _ = require('lodash')
 // var babel = require('babel-core')

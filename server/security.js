@@ -1,4 +1,4 @@
-module.exports.middleware = security
+module.exports.securityMiddleware = security
 
 var cors = require('cors')
 var contentLength = require('express-content-length-validator')
