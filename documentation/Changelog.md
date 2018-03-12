@@ -1,5 +1,13 @@
 ### Changelog
 
+#### Mar 12th 18 - v1.9.0
+#294 - Creating Scripts To Automate Documentation
+#293 - File to import not found or unreadable: bootstrap
+#292 - Update Dev Dependencies
+#285 - Livereload Support HTTPS
+#284 - Socket Support HTTP & HTTPS
+#126 - Move Frontend Dep to NPM
+
 #### Mar 6th 18 - v1.8.2
 #291 Update Dependencies 
 

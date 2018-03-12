@@ -1,5 +1,5 @@
 
-# Operation Document for meanstackjs - 1.8.2
+# Operation Document for meanstackjs - 1.9.1
 ## Table Of Contents<a name="TableOfContents"></a>
 
 1. [Table Of Contents](#TableOfContents)
@@ -107,8 +107,8 @@
 
 | Name        | Info           |
 | ------------- |:-------------:|
-| Date     | Sun Mar 11 2018 23:48:26 GMT-0500 (CDT) |
-| Version     | 1.8.2 |
+| Date     | Mon Mar 12 2018 17:07:30 GMT-0500 (CDT) |
+| Version     | 1.9.1 |
 | Repository     | git+https://github.com/greenpioneersolutions/meanstackjs.git |
 | homepage     | https://github.com/greenpioneersolutions/meanstackjs#readme |
 | keywords     | Mean,Mean Stack,Mean Stack JS,Javascript framework,Mongodb,Expressjs,Express,Angular,Angularjs,Node,Nodejs,Meanstackjs,Greenpioneersolutions,Green Pioneer |
@@ -5483,18 +5483,18 @@ JavaScript source code visualization, static analysis, and complexity tool
   #### Dependencies
 ``` js 
  {
-  "angular": "1.5.8",
-  "angular-animate": "1.5.8",
-  "angular-cookies": "1.5.8",
-  "angular-jwt": "0.0.9",
-  "angular-material": "1.0.1",
-  "angular-mocks": "1.5.8",
-  "angular-moment": "1.0.1",
-  "angular-resource": "1.5.8",
-  "angular-sanitize": "1.5.8",
-  "angular-ui-bootstrap": "2.0.0",
-  "angular-ui-router": "0.3.2",
-  "auto-parse": "^1.2.0",
+  "angular": "1.6.9",
+  "angular-animate": "1.6.9",
+  "angular-cookies": "1.6.9",
+  "angular-jwt": "0.1.9",
+  "angular-material": "1.1.7",
+  "angular-mocks": "1.6.9",
+  "angular-moment": "1.2.0",
+  "angular-resource": "1.6.9",
+  "angular-sanitize": "1.6.9",
+  "angular-ui-bootstrap": "2.5.6",
+  "angular-ui-router": "0.4.3",
+  "auto-parse": "^1.3.0",
   "babel-core": "^6.7.6",
   "babel-plugin-transform-class-properties": "^6.6.0",
   "babel-preset-es2015": "^6.6.0",
@@ -5537,18 +5537,18 @@ JavaScript source code visualization, static analysis, and complexity tool
   "materialize-css": "^1.0.0-alpha.4",
   "maxcdn": "^0.2.0",
   "method-override": "^2.3.10",
-  "moment": "2.14.1",
+  "moment": "2.21.0",
   "mongo-throttle": "^1.2.0",
   "mongoose": "^5.0.9",
   "mongoose-timestamp": "^0.6.0",
   "mongoose-validator": "^2.0.2",
   "morgan": "^1.6.1",
   "multer": "^1.3.0",
-  "ng-file-upload": "12.0.4",
+  "ng-file-upload": "12.2.13",
   "node-horseman": "^3.2.0",
   "node-outlook": "^1.1.6",
-  "node-sass": "^4.7.2",
-  "node-uuid": "^1.4.7",
+  "node-sass": "^4.8.1",
+  "node-uuid": "^1.4.8",
   "node-xlsx": "^0.11.2",
   "nodemailer": "^4.6.2",
   "passport": "0.4.0",
@@ -5561,23 +5561,23 @@ JavaScript source code visualization, static analysis, and complexity tool
   "passport-oauth": "^1.0.0",
   "passport-openid": "^0.4.0",
   "passport-twitter": "^1.0.4",
-  "path-to-regexp": "^2.1.0",
-  "pug": "^2.0.0",
+  "path-to-regexp": "^2.2.0",
+  "pug": "^2.0.1",
   "q": "^1.4.1",
-  "redis": "^2.6.2",
-  "request": "^2.79.0",
+  "redis": "^2.8.0",
+  "request": "^2.85.0",
   "run-auto": "^2.0.0",
-  "semver": "^5.3.0",
+  "semver": "^5.5.0",
   "serial-concat-files": "^1.0.0",
-  "snyk": "^1.30.1",
+  "snyk": "^1.70.0",
   "socket.io": "^2.0.2",
-  "socket.io-client": "1.4.5",
+  "socket.io-client": "2.0.4",
   "toastr": "^2.1.4",
-  "uglify-js": "^3.3.13",
+  "uglify-js": "^3.3.14",
   "uglifycss": "^0.0.28",
   "validator": "^9.4.1",
-  "winston": "^2.3.1",
-  "winston-daily-rotate-file": "^1.4.4",
+  "winston": "^2.4.1",
+  "winston-daily-rotate-file": "^1.7.2",
   "winston-mongodb": "^3.0.2"
 }```
 #### Dev Dependencies
@@ -5663,37 +5663,35 @@ Since you use the first approach on both scripts you are basically overriding th
 On the second script being loaded, use `var myApp = angular.module('myApp');`
 
 [Credit](http://stackoverflow.com/a/25895387)
-### Roadmap
-
 Welcome to those of you here reading the roadmap. we are very open to feedback and to debate what would be a great fit in the stack. With that being said lets start the conversation right here and get it planned into the start. Please feel free to create a issue/feature request.
 
 There will be more info to come later in the roadmap.
 
-#### Meanstackjs 1.x - Goal is to support Enterprises
-
+Meanstackjs 1.x - Goal is to support Enterprises
+----------------
 
 We will default to what supports most of versions of node, browsers & users. 1.x will try to keep production ready at all time with the most stable code base.
 
 * ES5
 * [Expressjs 4](http://expressjs.com/en/4x/api.html)
-* [Boostrap 3](http://getbootstrap.com/)
+* [Boostrap 3](https://getbootstrap.com/docs/3.3/)
 * [Angular](https://angularjs.org/) 1.x
 * [MongoDB](https://www.mongodb.com/download-center#community) 3.x
-* [Nodejs](https://github.com/nodejs/LTS#lts_schedule) 4.x - 6.x
+* [Nodejs](https://github.com/nodejs/LTS#lts_schedule) 6.x - 9.x
 * [John Papa Angular Style](https://github.com/johnpapa/angular-styleguide/tree/master/a1)
 * [NightwatchJS](http://nightwatchjs.org/) 0.x - 1.x
 
-#### Meanstackjs 2.x - Goal is to support Open Source Comp
-
+Meanstackjs 2.x - Goal is to support Open Source Comp
+----------------
 
 We plan to really use forward thinking technologies with the all the newest stuff.
 
 * ES6
 * [Expressjs 5](http://expressjs.com/en/guide/migrating-5.html)
-* [Boostrap 4](http://v4-alpha.getbootstrap.com/)
-* [Angular](https://angular.io/) 2.x
+* [Boostrap 4](https://getbootstrap.com/)
+* [Angular](https://angular.io/) 5.x > 
 * [MongoDB](https://www.mongodb.com/download-center#community) 3.x - 4.x
-* [Nodejs](https://github.com/nodejs/LTS#lts_schedule) 6.x - 8.x
+* [Nodejs](https://github.com/nodejs/LTS#lts_schedule) 10.x - 14.x
 * [John Papa Angular 2 Style ](https://github.com/johnpapa/angular-styleguide/tree/master/a2)
 * [NightwatchJS](http://nightwatchjs.org/) 1.x - 2.x
 
@@ -5709,6 +5707,14 @@ Potential Mern Stack Js on the rise in the future.
 
 
 ### Changelog
+
+#### Mar 12th 18 - v1.9.0
+#294 - Creating Scripts To Automate Documentation
+#293 - File to import not found or unreadable: bootstrap
+#292 - Update Dev Dependencies
+#285 - Livereload Support HTTPS
+#284 - Socket Support HTTP & HTTPS
+#126 - Move Frontend Dep to NPM
 
 #### Mar 6th 18 - v1.8.2
 #291 Update Dependencies 
