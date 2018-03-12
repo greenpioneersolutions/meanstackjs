@@ -158,7 +158,7 @@ var baseLine = {
   assets: {
     js: [
       '/angular-jwt/dist/angular-jwt.js',
-      '/socket.io-client/socket.io.js',
+      '/socket.io-client/dist/socket.io.js',
       '/ng-file-upload/dist/ng-file-upload-all.js',
       '/angular-mocks/angular-mocks.js',
       '/angular-cookies/angular-cookies.js',
