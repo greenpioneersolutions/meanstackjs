@@ -63,7 +63,6 @@
     "documentation:changelog":"node scripts/generate-changelog.js",
     "documentation:development":"node scripts/generate-development-doc.js",
     "documentation:ops":"node scripts/generate-ops-doc.js"
-
   },
   "repository": "git+https://github.com/greenpioneersolutions/meanstackjs.git",
   "homepage": "https://github.com/greenpioneersolutions/meanstackjs#readme",
