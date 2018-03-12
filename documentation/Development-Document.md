@@ -54,7 +54,7 @@ sets up mailer after db connect to give it access
 
 Connect to MongoDb & Register mongoose schemas
 
-## info
+## registerSystemInfo
 
 setupRegister > Used to gather all modules to gether and to register them properly
 
@@ -78,7 +78,7 @@ setupExpressHeaders > Used to set up the headers that go out on every route.
 
 setupExpressLogger > Used to set up our morgan logger & debug statements on all routes.
 
-## setup
+## setupTools
 
 setupTools > Used to set up every tool in the tools directory.
 

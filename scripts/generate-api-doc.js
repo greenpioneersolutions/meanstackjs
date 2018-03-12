@@ -49,7 +49,7 @@ var routeInfo = {
 for (let index = 0; index < routes.length; index++) {
   require(path.resolve(routes[index]))(self.app, self.middleware, self.mail, self.settings, self.models, self.logger)
 }
-require('../server/routes.js').build(self)
+require('../server/routes.js').buildRoutes(self)
 
 var apiDoc = '## API \n\n'
 for (let index = 0; index < self.app._router.stack.length; index++) {

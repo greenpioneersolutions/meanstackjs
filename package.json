@@ -57,7 +57,13 @@
     "selenium:start": "node_modules/.bin/selenium-standalone start",
     "update": "node scripts/update-meanstackjs.js",
     "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
+    "prepublish": "npm run snyk-protect",
+    "documentation":"npm run documentation:api && npm run documentation:changelog && npm run documentation:development && npm run documentation:ops",
+    "documentation:api":"node scripts/generate-api-doc.js",
+    "documentation:changelog":"node scripts/generate-changelog.js",
+    "documentation:development":"node scripts/generate-development-doc.js",
+    "documentation:ops":"node scripts/generate-ops-doc.js"
+
   },
   "repository": "git+https://github.com/greenpioneersolutions/meanstackjs.git",
   "homepage": "https://github.com/greenpioneersolutions/meanstackjs#readme",

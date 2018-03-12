@@ -107,7 +107,7 @@
 
 | Name        | Info           |
 | ------------- |:-------------:|
-| Date     | Sun Mar 11 2018 23:01:59 GMT-0500 (CDT) |
+| Date     | Sun Mar 11 2018 23:48:26 GMT-0500 (CDT) |
 | Version     | 1.8.2 |
 | Repository     | git+https://github.com/greenpioneersolutions/meanstackjs.git |
 | homepage     | https://github.com/greenpioneersolutions/meanstackjs#readme |
@@ -5585,6 +5585,7 @@ JavaScript source code visualization, static analysis, and complexity tool
  {
   "blessed": "^0.1.81",
   "chai": "^4.1.2",
+  "documentation": "^6.1.0",
   "inquirer": "^5.1.0",
   "karma": "^2.0.0",
   "karma-chai": "^0.1.0",
