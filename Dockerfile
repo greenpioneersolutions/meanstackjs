@@ -10,7 +10,7 @@ RUN curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
 RUN sudo apt-get install -yq nodejs
 
 # Install Meanstackjs Prerequisites
-RUN npm install --quiet -g  bower mocha pm2 mongo-express nodemon node-inspector
+RUN npm install --quiet -g mocha pm2 mongo-express nodemon node-inspector
 
 RUN mkdir /opt/meanstackjs
 WORKDIR /opt/meanstackjs
@@ -24,9 +24,9 @@ ADD package.json /opt/meanstackjs/package.json
 RUN npm install --quiet
 
 # Install bower packages
-ADD bower.json /opt/meanstackjs/bower.json
-ADD .bowerrc /opt/meanstackjs/.bowerrc
-RUN bower install --quiet --allow-root --config.interactive=false
+# ADD bower.json /opt/meanstackjs/bower.json
+# ADD .bowerrc /opt/meanstackjs/.bowerrc
+# RUN bower install --quiet --allow-root --config.interactive=false
 
 # Share local directory on the docker container
 ADD . /opt/meanstackjs

@@ -1,5 +1,6 @@
+### Getting Started
 
-## Prerequisites: Option 1
+#### Prerequisites: Option 1
 
 - <img src="https://www.mongodb.com/assets/global/favicon-bf23af61025ab0705dc84c3315c67e402d30ed0cba66caff15de0d57974d58ff.ico" height="17">&nbsp; [Download](https://www.mongodb.org/downloads) and Install mongodb - <a href="https://docs.mongodb.org/manual/">Checkout their manual</a> if you're just starting.
   - <img src="http://deluge-torrent.org/images/apple-logo.gif" height="17">&nbsp; [OSX MongoDB](https://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/)
@@ -7,7 +8,7 @@
   - <img src="https://lh5.googleusercontent.com/-2YS1ceHWyys/AAAAAAAAAAI/AAAAAAAAAAc/0LCb_tsTvmU/s46-c-k/photo.jpg" height="17">&nbsp; [Linux Mongodb](https://docs.mongodb.org/manual/administration/install-on-linux/)
 - <img src="https://nodejs.org/static/apple-touch-icon.png" height="17">&nbsp; [Download](http://nodejs.org) and Install Node.js  - nodeschool has free <a href=" http://nodeschool.io/#workshoppers">node tutorials</a> to get you started.
 
-## Prerequisites: Option 2
+#### Prerequisites: Option 2
 
 Download our repo & run CLI - NOTE: not for windows users. Please use the links above to install
 
@@ -19,7 +20,7 @@ npm run cli
 # the select - Install MongoDB
 # in a new window or tab select - Start Mongod
 ```
-## Start
+#### Start
 
 The easiest way to get started is to clone the repository:
 
@@ -41,7 +42,7 @@ node index.js
 nodemon index.js
 ```
 
-## Testing
+#### Testing
 
 Easiest way to start testing your whole system 
 

@@ -1,4 +1,12 @@
 module.exports = SocketIO
+/**
+ * Mean Stack SocketIO Server File
+ * @name SocketIO
+ * @function
+ * @param {Object} opts the options passed to create the server
+ * @param {Function} done the callback function
+ * MIT Licensed
+*/
 
 var express = require('express')
 var debug = require('debug')('meanstackjs:socketio')

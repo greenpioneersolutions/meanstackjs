@@ -55,6 +55,7 @@ client/styles/global-configs.styles.scss
 # --------------------
 .bower-*/
 bower_components
+components
 
 # --------------------
 # App Files

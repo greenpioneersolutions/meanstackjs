@@ -1,4 +1,6 @@
-### Settings Usage
+### Configs
+
+#### Settings Usage
 
 you can programmatically set it in your code. Recommended you just change it in the settings or env config 
 
@@ -9,7 +11,7 @@ self.settings = require('./configs/settings.js').set({
 })
 ```
 
-### Seo.js
+#### Seo.js
 
 Example below of how totally control the seo of a dynamic route. In the hook if you chose to create one you have access to the `self` obj for the entire system, `data` object which will get sent to your templates & lastly if you need to call the callback to pass a error first or the data second. if there is a error the system will revert to the default seo. Note the data object will hold the values of the route before you do anything to it for example anything on the query or the params. In the env configs you can deem how you want to render by which template engine. Default - `lodash` which can handles es6 and ejs-like templating. If you wanted to you could switch right from the start to ejs and the templates are already compatible 
 
@@ -38,7 +40,7 @@ Example below of how totally control the seo of a dynamic route. In the hook if 
     }
   }
 ```
-### Environment.js
+#### Environment.js
 
 ``` javascript
 self.environment = require('./server/environment.js').get()
@@ -48,7 +50,7 @@ export NODE_ENV=test // LINUX
 set NODE_ENE=test // WINDOWS
 ```
 
-### Configs are based off env
+#### Configs are based off env
 
 ``` javascript
 // Development example
@@ -127,7 +129,7 @@ module.exports = {
 
 ```
 
-### Settings.js
+#### Settings.js
 
 We now have included [Dotenv](https://www.npmjs.com/package/dotenv) as you see below. In doing this it purposely fails silently because we want you to never source that info in github for security reasons. Please keep your configs safe and out of the public eye. `minify` is now configurable and no longer based on our env names so you have total control of your env names and how they build.
 
@@ -240,7 +242,7 @@ var baseLine = {
   },
   seo: require('./seo.js'),
   // AGGREGATION
-  // bower_components -  Needs to be manually added below
+  // components -  Needs to be manually added below
   // modules - aggregated automatically
   // images - manually called in files
   // styles - manually called  & automatically compiles the global style scss in COMPILED Folder
@@ -249,28 +251,31 @@ var baseLine = {
   // OR USE INTERNAL FILES - '/bower_components/jquery/dist/jquery.js'
   assets: {
     js: [
-      '/bower_components/angular-jwt/dist/angular-jwt.js',
-      '/bower_components/socket.io-client/socket.io.js',
-      '/bower_components/ng-file-upload/ng-file-upload-all.js',
-      '/bower_components/angular-mocks/angular-mocks.js',
-      '/bower_components/angular-cookies/angular-cookies.js',
-      '/bower_components/angular-sanitize/angular-sanitize.js',
-      '/bower_components/angular-animate/angular-animate.js',
-      '/bower_components/angular-resource/angular-resource.js',
-      '/bower_components/angular-ui-router/release/angular-ui-router.js',
-      '/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
-      '/bower_components/angular-moment/angular-moment.js',
-      '/bower_components/moment/moment.js',
-      '/bower_components/lodash/lodash.js',
-      '/bower_components/toastr/toastr.js',
-      '/bower_components/bootstrap-sass/assets/javascripts/bootstrap.js',
-      '/bower_components/angular/angular.js',
-      '/bower_components/jquery/dist/jquery.js'
+      '/angular-jwt/dist/angular-jwt.js',
+      '/socket.io-client/socket.io.js',
+      '/ng-file-upload/dist/ng-file-upload-all.js',
+      '/angular-mocks/angular-mocks.js',
+      '/angular-cookies/angular-cookies.js',
+      '/angular-sanitize/angular-sanitize.js',
+      '/angular-animate/angular-animate.js',
+      '/angular-resource/angular-resource.js',
+      '/angular-ui-router/release/angular-ui-router.js',
+      '/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
+      '/angular-moment/angular-moment.js',
+      '/moment/moment.js',
+      '/lodash/lodash.js',
+      '/toastr/toastr.js',
+      '/bootstrap-sass/assets/javascripts/bootstrap.js',
+      '/angular/angular.js',
+      '/jquery/dist/jquery.js'
     ],
     css: [
       '/styles/compiled/global.style.css',
-      '/bower_components/toastr/toastr.css'
-    // '/bower_components/font-awesome/css/font-awesome.min.css'
+      '/toastr/build/toastr.css'
+    ],
+    copy: [
+      '/font-awesome/fonts/fontawesome-webfont.woff2',
+      '/font-awesome/fonts/fontawesome-webfont.ttf'
     ]
   },
   bodyparser: {

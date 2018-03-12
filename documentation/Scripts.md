@@ -1,4 +1,6 @@
-### Generate-ssl-certs.sh
+### Scripts
+
+Generate-ssl-certs.sh
 
 How to generate your own certs for https.
 

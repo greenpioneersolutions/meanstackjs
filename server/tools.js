@@ -1,4 +1,4 @@
-module.exports.setup = tools
+module.exports.setupTools = tools
 
 var _ = require('lodash')
 var glob = require('glob')

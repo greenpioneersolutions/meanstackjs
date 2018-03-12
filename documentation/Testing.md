@@ -1,6 +1,6 @@
-## Testing
+### Testing
 
-### NPM Test / Everything
+#### NPM Test / Everything
 
 ```bash
 # Make sure you haves a selenium sever on 
@@ -8,7 +8,7 @@
 npm test
 ```
 
-### Nightwatch / E2E
+#### Nightwatch / E2E
 
 ``` bash
 npm install -g nightwatch
@@ -17,7 +17,7 @@ nightwatch
 npm run e2e
 ```
 
-### Karma / Frontend
+#### Karma / Frontend
 
 ``` bash
 npm install -g karma
@@ -26,7 +26,7 @@ karma start tests/unit/karma.test.js
 npm run karma
 ```
 
-### Mocha & Chai / Backend
+#### Mocha & Chai / Backend
 
 ``` bash
 npm install -g mocha
@@ -35,7 +35,7 @@ mocha tests/unit/mocha.test.js
 npm run mocha
 ```
 
-### Standard / JS Style
+#### Standard / JS Style
 
 ``` bash
 npm install -g standard
@@ -44,7 +44,7 @@ standard
 npm run standard
 ```
 
-### Need help installing?
+#### Need help installing?
 
 Easiest way to start testing your whole system 
 

@@ -1,4 +1,6 @@
-## Project Structure
+### Folder Structure
+
+#### Project Structure
 
 | Name                                | Description                                                  |
 | ----------------------------------  | ------------------------------------------------------------ |
@@ -22,7 +24,7 @@
 | **server.mean.js**                  | Mean server file that uses server folder                     |
 | **server.socketio.js**              | Socketio server file that is independent of everything       |
 
-### Server Structure
+#### Server Structure
 
 | Name                               | Description                                                  |
 | ---------------------------------- | ------------------------------------------------------------ |
@@ -43,7 +45,7 @@
 | **server**/security.js             | File:This file is used to set up helmet, hpp, cors & content length    |
 | **server**/seo.js             | File:This file is used for the main route to properly response to all request for seo  |
 
-### Client Structure
+#### Client Structure
 
 | Name                               | Description                                                  |
 | ---------------------------------- | ------------------------------------------------------------ |

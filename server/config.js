@@ -1,4 +1,4 @@
-module.exports.middleware = config
+module.exports.configMiddleware = config
 
 var bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser')
