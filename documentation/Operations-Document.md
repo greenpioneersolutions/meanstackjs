@@ -107,7 +107,7 @@
 
 | Name        | Info           |
 | ------------- |:-------------:|
-| Date     | Sun Mar 11 2018 22:55:31 GMT-0500 (CDT) |
+| Date     | Sun Mar 11 2018 23:01:59 GMT-0500 (CDT) |
 | Version     | 1.8.2 |
 | Repository     | git+https://github.com/greenpioneersolutions/meanstackjs.git |
 | homepage     | https://github.com/greenpioneersolutions/meanstackjs#readme |
@@ -1509,7 +1509,7 @@ Purpose: This is the socketio server file that aims to make realtime apps possib
 ## API 
 
 
-<details><summary>/api/admin/users - **GET**</summary>
+<details><summary>/api/admin/users - GET</summary>
 <p>
 
 
@@ -1565,7 +1565,7 @@ function getUsers(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/users/:userId - **GET**</summary>
+<details><summary>/api/admin/users/:userId - GET</summary>
 <p>
 
 
@@ -1610,7 +1610,7 @@ function getUsersById(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/users - **POST**</summary>
+<details><summary>/api/admin/users - POST</summary>
 <p>
 
 
@@ -1666,7 +1666,7 @@ function postUsers(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/users/:userId - **PUT**</summary>
+<details><summary>/api/admin/users/:userId - PUT</summary>
 <p>
 
 
@@ -1715,7 +1715,7 @@ function putUsers(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/users/:userId - **DELETE**</summary>
+<details><summary>/api/admin/users/:userId - DELETE</summary>
 <p>
 
 
@@ -1762,7 +1762,7 @@ function deleteUsers(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/errors/ - **GET**</summary>
+<details><summary>/api/admin/errors/ - GET</summary>
 <p>
 
 
@@ -1821,7 +1821,7 @@ function getErrors(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/errors/:errorId - **GET**</summary>
+<details><summary>/api/admin/errors/:errorId - GET</summary>
 <p>
 
 
@@ -1866,7 +1866,7 @@ function getErrorsById(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/errors - **POST**</summary>
+<details><summary>/api/admin/errors - POST</summary>
 <p>
 
 
@@ -1922,7 +1922,7 @@ function postErrors(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/errors/:errorId - **PUT**</summary>
+<details><summary>/api/admin/errors/:errorId - PUT</summary>
 <p>
 
 
@@ -1971,7 +1971,7 @@ function putErrors(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/errors/:errorId - **DELETE**</summary>
+<details><summary>/api/admin/errors/:errorId - DELETE</summary>
 <p>
 
 
@@ -2018,7 +2018,7 @@ function deleteErrors(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/logs/ - **GET**</summary>
+<details><summary>/api/admin/logs/ - GET</summary>
 <p>
 
 
@@ -2072,7 +2072,7 @@ function (req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/blog/ - **GET**</summary>
+<details><summary>/api/blog/ - GET</summary>
 <p>
 
 #### Description 
@@ -2120,7 +2120,7 @@ function getBlog(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/blog/:blogId - **GET**</summary>
+<details><summary>/api/blog/:blogId - GET</summary>
 <p>
 
 
@@ -2145,7 +2145,7 @@ function getBlogById(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/blog - **POST**</summary>
+<details><summary>/api/blog - POST</summary>
 <p>
 
 
@@ -2199,7 +2199,7 @@ function postBlog(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/blog/:blogId - **PUT**</summary>
+<details><summary>/api/blog/:blogId - PUT</summary>
 <p>
 
 
@@ -2268,7 +2268,7 @@ function putBlog(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/blog/:blogId - **DELETE**</summary>
+<details><summary>/api/blog/:blogId - DELETE</summary>
 <p>
 
 
@@ -2336,7 +2336,7 @@ function deleteBlog(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/testing/ - **GET**</summary>
+<details><summary>/api/testing/ - GET</summary>
 <p>
 
 
@@ -2359,7 +2359,7 @@ function (req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/settings/ - **GET**</summary>
+<details><summary>/api/settings/ - GET</summary>
 <p>
 
 
@@ -2380,7 +2380,7 @@ function (req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/system/status - **GET**</summary>
+<details><summary>/api/system/status - GET</summary>
 <p>
 
 
@@ -2401,7 +2401,7 @@ function status(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/photos/upload - **POST**</summary>
+<details><summary>/api/user/photos/upload - POST</summary>
 <p>
 
 
@@ -2616,7 +2616,7 @@ function postPhoto(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/authenticate - **POST**</summary>
+<details><summary>/api/user/authenticate - POST</summary>
 <p>
 
 #### Description 
@@ -2690,7 +2690,7 @@ function postAuthenticate(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/authenticate - **GET**</summary>
+<details><summary>/api/user/authenticate - GET</summary>
 <p>
 
 #### Description 
@@ -2729,7 +2729,7 @@ function getAuthenticate(req, res) {
 </p>
 </details>
 
-<details><summary>/api/user/logout - **POST**</summary>
+<details><summary>/api/user/logout - POST</summary>
 <p>
 
 
@@ -2753,7 +2753,7 @@ function logout(req, res) {
 </p>
 </details>
 
-<details><summary>/api/user/forgot - **POST**</summary>
+<details><summary>/api/user/forgot - POST</summary>
 <p>
 
 
@@ -2823,7 +2823,7 @@ function postForgot(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/reset/:token - **GET**</summary>
+<details><summary>/api/user/reset/:token - GET</summary>
 <p>
 
 
@@ -2875,7 +2875,7 @@ function getReset(req, res) {
 </p>
 </details>
 
-<details><summary>/api/user/reset/:token - **POST**</summary>
+<details><summary>/api/user/reset/:token - POST</summary>
 <p>
 
 
@@ -2951,7 +2951,7 @@ function postReset(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/signup - **POST**</summary>
+<details><summary>/api/user/signup - POST</summary>
 <p>
 
 
@@ -3030,7 +3030,7 @@ function postSignup(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/profile - **PUT**</summary>
+<details><summary>/api/user/profile - PUT</summary>
 <p>
 
 
@@ -3082,7 +3082,7 @@ function putUpdateProfile(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/password - **PUT**</summary>
+<details><summary>/api/user/password - PUT</summary>
 <p>
 
 
@@ -3144,7 +3144,7 @@ function putUpdatePassword(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/delete - **DELETE**</summary>
+<details><summary>/api/user/delete - DELETE</summary>
 <p>
 
 
@@ -3191,7 +3191,7 @@ function deleteDeleteAccount(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/token - **GET**</summary>
+<details><summary>/api/user/token - GET</summary>
 <p>
 
 
@@ -3230,7 +3230,7 @@ function getKey(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/token - **POST**</summary>
+<details><summary>/api/user/token - POST</summary>
 <p>
 
 
@@ -3301,7 +3301,7 @@ function postKey(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/token/reset - **GET**</summary>
+<details><summary>/api/user/token/reset - GET</summary>
 <p>
 
 
@@ -3345,7 +3345,7 @@ function getKeyReset(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/users - **GET**</summary>
+<details><summary>/api/admin/users - GET</summary>
 <p>
 
 
@@ -3401,7 +3401,7 @@ function getUsers(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/users/:userId - **GET**</summary>
+<details><summary>/api/admin/users/:userId - GET</summary>
 <p>
 
 
@@ -3446,7 +3446,7 @@ function getUsersById(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/users - **POST**</summary>
+<details><summary>/api/admin/users - POST</summary>
 <p>
 
 
@@ -3502,7 +3502,7 @@ function postUsers(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/users/:userId - **PUT**</summary>
+<details><summary>/api/admin/users/:userId - PUT</summary>
 <p>
 
 
@@ -3551,7 +3551,7 @@ function putUsers(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/users/:userId - **DELETE**</summary>
+<details><summary>/api/admin/users/:userId - DELETE</summary>
 <p>
 
 
@@ -3598,7 +3598,7 @@ function deleteUsers(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/errors/ - **GET**</summary>
+<details><summary>/api/admin/errors/ - GET</summary>
 <p>
 
 
@@ -3657,7 +3657,7 @@ function getErrors(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/errors/:errorId - **GET**</summary>
+<details><summary>/api/admin/errors/:errorId - GET</summary>
 <p>
 
 
@@ -3702,7 +3702,7 @@ function getErrorsById(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/errors - **POST**</summary>
+<details><summary>/api/admin/errors - POST</summary>
 <p>
 
 
@@ -3758,7 +3758,7 @@ function postErrors(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/errors/:errorId - **PUT**</summary>
+<details><summary>/api/admin/errors/:errorId - PUT</summary>
 <p>
 
 
@@ -3807,7 +3807,7 @@ function putErrors(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/errors/:errorId - **DELETE**</summary>
+<details><summary>/api/admin/errors/:errorId - DELETE</summary>
 <p>
 
 
@@ -3854,7 +3854,7 @@ function deleteErrors(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/admin/logs/ - **GET**</summary>
+<details><summary>/api/admin/logs/ - GET</summary>
 <p>
 
 
@@ -3908,7 +3908,7 @@ function (req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/blog/ - **GET**</summary>
+<details><summary>/api/blog/ - GET</summary>
 <p>
 
 #### Description 
@@ -3956,7 +3956,7 @@ function getBlog(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/blog/:blogId - **GET**</summary>
+<details><summary>/api/blog/:blogId - GET</summary>
 <p>
 
 
@@ -3981,7 +3981,7 @@ function getBlogById(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/blog - **POST**</summary>
+<details><summary>/api/blog - POST</summary>
 <p>
 
 
@@ -4035,7 +4035,7 @@ function postBlog(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/blog/:blogId - **PUT**</summary>
+<details><summary>/api/blog/:blogId - PUT</summary>
 <p>
 
 
@@ -4104,7 +4104,7 @@ function putBlog(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/blog/:blogId - **DELETE**</summary>
+<details><summary>/api/blog/:blogId - DELETE</summary>
 <p>
 
 
@@ -4172,7 +4172,7 @@ function deleteBlog(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/testing/ - **GET**</summary>
+<details><summary>/api/testing/ - GET</summary>
 <p>
 
 
@@ -4195,7 +4195,7 @@ function (req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/settings/ - **GET**</summary>
+<details><summary>/api/settings/ - GET</summary>
 <p>
 
 
@@ -4216,7 +4216,7 @@ function (req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/system/status - **GET**</summary>
+<details><summary>/api/system/status - GET</summary>
 <p>
 
 
@@ -4237,7 +4237,7 @@ function status(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/photos/upload - **POST**</summary>
+<details><summary>/api/user/photos/upload - POST</summary>
 <p>
 
 
@@ -4452,7 +4452,7 @@ function postPhoto(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/authenticate - **POST**</summary>
+<details><summary>/api/user/authenticate - POST</summary>
 <p>
 
 #### Description 
@@ -4526,7 +4526,7 @@ function postAuthenticate(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/authenticate - **GET**</summary>
+<details><summary>/api/user/authenticate - GET</summary>
 <p>
 
 #### Description 
@@ -4565,7 +4565,7 @@ function getAuthenticate(req, res) {
 </p>
 </details>
 
-<details><summary>/api/user/logout - **POST**</summary>
+<details><summary>/api/user/logout - POST</summary>
 <p>
 
 
@@ -4589,7 +4589,7 @@ function logout(req, res) {
 </p>
 </details>
 
-<details><summary>/api/user/forgot - **POST**</summary>
+<details><summary>/api/user/forgot - POST</summary>
 <p>
 
 
@@ -4659,7 +4659,7 @@ function postForgot(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/reset/:token - **GET**</summary>
+<details><summary>/api/user/reset/:token - GET</summary>
 <p>
 
 
@@ -4711,7 +4711,7 @@ function getReset(req, res) {
 </p>
 </details>
 
-<details><summary>/api/user/reset/:token - **POST**</summary>
+<details><summary>/api/user/reset/:token - POST</summary>
 <p>
 
 
@@ -4787,7 +4787,7 @@ function postReset(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/signup - **POST**</summary>
+<details><summary>/api/user/signup - POST</summary>
 <p>
 
 
@@ -4866,7 +4866,7 @@ function postSignup(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/profile - **PUT**</summary>
+<details><summary>/api/user/profile - PUT</summary>
 <p>
 
 
@@ -4918,7 +4918,7 @@ function putUpdateProfile(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/password - **PUT**</summary>
+<details><summary>/api/user/password - PUT</summary>
 <p>
 
 
@@ -4980,7 +4980,7 @@ function putUpdatePassword(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/delete - **DELETE**</summary>
+<details><summary>/api/user/delete - DELETE</summary>
 <p>
 
 
@@ -5027,7 +5027,7 @@ function deleteDeleteAccount(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/token - **GET**</summary>
+<details><summary>/api/user/token - GET</summary>
 <p>
 
 
@@ -5066,7 +5066,7 @@ function getKey(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/token - **POST**</summary>
+<details><summary>/api/user/token - POST</summary>
 <p>
 
 
@@ -5137,7 +5137,7 @@ function postKey(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/user/token/reset - **GET**</summary>
+<details><summary>/api/user/token/reset - GET</summary>
 <p>
 
 
@@ -5181,7 +5181,7 @@ function getKeyReset(req, res, next) {
 </p>
 </details>
 
-<details><summary>/api/seo/* - **GET**</summary>
+<details><summary>/api/seo/* - GET</summary>
 <p>
 
 
@@ -5206,7 +5206,7 @@ function (req, res) {
 </p>
 </details>
 
-<details><summary>/:url(api|images|scripts|styles|components|uploads|modules)/* - **GET**</summary>
+<details><summary>/:url(api|images|scripts|styles|components|uploads|modules)/* - GET</summary>
 <p>
 
 
@@ -5232,7 +5232,7 @@ function (req, res) {
 </p>
 </details>
 
-<details><summary>/* - **GET**</summary>
+<details><summary>/* - GET</summary>
 <p>
 
 

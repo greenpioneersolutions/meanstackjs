@@ -68,7 +68,7 @@ for (let index = 0; index < self.app._router.stack.length; index++) {
           }
         }
         apiDoc += `
-<details><summary>${self.app._router.stack[index].route.path} - **${self.app._router.stack[index].route.stack[route].method.toUpperCase()}**</summary>
+<details><summary>${self.app._router.stack[index].route.path} - ${self.app._router.stack[index].route.stack[route].method.toUpperCase()}</summary>
 <p>
 
 ${routeInfoDoc}\n
