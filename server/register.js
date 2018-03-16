@@ -3,7 +3,7 @@ module.exports.registerSystemInfo = build
 var _ = require('lodash')
 // var babel = require('babel-core')
 var chalksay = require('chalksay')
-var concat = require('serial-concat-files')
+var concat = require('serial-concat-files')({post: '\n'})
 var debug = require('debug')('meanstackjs:register')
 var fs = require('fs-extra')
 var less = require('less')
@@ -472,7 +472,7 @@ Register.prototype.renderFrontendFiles = function (self) {
         )
         fs.writeFile(path.join(dir, '../client/styles/compiled/concat.min.css'), uglifiedcss, function (error) {
           if (error) {
-            debug(error)
+            throw new Error(error)
           } else {
             console.log('Script generated and saved:', 'concat.min.css')
           }
@@ -485,9 +485,10 @@ Register.prototype.renderFrontendFiles = function (self) {
         var uglifiedjs = uglify.minify(fs.readFileSync(path.join(dir, '../client/scripts/compiled/concat.js'), 'utf8'), {
           mangle: false
         })
+        if (uglifiedjs.error) throw new Error(uglifiedjs.error)
         fs.writeFile(path.join(dir, '../client/scripts/compiled/concat.min.js'), uglifiedjs.code, function (error) {
           if (error) {
-            debug(error)
+            throw new Error(error)
           } else {
             console.log('Script generated and saved:', 'concat.min.js')
           }
