@@ -1,5 +1,8 @@
 ### Changelog
 
+#### Mar 12th 18 - v1.9.1
+#296 Address potential security vulnerability
+
 #### Mar 12th 18 - v1.9.0
 #294 - Creating Scripts To Automate Documentation
 #293 - File to import not found or unreadable: bootstrap

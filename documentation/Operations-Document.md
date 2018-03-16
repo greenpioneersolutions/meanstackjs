@@ -1,5 +1,5 @@
 
-# Operation Document for meanstackjs - 1.9.1
+# Operation Document for meanstackjs - 1.10.0
 ## Table Of Contents<a name="TableOfContents"></a>
 
 1. [Table Of Contents](#TableOfContents)
@@ -107,8 +107,8 @@
 
 | Name        | Info           |
 | ------------- |:-------------:|
-| Date     | Mon Mar 12 2018 17:07:30 GMT-0500 (CDT) |
-| Version     | 1.9.1 |
+| Date     | Fri Mar 16 2018 13:04:52 GMT-0500 (CDT) |
+| Version     | 1.10.0 |
 | Repository     | git+https://github.com/greenpioneersolutions/meanstackjs.git |
 | homepage     | https://github.com/greenpioneersolutions/meanstackjs#readme |
 | keywords     | Mean,Mean Stack,Mean Stack JS,Javascript framework,Mongodb,Expressjs,Express,Angular,Angularjs,Node,Nodejs,Meanstackjs,Greenpioneersolutions,Green Pioneer |
@@ -5485,9 +5485,11 @@ JavaScript source code visualization, static analysis, and complexity tool
  {
   "angular": "1.6.9",
   "angular-animate": "1.6.9",
+  "angular-aria": "^1.6.9",
   "angular-cookies": "1.6.9",
   "angular-jwt": "0.1.9",
   "angular-material": "1.1.7",
+  "angular-messages": "^1.6.9",
   "angular-mocks": "1.6.9",
   "angular-moment": "1.2.0",
   "angular-resource": "1.6.9",
@@ -5521,7 +5523,7 @@ JavaScript source code visualization, static analysis, and complexity tool
   "express-sitemap": "^1.6.3",
   "express-status-monitor": "^1.0.1",
   "express-validator": "^5.0.3",
-  "font-awesome": "4.3.0",
+  "font-awesome": "4.7.0",
   "foundation-sites": "^6.4.3",
   "fs-extra": "^5.0.0",
   "glob": "^7.1.1",
@@ -5530,7 +5532,7 @@ JavaScript source code visualization, static analysis, and complexity tool
   "http-status-codes": "^1.0.6",
   "is-there": "^4.3.3",
   "isbot": "^2.0.1",
-  "jquery": "3.1.0",
+  "jquery": "3.3.1",
   "jsonwebtoken": "^8.1.0",
   "less": "^3.0.1",
   "lodash": "^4.17.5",
@@ -5549,7 +5551,7 @@ JavaScript source code visualization, static analysis, and complexity tool
   "node-outlook": "^1.1.6",
   "node-sass": "^4.8.1",
   "node-uuid": "^1.4.8",
-  "node-xlsx": "^0.11.2",
+  "node-xlsx": "^0.12.0",
   "nodemailer": "^4.6.2",
   "passport": "0.4.0",
   "passport-azure-ad": "^3.0.4",
@@ -5568,7 +5570,7 @@ JavaScript source code visualization, static analysis, and complexity tool
   "request": "^2.85.0",
   "run-auto": "^2.0.0",
   "semver": "^5.5.0",
-  "serial-concat-files": "^1.0.0",
+  "serial-concat-files": "^2.0.0",
   "snyk": "^1.70.0",
   "socket.io": "^2.0.2",
   "socket.io-client": "2.0.4",
@@ -5583,10 +5585,12 @@ JavaScript source code visualization, static analysis, and complexity tool
 #### Dev Dependencies
 ``` js 
  {
+  "a11y": "^0.5.0",
   "blessed": "^0.1.81",
   "chai": "^4.1.2",
   "documentation": "^6.1.0",
   "inquirer": "^5.1.0",
+  "jasmine-core": "^3.1.0",
   "karma": "^2.0.0",
   "karma-chai": "^0.1.0",
   "karma-chrome-launcher": "^2.0.0",
@@ -5707,6 +5711,9 @@ Potential Mern Stack Js on the rise in the future.
 
 
 ### Changelog
+
+#### Mar 12th 18 - v1.9.1
+#296 Address potential security vulnerability
 
 #### Mar 12th 18 - v1.9.0
 #294 - Creating Scripts To Automate Documentation

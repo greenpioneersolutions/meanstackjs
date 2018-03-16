@@ -101,7 +101,7 @@
         )
       }
 
-      function updateSeo(){
+      function updateSeo () {
         $http.get('/api/seo' + $location.$$url).then(function (success) {
           $rootScope.seo = success.data
         })

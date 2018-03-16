@@ -2,7 +2,7 @@ var fs = require('fs')
 var request = require('request')
 var moment = require('moment')
 request.get({
-  url: 'https://api.github.com/repos/greenpioneersolutions/meanstackjs/releases',
+  url: 'https://api.github.com/repos/greenpioneersolutions/meanstackjs/releases?per_page=150',
   headers: {
     'Content-Type': 'application/json',
     'user-agent': 'changelog'
