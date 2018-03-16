@@ -157,6 +157,8 @@ var baseLine = {
   // OR USE INTERNAL FILES - '/bower_components/jquery/dist/jquery.js'
   assets: {
     js: [
+      '/angular-messages/angular-messages.js',
+      '/angular-aria/angular-aria.js',
       '/angular-jwt/dist/angular-jwt.js',
       '/socket.io-client/dist/socket.io.js',
       '/ng-file-upload/dist/ng-file-upload-all.js',
@@ -165,7 +167,7 @@ var baseLine = {
       '/angular-sanitize/angular-sanitize.js',
       '/angular-animate/angular-animate.js',
       '/angular-resource/angular-resource.js',
-      '/angular-ui-router/release/angular-ui-router.js',
+      '/@uirouter/angularjs/release/angular-ui-router.js',
       '/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
       '/angular-moment/angular-moment.js',
       '/moment/moment.js',

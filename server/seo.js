@@ -35,10 +35,10 @@ function Seo (self, req, path, cb) {
           if (!data) {
             data = obj
           }
-          return cb(_.assign(self.settings.html, compile({name: self.settings.render.seo.toLowerCase(), options: self.settings.render[self.settings.render.seo.toLowerCase()].options}, pathSettings, data)))
+          return cb(_.assign(self.settings.html, compile({name: self.settings.render.seo.toLowerCase(), options: self.settings.render[self.settings.render.seo.toLowerCase()].options}, pathSettings, data, self)))
         })
       } else {
-        return cb(_.assign(self.settings.html, compile({name: self.settings.render.seo.toLowerCase(), options: self.settings.render[self.settings.render.seo.toLowerCase()].options}, pathSettings, obj)))
+        return cb(_.assign(self.settings.html, compile({name: self.settings.render.seo.toLowerCase(), options: self.settings.render[self.settings.render.seo.toLowerCase()].options}, pathSettings, obj, self)))
       }
       return false
     }
@@ -47,7 +47,7 @@ function Seo (self, req, path, cb) {
     return cb(self.settings.html)
   }
 }
-function compile (type, seo, data) {
+function compile (type, seo, data, self) {
   var compiled = {}
   _.forEach(seo, function (value, prop) {
     if (prop === 'hook') { return }
