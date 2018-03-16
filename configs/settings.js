@@ -157,6 +157,8 @@ var baseLine = {
   // OR USE INTERNAL FILES - '/bower_components/jquery/dist/jquery.js'
   assets: {
     js: [
+      '/angular-messages/angular-messages.js',
+      '/angular-aria/angular-aria.js',
       '/angular-jwt/dist/angular-jwt.js',
       '/socket.io-client/dist/socket.io.js',
       '/ng-file-upload/dist/ng-file-upload-all.js',

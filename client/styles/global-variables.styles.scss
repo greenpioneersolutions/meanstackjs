@@ -6,7 +6,7 @@ $bootstrap-sass-asset-helper: false !default;
 // --------------------------------------------------
 
 //Paths
-$fa-font-path:        "/components/font-awesome/fonts/" !default;
+$fa-font-path:        "/components/font-awesome/fonts" !default;
 $icon-font-path: if($bootstrap-sass-asset-helper, "bootstrap/", "/components/bootstrap-sass/assets/fonts/bootstrap/") !default;
 
 

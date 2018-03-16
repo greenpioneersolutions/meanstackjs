@@ -11,6 +11,8 @@
       'ui.router',
       'angularMoment',
       'ngFileUpload',
-      'angular-jwt'
+      'angular-jwt',
+      'ngAria',
+      'ngMessages'
     ])
 })()

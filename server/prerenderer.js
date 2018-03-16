@@ -2,6 +2,7 @@ module.exports = prerenderer
 
 var Horseman = require('node-horseman')
 var isBot = require('isbot')
+var debug = require('debug')('meanstackjs:prerenderer')
 var MEAN_STACK_UA = 'Mean Stack Prerenderer'
 
 function shouldRenderFromPhantom (req) {
@@ -29,16 +30,15 @@ function prerenderer (req, res, next) {
   if (shouldRenderFromPhantom(req)) {
     var escapedFragment = req.query._escaped_fragment_
     var fullHref = req.protocol + '://' + req.headers.host + (escapedFragment ? req.path + '#!/' + escapedFragment : req.originalUrl)
-
     new Horseman()
-.userAgent(MEAN_STACK_UA)
-.open(fullHref)
-.html().then(function (html) {
-  res.send(html)
-}).catch(function (error) {
-  next(error)
-}).close()
-
+      .userAgent(MEAN_STACK_UA)
+      .open(fullHref)
+      .html().then(function (html) {
+        res.send(html)
+      }).catch(function (error) {
+        debug(error)
+        next()
+      }).close()
     return
   }
   next()

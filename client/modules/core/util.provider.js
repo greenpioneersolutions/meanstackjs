@@ -83,23 +83,28 @@
 
       function init () {
         handleRoutingErrors()
-        updateupdateSeo()
+        setupSeo()
+        updateSeo()
       }
 
       function getStates () {
         return $state.get()
       }
 
-      function updateupdateSeo () {
+      function setupSeo () {
         $rootScope.$on('$stateChangeSuccess',
           function (event, toState, toParams, fromState, fromParams) {
-            $http.get('/api/seo' + $location.$$url).then(function (success) {
-              $rootScope.seo = success.data
-            })
+            updateSeo()
             stateCounts.changes++
             handlingStateChangeError = false
           }
         )
+      }
+
+      function updateSeo () {
+        $http.get('/api/seo' + $location.$$url).then(function (success) {
+          $rootScope.seo = success.data
+        })
       }
     }
   }

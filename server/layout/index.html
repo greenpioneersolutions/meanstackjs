@@ -8,23 +8,23 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="fragment" content="!"/>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
-    <meta name="keywords" content="<%= html.keywords %>"/>
-    <meta name="description" content="<%= html.description %>"/>
-    <meta name="title" content="<%= html.title %>" />
-    <meta name="og:url" content="<%= html.ogUrl %>" />
-    <meta name="og:type" content="<%= html.ogType %>" />
-    <meta name="og:title" content="<%= html.ogTitle %>" />
-    <meta name="og:description" content="<%= html.ogDescription %>" />
-    <meta name="og:image" content="<%= html.ogImage %>" />
-    <meta name="fb:app_id" content="<%= html.fbAppId %>" />
-    <meta name="twitter:creator" content="<%= html.twitterCreator %>" />
-    <meta name="twitter:card" content="<%= html.twitterCard %>" />
-    <meta name="twitter:title" content="<%= html.twitterTitle %>" />
-    <meta name="twitter:description" content="<%= html.twitterDescription %>" />
-    <meta name="twitter:url" content="<%= html.twitterUrl %>" />
-    <meta name="twitter:image" content="<%= html.twitterImage %>" />
-    <meta name="twitter:site" content="<%= html.twitterSite %>" />
-    <meta name="author" content="<%= html.author %>"/>
+    <% if (html.keywords) { %><meta name="keywords" content="<%= html.keywords %>"/> <%  } %>
+    <% if (html.description) { %><meta name="description" content="<%= html.description %>"/> <%  } %>
+    <% if (html.title) { %><meta name="title" content="<%= html.title %>" /> <%  } %>
+    <% if (html.ogUrl) { %><meta name="og:url" content="<%= html.ogUrl %>" /> <%  } %>
+    <% if (html.ogType) { %><meta name="og:type" content="<%= html.ogType %>" /> <%  } %>
+    <% if (html.ogTitle) { %><meta name="og:title" content="<%= html.ogTitle %>" /> <%  } %>
+    <% if (html.ogDescription) { %><meta name="og:description" content="<%= html.ogDescription %>" /> <%  } %>
+    <% if (html.ogImage) { %><meta name="og:image" content="<%= html.ogImage %>" /> <%  } %>
+    <% if (html.fbAppId) { %><meta name="fb:app_id" content="<%= html.fbAppId %>" /> <%  } %>
+    <% if (html.twitterCreator) { %><meta name="twitter:creator" content="<%= html.twitterCreator %>" /> <%  } %>
+    <% if (html.twitterCard) { %><meta name="twitter:card" content="<%= html.twitterCard %>" /> <%  } %>
+    <% if (html.twitterTitle) { %><meta name="twitter:title" content="<%= html.twitterTitle %>" /> <%  } %>
+    <% if (html.twitterDescription) { %><meta name="twitter:description" content="<%= html.twitterDescription %>" /> <%  } %>
+    <% if (html.twitterUrl) { %><meta name="twitter:url" content="<%= html.twitterUrl %>" /> <%  } %>
+    <% if (html.twitterImage) { %><meta name="twitter:image" content="<%= html.twitterImage %>" /> <%  } %>
+    <% if (html.twitterSite) { %><meta name="twitter:site" content="<%= html.twitterSite %>" /> <%  } %>
+    <% if (html.author) { %><meta name="author" content="<%= html.author %>"/> <%  } %>
     <meta name="msapplication-TileColor" content="#4A90E2"/>
     <meta name="theme-color" content="#4A90E2"/>
     <meta name="msapplication-TileImage" content="images/logo/icon.png"/>
