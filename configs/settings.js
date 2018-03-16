@@ -167,7 +167,7 @@ var baseLine = {
       '/angular-sanitize/angular-sanitize.js',
       '/angular-animate/angular-animate.js',
       '/angular-resource/angular-resource.js',
-      '/@uirouter/angularjs/release/angular-ui-router.js',
+      '/angular-ui-router/release/angular-ui-router.js',
       '/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
       '/angular-moment/angular-moment.js',
       '/moment/moment.js',
