@@ -62,7 +62,8 @@
     "documentation:api": "node scripts/generate-api-doc.js",
     "documentation:changelog": "node scripts/generate-changelog.js",
     "documentation:development": "node scripts/generate-development-doc.js",
-    "documentation:ops": "node scripts/generate-ops-doc.js"
+    "documentation:ops": "node scripts/generate-ops-doc.js",
+    "prepare": "npm run snyk-protect"
   },
   "repository": "git+https://github.com/greenpioneersolutions/meanstackjs.git",
   "homepage": "https://github.com/greenpioneersolutions/meanstackjs#readme",
@@ -177,7 +178,7 @@
     "run-auto": "^2.0.0",
     "semver": "^5.5.0",
     "serial-concat-files": "^2.0.0",
-    "snyk": "^1.70.0",
+    "snyk": "^1.83.0",
     "socket.io": "^2.0.2",
     "socket.io-client": "2.0.4",
     "toastr": "^2.1.4",
