@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.7.0
+version: v1.12.0
 ignore: {}
 # patches apply the minimum changes required to fix a vulnerability
 patch:
@@ -48,3 +48,6 @@ patch:
         patched: '2017-05-23T01:35:11.139Z'
     - express-status-monitor > socket.io > socket.io-client > socket.io-parser > debug > ms:
         patched: '2017-05-23T01:35:11.139Z'
+  'npm:tunnel-agent:20170305':
+    - node-sass > request > tunnel-agent:
+        patched: '2018-06-26T00:32:18.354Z'
