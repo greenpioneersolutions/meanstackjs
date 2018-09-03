@@ -45,6 +45,7 @@ module.exports = {
     // See http://mongodb.github.io/node-mongodb-native/driver-articles/mongoclient.html#mongoclient-connect-options
     // and http://mongoosejs.com/docs/connections.html for more information
     options: {
+      useNewUrlParser: true,
       autoIndex: false, // Don't build indexes
       reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
       reconnectInterval: 500, // Reconnect every 500ms

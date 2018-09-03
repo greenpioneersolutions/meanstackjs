@@ -37,7 +37,7 @@ function getUsers (req, res, next) {
 }
 
 function deleteUsers (req, res, next) {
-  req.adminUser.remove(function () {
+  req.adminUser.deleteOne(function () {
     res.status(204).send()
   })
 }
@@ -120,7 +120,7 @@ function getErrors (req, res, next) {
 }
 
 function deleteErrors (req, res, next) {
-  req.error.remove(function () {
+  req.error.deleteOne(function () {
     res.status(204).send()
   })
 }

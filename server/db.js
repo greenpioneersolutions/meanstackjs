@@ -7,9 +7,12 @@ var glob = require('glob')
 var _ = require('lodash')
 var path = require('path')
 
+
+
 function mongoDB (self) {
   // Connect to MongoDb
   mongoose.Promise = global.Promise
+  mongoose.set('useCreateIndex', true)
   mongoose.set('debug', self.settings.mongodb.debug)
   mongoose.connect(self.settings.mongodb.uri, self.settings.mongodb.options)
   mongoose.connection.on('error', function (error) {

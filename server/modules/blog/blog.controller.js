@@ -30,7 +30,7 @@ function getBlog (req, res, next) {
       blogs
         .find(req.queryParameters.filter || '')
         .where(req.queryParameters.where || '')
-        .count()
+        .countDocuments()
         .exec(cb)
     }
   }, function (error, results) {
@@ -41,7 +41,7 @@ function getBlog (req, res, next) {
 }
 
 function deleteBlog (req, res, next) {
-  req.blog.remove(function (error) {
+  req.blog.deleteOne(function (error) {
     if (error) return next(error)
     res.status(204).send()
   })
