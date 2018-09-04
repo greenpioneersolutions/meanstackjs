@@ -1,4 +1,4 @@
-require('dotenv').config({silent: true})
+require('dotenv').config({ silent: true })
 
 var path = require('path')
 var _ = require('lodash')
@@ -189,8 +189,8 @@ var baseLine = {
     ]
   },
   bodyparser: {
-    json: {limit: '100kb'},
-    urlencoded: {limit: '100kb', extended: true}
+    json: { limit: '100kb' },
+    urlencoded: { limit: '100kb', extended: true }
   },
   expresValidator: {
     customValidators: {

@@ -19,10 +19,10 @@ function seed (cb) {
           })
         }
       },
-        function (error, results) {
-          if (error) throw error
-          callback(null, true)
-        })
+      function (error, results) {
+        if (error) throw error
+        callback(null, true)
+      })
     },
     users: ['remove', function (done, callback) {
       User.create([{

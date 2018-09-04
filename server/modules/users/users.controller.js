@@ -174,7 +174,7 @@ function putUpdatePassword (req, res, next) {
 function deleteDeleteAccount (req, res, next) {
   debug('start deleteDeleteAccount')
 
-  User.remove({ _id: req.user.id }, function (error) {
+  User.deleteOne({ _id: req.user.id }, function (error) {
     if (error) {
       return next(error)
     }
@@ -226,7 +226,7 @@ function postReset (req, res, next) {
 
   if (errors) {
     debug('end postReset')
-    return res.status(400).send({message: errors})
+    return res.status(400).send({ message: errors })
   } else {
     auto({
       user: function (callback) {
@@ -238,7 +238,7 @@ function postReset (req, res, next) {
               return next(error)
             }
             if (!user) {
-              return res.status(400).send({message: 'no user found to reset password for. please hit reset password to get another token'})
+              return res.status(400).send({ message: 'no user found to reset password for. please hit reset password to get another token' })
             }
             user.password = req.body.password
             user.resetPasswordToken = undefined
@@ -329,7 +329,7 @@ function postForgot (req, res, next) {
 
 function getKey (req, res, next) {
   debug('start getKey')
-  return res.json({token: tokenApi.createKey(req.user)})
+  return res.json({ token: tokenApi.createKey(req.user) })
 }
 
 function postKey (req, res, next) {
@@ -337,7 +337,7 @@ function postKey (req, res, next) {
   var token = tokenApi.createKey(req.user)
   res.cookie('token', token)
   debug('start postKey')
-  return res.json({token: token})
+  return res.json({ token: token })
 }
 
 function getKeyReset (req, res, next) {
@@ -346,7 +346,7 @@ function getKeyReset (req, res, next) {
   req.user.save(function (error) {
     debug('start getKeyReset')
     if (error) return res.status(500).send(error)
-    return res.json({token: tokenApi.createKey(req.user)})
+    return res.json({ token: tokenApi.createKey(req.user) })
   })
 }
 

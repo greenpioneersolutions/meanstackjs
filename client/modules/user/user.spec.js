@@ -32,7 +32,7 @@ describe('USER Testing', function () {
     $httpBackend.when('GET', /\/api\/user\/authenticate\?noCache=\d+/)
       .respond(200, authResponse)
     $httpBackend.when('GET', /\/api\/seo\/*/)
-        .respond(200, {})
+      .respond(200, {})
     $httpBackend.when('GET', /modules\/[\d\w]+\/[\d\w]+\.view\.html\?noCache=\d+/)
       .respond(200, '')
     $httpBackend.when('GET', /modules\/index\/[\d\w]+\.view\.html\?noCache=\d+/)
@@ -136,7 +136,7 @@ describe('USER Testing', function () {
 
     beforeEach(inject(function ($rootScope, $controller) {
       var $scope = $rootScope.$new()
-      UserController = $controller('UserController', {$scope: $scope})
+      UserController = $controller('UserController', { $scope: $scope })
     }))
 
     it('should exist', function () {
@@ -182,7 +182,7 @@ describe('USER Testing', function () {
       $httpBackend.flush()
       expect(UserFactory.user).to.be.empty
 
-      var payload = {email: 'testuser@test.com'}
+      var payload = { email: 'testuser@test.com' }
 
       $httpBackend.when('POST', '/api/user/forgot')
         .respond(200, authResponse)
@@ -222,7 +222,7 @@ describe('USER Testing', function () {
     })
 
     it('vm.update() should update user correctly', function () {
-      UserController.editProfile = {profile: {}}
+      UserController.editProfile = { profile: {} }
 
       // Simulate setting form input fields
       UserController.editProfile.email = 'test@user.com'

@@ -3,7 +3,7 @@ module.exports.registerSystemInfo = build
 var _ = require('lodash')
 // var babel = require('babel-core')
 var chalksay = require('chalksay')
-var concat = require('serial-concat-files')({post: '\n'})
+var concat = require('serial-concat-files')({ post: '\n' })
 var debug = require('debug')('meanstackjs:register')
 var fs = require('fs-extra')
 var less = require('less')
@@ -42,7 +42,7 @@ Register.prototype.getDownloadContents = function (self) {
   debug('started getDownloadContents')
   self.settings.assets.css.forEach(function (ms) {
     if (validator.isURL(ms)) {
-      request({url: ms}, function (error, response, body) {
+      request({ url: ms }, function (error, response, body) {
         if (error) self.logger.warn('Error Downloading Content', error)
         fs.writeFileSync(path.join(dir, '../client/styles/downloaded/' + path.basename(ms)), body)
       })
@@ -50,7 +50,7 @@ Register.prototype.getDownloadContents = function (self) {
   })
   self.settings.assets.js.forEach(function (ms) {
     if (validator.isURL(ms)) {
-      request({url: ms}, function (error, response, body) {
+      request({ url: ms }, function (error, response, body) {
         if (error) self.logger.warn('Error Downloading Content', error)
         fs.writeFileSync(path.join(dir, '../client/scripts/downloaded/' + path.basename(ms)), body)
       })
@@ -345,11 +345,11 @@ Register.prototype.compileBackendScripts = function (self) {
       //   baseDirectory = './' + self.settings.babel.folder + '/'
       // }
       if (j.type === 'controller') {
-        self.backendFiles.controllers.push({name: r.name, url: baseDirectory + r.name + '/' + j.orginal})
+        self.backendFiles.controllers.push({ name: r.name, url: baseDirectory + r.name + '/' + j.orginal })
       } else if (j.type === 'model') {
-        self.backendFiles.model.push({name: j.name, url: baseDirectory + r.name + '/' + j.orginal})
+        self.backendFiles.model.push({ name: j.name, url: baseDirectory + r.name + '/' + j.orginal })
       } else if (j.type === 'routes') {
-        self.backendFiles.routes.push({name: r.name, url: baseDirectory + r.name + '/' + j.orginal})
+        self.backendFiles.routes.push({ name: r.name, url: baseDirectory + r.name + '/' + j.orginal })
       } else {
         // debug(j.type)
       }
@@ -390,7 +390,7 @@ Register.prototype.renderFrontendFiles = function (self) {
       self.frontendFilesFinal.css.unshift('/styles/downloaded/' + path.basename(ms))
     } else {
       if (fs.existsSync(path.join(dir, '../node_modules/' + ms))) {
-        fs.copySync(path.join(dir, '../node_modules/' + ms), path.join(dir, '../client/components/' + ms), {overwrite: true}) // Options { preserveTimestamps:true,errorOnExist:true}
+        fs.copySync(path.join(dir, '../node_modules/' + ms), path.join(dir, '../client/components/' + ms), { overwrite: true }) // Options { preserveTimestamps:true,errorOnExist:true}
         self.frontendFilesAggregate.css.unshift(path.join(dir, '../client/components/' + ms))
         self.frontendFilesFinal.css.unshift('/components' + ms)
       } else {
@@ -414,7 +414,7 @@ Register.prototype.renderFrontendFiles = function (self) {
       self.frontendFilesFinal.js.unshift('/scripts/downloaded/' + path.basename(ms))
     } else {
       if (fs.existsSync(path.join(dir, '../node_modules/' + ms))) {
-        fs.copySync(path.join(dir, '../node_modules/' + ms), path.join(dir, '../client/components/' + ms), {overwrite: true}) // Options { preserveTimestamps:true,errorOnExist:true}
+        fs.copySync(path.join(dir, '../node_modules/' + ms), path.join(dir, '../client/components/' + ms), { overwrite: true }) // Options { preserveTimestamps:true,errorOnExist:true}
         self.frontendFilesAggregate.js.unshift(path.join(dir, '../client/components/' + ms))
         self.frontendFilesFinal.js.unshift('/components' + ms)
       } else {
@@ -425,7 +425,7 @@ Register.prototype.renderFrontendFiles = function (self) {
   })
   self.settings.assets.copy.forEach(function (ms) {
     if (fs.existsSync(path.join(dir, '../node_modules/' + ms))) {
-      fs.copySync(path.join(dir, '../node_modules/' + ms), path.join(dir, '../client/components/' + ms), {overwrite: true}) // Options { preserveTimestamps:true,errorOnExist:true}
+      fs.copySync(path.join(dir, '../node_modules/' + ms), path.join(dir, '../client/components/' + ms), { overwrite: true }) // Options { preserveTimestamps:true,errorOnExist:true}
     }
   })
   debug('end createFrontend')

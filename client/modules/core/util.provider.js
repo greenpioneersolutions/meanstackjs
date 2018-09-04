@@ -119,7 +119,7 @@
     }
 
     this.$get = function () {
-      return {config: this.config}
+      return { config: this.config }
     }
   }
 
@@ -132,7 +132,7 @@
   function extendExceptionHandler ($delegate, exceptionHandler, logger) {
     return function (exception, cause) {
       $delegate(exception, cause)
-      logger.error(exception.message || exception, {exception: exception, cause: cause})
+      logger.error(exception.message || exception, { exception: exception, cause: cause })
     }
   }
 })()

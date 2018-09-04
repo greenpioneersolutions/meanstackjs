@@ -99,7 +99,7 @@ describe('BLOG Testing', function () {
       $httpBackend.when('GET', /modules\/\w+\/(\d|\w)+\.view\.html\?noCache=\d+/)
         .respond(200, '')
       var $scope = $rootScope.$new()
-      BlogController = $controller('BlogController', {$scope: $scope})
+      BlogController = $controller('BlogController', { $scope: $scope })
     }))
 
     it('should exist', function () {

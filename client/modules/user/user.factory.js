@@ -25,7 +25,7 @@
           }
           $timeout(deferred.resolve(success.data))
         } else {
-          $timeout(deferred.reject({message: 'No Response'}))
+          $timeout(deferred.reject({ message: 'No Response' }))
         }
       }, function (error) {
         $timeout(deferred.reject(error))
@@ -81,7 +81,7 @@
       })
     }
     UserClass.prototype.onIdentity = function (data) {
-      if (!data) return ({error: true})
+      if (!data) return ({ error: true })
 
       self.user = data.user
       self.token = data.token
@@ -142,7 +142,7 @@
             logger.error(response.data.message)
             vm.tokenCheck = true
           }
-      )
+        )
     }
     UserClass.prototype.resetpassword = function (vm) {
       $http.post('/api/user/reset/' + vm.resetToken, {
@@ -184,8 +184,8 @@
     UserClass.prototype.checkLoggedin = function () {
       getAuthenticate().then(function (data) {
         if (data.authenticated === false) {
-          $state.go('signin', {'redirect': $location.path()})
-          logger.error('please sign in', {user: 'No User'}, 'Unauthenticated')
+          $state.go('signin', { 'redirect': $location.path() })
+          logger.error('please sign in', { user: 'No User' }, 'Unauthenticated')
         }
       })
     }
@@ -205,7 +205,7 @@
         if (data.user.roles && _.isArray(data.user.roles))roles = data.user.roles.indexOf('admin') === -1
         if (data.authenticated !== true || roles) {
           $state.go('index')
-          logger.error('requires access', {user: 'No User'}, 'Unauthorized')
+          logger.error('requires access', { user: 'No User' }, 'Unauthorized')
         }
       })
     }

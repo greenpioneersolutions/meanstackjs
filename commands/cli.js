@@ -32,21 +32,21 @@ commandFiles.template = _.union(
   _.map(fs.readdirSync('./commands/template/client'), function (n) { return 'client/' + n }),
   [new inquirer.Separator('Server Creation:')],
   _.map(fs.readdirSync('./commands/template/server'), function (n) { return 'server/' + n })
-  )
+)
 
 commandFiles.blank = _.union(
   [new inquirer.Separator('Client Creation:')],
   _.map(fs.readdirSync('./commands/blank/client'), function (n) { return 'client/' + n }),
   [new inquirer.Separator('Server Creation:')],
   _.map(fs.readdirSync('./commands/blank/server'), function (n) { return 'server/' + n })
-  )
+)
 
 commandFiles.modules = _.union(
   [new inquirer.Separator('Client Deletion:')],
   _.map(_.remove(fs.readdirSync('./client/modules'), function (n) { return n !== 'client.module.js' }), function (n) { return 'client/modules/' + n }),
   [new inquirer.Separator('Server Deletion:')],
   _.map(fs.readdirSync('./server/modules'), function (n) { return 'server/modules/' + n })
-  )
+)
 function rmdirSync (url) {
   if (pathExists(url)) {
     fs.readdirSync(url).forEach(function (file, index) {
@@ -366,52 +366,52 @@ function ask () {
   inquirer.prompt(questions.intro).then(function (answers) {
     switch (answers.intro) {
       case 'Start Selenium Server':
-        shell.exec('node_modules/.bin/selenium-standalone start', {silent: false}, logShellJS)
+        shell.exec('node_modules/.bin/selenium-standalone start', { silent: false }, logShellJS)
         break
       case 'Install Selenium Server':
-        shell.exec('node_modules/.bin/selenium-standalone install', {silent: false}, logShellJS)
+        shell.exec('node_modules/.bin/selenium-standalone install', { silent: false }, logShellJS)
         break
       case 'Start Mongod':
-        shell.exec('bash scripts/start-mongod.sh', {silent: false}, logShellJS)
+        shell.exec('bash scripts/start-mongod.sh', { silent: false }, logShellJS)
         break
       case 'Install MongoDB':
-        shell.exec('bash scripts/mongodb-install.sh', {silent: false}, logShellJS)
+        shell.exec('bash scripts/mongodb-install.sh', { silent: false }, logShellJS)
         break
       case 'Install NodeJS':
-        shell.exec('bash scripts/nodejs-install.sh', {silent: false}, logShellJS)
+        shell.exec('bash scripts/nodejs-install.sh', { silent: false }, logShellJS)
         break
       case 'Set Proxies':
-        shell.exec('bash scripts/set-proxies.sh', {silent: false}, logShellJS)
+        shell.exec('bash scripts/set-proxies.sh', { silent: false }, logShellJS)
         break
       case 'Delete Proxies':
-        shell.exec('bash scripts/unset-proxies.sh', {silent: false}, logShellJS)
+        shell.exec('bash scripts/unset-proxies.sh', { silent: false }, logShellJS)
         break
       case 'Linux Processes':
-        shell.exec("ps -ef | grep 'node index.js' | grep -v grep", {silent: false}, logShellJS)
+        shell.exec("ps -ef | grep 'node index.js' | grep -v grep", { silent: false }, logShellJS)
         break
       case 'Linux Kill Processes':
-        shell.exec("ps -ef | grep 'node index.js' | grep -v grep | awk '{print $2}' | xargs kill -9", {silent: false}, logShellJS)
+        shell.exec("ps -ef | grep 'node index.js' | grep -v grep | awk '{print $2}' | xargs kill -9", { silent: false }, logShellJS)
         break
       case 'Lint Code':
-        shell.exec('node_modules/.bin/standard --fix', {silent: false}, logShellJS)
+        shell.exec('node_modules/.bin/standard --fix', { silent: false }, logShellJS)
         break
       case 'Lint & Fix Code':
-        shell.exec('node_modules/.bin/standard --fix', {silent: false}, logShellJS)
+        shell.exec('node_modules/.bin/standard --fix', { silent: false }, logShellJS)
         break
       case 'Install SSL Certs':
-        shell.exec('bash scripts/generate-ssl-certs.sh', {silent: false}, logShellJS)
+        shell.exec('bash scripts/generate-ssl-certs.sh', { silent: false }, logShellJS)
         break
       case 'Mean Stack JS Install Dependencies':
-        shell.exec('npm install', {silent: false}, logShellJS)
+        shell.exec('npm install', { silent: false }, logShellJS)
         break
       case 'Mean Stack JS Post Install':
-        shell.exec('npm run postinstall', {silent: false}, logShellJS)
+        shell.exec('npm run postinstall', { silent: false }, logShellJS)
         break
       case 'Install Tools Dependencies':
-        shell.exec('node scripts/postinstall.js', {silent: false}, logShellJS)
+        shell.exec('node scripts/postinstall.js', { silent: false }, logShellJS)
         break
       case 'Install Bower Dependencies':
-        shell.exec('node_modules/.bin/bower install', {silent: false}, logShellJS)
+        shell.exec('node_modules/.bin/bower install', { silent: false }, logShellJS)
         break
       case 'Seed Database':
         require('../tests/seed.js')(function () {

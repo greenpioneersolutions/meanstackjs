@@ -1,8 +1,8 @@
 const a11y = require('a11y')
 
 const options = {
-    // viewportSize: '800x600',
-    // delay:5,
+  // viewportSize: '800x600',
+  // delay:5,
   verbose: true
 }
 
