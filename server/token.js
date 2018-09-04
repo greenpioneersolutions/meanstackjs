@@ -1,11 +1,9 @@
-exports.createKey = createKey
-exports.checkKey = checkKey
+module.exports = { createKey, checkKey }
 
-var mongoose = require('mongoose')
-var User = mongoose.model('users')
-var settings = require('../configs/settings').get()
-var jwt = require('jsonwebtoken')
-var debug = require('debug')('meanstackjs:users')
+const jwt = require('jsonwebtoken')
+const mongoose = require('mongoose')
+const User = mongoose.model('users')
+const settings = require('../configs/settings').get()
 
 function createKey (user, apikey) {
   return jwt.sign({
@@ -14,31 +12,41 @@ function createKey (user, apikey) {
 }
 
 function checkKey (token, cb) {
-  var decoded = jwt.decode(token, { complete: true })
-  if (!decoded) return cb({ message: 'Nothing to decode' })
-  if (!decoded.payload) return cb({ message: 'No payload to decode' })
-  if (!decoded.payload._id) return cb({ message: 'No user id was found in decode' })
+  console.log(token, 'TP')
+  if (token.startsWith('Bearer ')) {
+    token = token.slice(7, token.length).trimLeft()
+  }
+  if (token.startsWith('bearer ')) {
+    token = token.slice(7, token.length).trimLeft()
+  }
+  const decoded = jwt.decode(token, { complete: true })
+  let errorResponse = { message: '' }
+  console.log(token, 'TP22')
+
+  if (!decoded) errorResponse.message = 'Nothing to decode'
+  if (!decoded.payload) errorResponse.message = 'No payload to decode'
+  if (!decoded.payload._id) errorResponse.message = 'No user id was found in decode'
+  if (errorResponse.message) return cb(errorResponse)
   User.findOne({
     _id: decoded.payload._id
-  }, function (error, user) {
+  }, (error, user) => {
     if (error) cb(error)
     if (!user) {
-      cb({ message: 'Authentication failed. User not found.' })
+      errorResponse.message = 'Authentication failed. User not found.'
+      return cb(errorResponse)
     } else {
-      debug('middleware verify user: ', user.email)
-      jwt.verify(token, user.apikey, function (error, decoded) {
+      jwt.verify(token, user.apikey, (error, decoded) => {
         if (error) {
-          debug('middleware verify error: ', error)
           switch (error.name) {
             case 'TokenExpiredError':
-              cb({ message: 'It appears your token has expired' }) // Date(error.expiredAt)
-              break
+              errorResponse.message = 'It appears your token has expired'
+              return cb(errorResponse)
             case 'JsonWebTokenError':
-              cb({ message: 'It appears you have invalid signature Token Recieved:' + token })
-              break
+              errorResponse.message = `It appears you have invalid signature Token Recieved:${token}`
+              return cb(errorResponse)
           }
         } else {
-          cb(null, user)
+          return cb(null, user)
         }
       })
     }

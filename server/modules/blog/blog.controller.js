@@ -1,67 +1,50 @@
-exports.getBlog = getBlog
-exports.deleteBlog = deleteBlog
-exports.postBlog = postBlog
-exports.putBlog = putBlog
-exports.getBlogById = getBlogById
-exports.paramBlog = paramBlog
+module.exports = { getBlog, deleteBlog, postBlog, putBlog, getBlogById, paramBlog }
 
-var auto = require('run-auto')
-var mongoose = require('mongoose')
-var blogs = mongoose.model('blog')
-var _ = require('lodash')
-var debug = require('debug')('meanstackjs:blog')
+const auto = require('run-auto')
+const _ = require('lodash')
+const { validationResult } = require('express-validator/check')
+const mongoose = require('mongoose')
+const blogs = mongoose.model('blog')
 
 function getBlog (req, res, next) {
-  debug('start getBlog')
   auto({
-    blogs: function (cb) {
-      debug(req.queryParameters)
+    blogs (cb) {
       blogs
-        .find(req.queryParameters.filter || '')
-        .where(req.queryParameters.where || '')
-        .sort(req.queryParameters.sort || '')
-        .select(req.queryParameters.select || '')
-        .limit(req.queryParameters.limit || '')
-        .skip(req.queryParameters.skip || '')
-        .populate(req.queryParameters.populateId || 'user', req.queryParameters.populateItems || '')
+        .find()
         .exec(cb)
     },
-    count: function (cb) {
+    count (cb) {
       blogs
-        .find(req.queryParameters.filter || '')
-        .where(req.queryParameters.where || '')
+        .find()
         .countDocuments()
         .exec(cb)
     }
-  }, function (error, results) {
+  }, (error, results) => {
     if (error) return next(error)
-    debug('end getBlog')
     return res.status(200).send(results)
   })
 }
 
 function deleteBlog (req, res, next) {
-  req.blog.deleteOne(function (error) {
+  req.blog.deleteOne(error => {
     if (error) return next(error)
     res.status(204).send()
   })
 }
 
 function postBlog (req, res, next) {
-  // EX. of how to use express validator
-  // req.assert('name', 'The name cannot be blank').notEmpty()
-  var errors = req.validationErrors()
+  const errors = validationResult(req)
 
-  if (errors) {
+  if (!errors.isEmpty()) {
     return res.status(400).send({
       success: false,
-      message: errors[0].message,
+      message: errors.array()[0].msg,
       redirect: '/'
     })
   }
 
   req.body.user = req.user._id
-  blogs.create(req.body, function (error, data) {
+  blogs.create(req.body, (error, data) => {
     if (error) return next(error)
     return res.status(201).send(data)
   })
@@ -69,44 +52,36 @@ function postBlog (req, res, next) {
 
 function putBlog (req, res, next) {
   req.blog = _.assign(req.blog, req.body)
-  req.blog.save(function (error) {
+  req.blog.save(error => {
     if (error) return next(error)
     return res.status(200).send(req.blog)
   })
 }
 
 function getBlogById (req, res, next) {
-  debug('start getBlogById')
   res.send(req.blog)
-  debug('end getBlogById')
 }
 
-function paramBlog (req, res, next, id) {
-  debug('start paramBlog')
-
-  req.assert('blogId', 'Your Blog ID cannot be blank').notEmpty()
-  req.assert('blogId', 'Your Blog ID has to be a real id').isMongoId()
-
-  var errors = req.validationErrors()
-  if (errors) {
+function paramBlog (req, res, next) {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
     return res.status(400).send({
       success: false,
-      message: errors[0].message,
+      message: errors.array()[0].msg,
       redirect: '/'
     })
   }
 
   auto({
-    blog: function (cb) {
+    blog (cb) {
       blogs
-        .findOne({ _id: id })
+        .findOne({ _id: req.params.blogId })
         .populate('user')
         .exec(cb)
     }
-  }, function (error, results) {
+  }, (error, results) => {
     if (error) return next(error)
     req.blog = results.blog
-    debug('end paramBlog')
     next()
   })
 }

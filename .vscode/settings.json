@@ -1,0 +1,14 @@
+
+{
+  "files.autoSave":"onFocusChange",
+  "standard.run":"onSave",
+  "standard.usePackageJson": true,
+  "standard.autoFixOnSave":true,
+  "workbench.colorTheme": "Visual Studio Light",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "editor.tabSize": 2,
+  "javascript.validate.enable": false,
+  "typescript.format.insertSpaceBeforeFunctionParenthesis": true,
+  "editor.detectIndentation": false
+}

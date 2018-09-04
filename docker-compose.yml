@@ -1,0 +1,23 @@
+version: "2"
+services:
+  menstack:
+    container_name: menstack
+    restart: always
+    build: .
+    ports:
+      - "3000:3000"
+    links:
+      - mongo
+    environment:
+      - MONGODB=mongodb://mongo/menstack
+    depends_on:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
+volumes:
+  mongo_data:

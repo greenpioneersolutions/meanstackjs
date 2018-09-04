@@ -1,21 +1,15 @@
-exports.send = send
+module.exports = { send }
 
-var nodemailer = require('nodemailer')
-var settings = require('../configs/settings.js').get()
-var debug = require('debug')('meanstackjs:mail')
-var transporter = nodemailer.createTransport(settings.email.connect)
+const sendmail = require('sendmail')()
+const settings = require('../configs/settings.js').get()
 
 function send (message, cb) {
-  var mailOptions = {
+  const mailOptions = {
     to: message.to,
     from: settings.email.from,
     subject: message.subject,
-    text: message.text
+    html: message.html
   }
 
-  debug('mailOptions', mailOptions)
-  transporter.sendMail(mailOptions, function (error) {
-    if (error) debug('mail error:', error)
-    cb(error)
-  })
+  sendmail(mailOptions, cb)
 }

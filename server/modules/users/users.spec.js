@@ -1,12 +1,12 @@
-var assert = require('chai').assert
-var request = require('supertest')
+const {assert}= require('chai')
+const request= require('supertest')
 
-describe('USERS', function () {
-  describe('GET /api/user', function () {
-    it('should be returning unauthenticated', function (done) {
+describe('USERS', () => {
+  describe('GET /api/user', () => {
+    it('should be returning unauthenticated', done => {
       request('localhost:3000/')
         .get('api/user/authenticate')
-        .expect(200, function (error, res) {
+        .expect(200, (error, res) => {
           if (error) return done(error)
           assert.equal(res.body.success, false)
           assert.equal(res.body.authenticated, false)
@@ -14,10 +14,10 @@ describe('USERS', function () {
           done()
         })
     })
-    it('should be returning token', function (done) {
+    it('should be returning token', done => {
       request('localhost:3000/')
         .get('api/user/token')
-        .expect(401, function (error, res) {
+        .expect(401, (error, res) => {
           if (error) return done(error)
           assert.equal(res.body.success, false)
           done()

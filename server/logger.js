@@ -1,83 +1,36 @@
-module.exports.loggerMiddleware = middleware
+module.exports = { middleware }
 
-var morgan = require('morgan')
-var pathExists = require('is-there')
-var fs = require('fs')
-var path = require('path')
-var winston = require('winston')
-require('winston-daily-rotate-file')
-var MongoDB = require('winston-mongodb').MongoDB
-var WinstonFile = (process.env.NODE_ENV !== 'production' ? winston.transports.File : winston.transports.DailyRotateFile)
-var settings = require('../configs/settings').get()
+const morgan = require('morgan')
+const fs = require('fs')
+const path = require('path')
+const winston = require('winston')
 
-if (!pathExists(path.join(__dirname, '/../logs/'))) {
-  fs.mkdirSync(path.join(__dirname, '/../logs/'))
+const logDir = path.resolve('./logs')
+try {
+  fs.statSync(logDir)
+} catch (e) {
+  fs.mkdirSync(logDir)
 }
-
-var logger = new (winston.Logger)({
+const logger = winston.createLogger({
+  format: winston.format.simple(),
   transports: [
-    new (winston.transports.Console)({
-      prettyPrint: true,
-      colorize: true,
-      showLevel: false,
-      timestamp: false,
-      handleExceptions: true
-    }),
-    new (WinstonFile)({
-      name: 'error',
-      filename: 'logs/error-meanstackjs.log',
-      datePattern: 'yyyy-MM-dd.',
-      prepend: true,
-      level: 'error',
-      handleExceptions: true,
-      json: true,
-      maxsize: 52428800, // 50MB
-      maxFiles: 5
-    }),
-    new (WinstonFile)({
-      name: 'info',
-      filename: 'logs/info-meanstackjs.log',
-      datePattern: 'yyyy-MM-dd.',
-      prepend: true,
-      handleExceptions: true,
-      json: true,
-      maxsize: 52428800, // 50MB
-      maxFiles: 5
-    }),
-    new (WinstonFile)({
-      name: 'warn',
-      filename: 'logs/warn-meanstackjs.log',
-      datePattern: 'yyyy-MM-dd.',
-      prepend: true,
-      level: 'warn',
-      handleExceptions: true,
-      json: true,
-      maxsize: 52428800, // 50MB
-      maxFiles: 5
-    }),
-    new (MongoDB)({
-      level: 'error',
-      db: settings.mongodb.uri,
-      collection: 'errors',
-      handleExceptions: true,
-      json: true,
-      maxsize: 52428800, // 50MB
-      maxFiles: 5
-    })
-  ],
-  exitOnError: false
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: './logs/error.log', level: 'error' }),
+    new winston.transports.File({ filename: './logs/warn.log', level: 'warn' }),
+    new winston.transports.File({ filename: './logs/info.log', level: 'info' }),
+    new winston.transports.File({ filename: './logs/debug.log', level: 'debug' })
+  ]
 })
 
 function middleware (self) {
   if (self.settings.logger) {
     self.app.use(morgan(self.settings.logger, {
       stream: {
-        write: function (message) {
+        write (message) {
           self.logger.info(message.replace(/\n$/, ''))
         }
       }
     }))
   }
 }
-
-module.exports.logger = logger
+module.exports = { logger }

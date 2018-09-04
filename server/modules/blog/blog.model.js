@@ -1,6 +1,6 @@
-var mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
-var blogSchema = mongoose.Schema({
+const blogSchema = mongoose.Schema({
   created: {
     type: Date,
     default: Date.now

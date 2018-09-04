@@ -18,10 +18,10 @@ files.forEach(function (model, key) {
 })
 self = {
   app: express(),
-  middleware: require('../server/middleware.js'),
-  mail: require('../server/mail.js'),
+  middleware: require('../old/server/middleware.js'),
+  mail: require('../old/server/mail.js'),
   logger: {},
-  settings: require('../configs/settings.js').get(),
+  settings: require('../old/configs/settings.js').get(),
   environment: 'APIGENERATE',
   dir: __dirname
 }
@@ -49,7 +49,7 @@ var routeInfo = {
 for (let index = 0; index < routes.length; index++) {
   require(path.resolve(routes[index]))(self.app, self.middleware, self.mail, self.settings, self.models, self.logger)
 }
-require('../server/routes.js').buildRoutes(self)
+require('../old/server/routes.js').buildRoutes(self)
 
 var apiDoc = '## API \n\n'
 for (let index = 0; index < self.app._router.stack.length; index++) {

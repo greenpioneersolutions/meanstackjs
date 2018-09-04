@@ -1,0 +1,102 @@
+# TODO
+
+* update JWT
+* update bootstrap
+* update seo
+* update documentation
+* add account page
+* add blog example
+* add todo example
+* add test cases - 250 total
+* get NG TEST working
+* move tools to npm packages
+* evaluate moving CLI to npm package
+* review scripts & are they needed?
+* refactor and minimize overall footprint (last version was too bulky)
+
+
+
+SEO notes
+``` html
+<!doctype html>
+<html ng-app="app" xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml" xmlns:og="http://opengraphprotocol.org/schema/" lang="en">
+<head  prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
+    <base href="/">
+    <title data-ng-bind="seo.title" ><%= html.title %></title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="fragment" content="!"/>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+    <% if (html.keywords) { %><meta name="keywords" content="<%= html.keywords %>"/> <%  } %>
+    <% if (html.description) { %><meta name="description" content="<%= html.description %>"/> <%  } %>
+    <% if (html.title) { %><meta name="title" content="<%= html.title %>" /> <%  } %>
+    <% if (html.ogUrl) { %><meta name="og:url" content="<%= html.ogUrl %>" /> <%  } %>
+    <% if (html.ogType) { %><meta name="og:type" content="<%= html.ogType %>" /> <%  } %>
+    <% if (html.ogTitle) { %><meta name="og:title" content="<%= html.ogTitle %>" /> <%  } %>
+    <% if (html.ogDescription) { %><meta name="og:description" content="<%= html.ogDescription %>" /> <%  } %>
+    <% if (html.ogImage) { %><meta name="og:image" content="<%= html.ogImage %>" /> <%  } %>
+    <% if (html.fbAppId) { %><meta name="fb:app_id" content="<%= html.fbAppId %>" /> <%  } %>
+    <% if (html.twitterCreator) { %><meta name="twitter:creator" content="<%= html.twitterCreator %>" /> <%  } %>
+    <% if (html.twitterCard) { %><meta name="twitter:card" content="<%= html.twitterCard %>" /> <%  } %>
+    <% if (html.twitterTitle) { %><meta name="twitter:title" content="<%= html.twitterTitle %>" /> <%  } %>
+    <% if (html.twitterDescription) { %><meta name="twitter:description" content="<%= html.twitterDescription %>" /> <%  } %>
+    <% if (html.twitterUrl) { %><meta name="twitter:url" content="<%= html.twitterUrl %>" /> <%  } %>
+    <% if (html.twitterImage) { %><meta name="twitter:image" content="<%= html.twitterImage %>" /> <%  } %>
+    <% if (html.twitterSite) { %><meta name="twitter:site" content="<%= html.twitterSite %>" /> <%  } %>
+    <% if (html.author) { %><meta name="author" content="<%= html.author %>"/> <%  } %>
+    <meta name="msapplication-TileColor" content="#4A90E2"/>
+    <meta name="theme-color" content="#4A90E2"/>
+    <meta name="msapplication-TileImage" content="images/logo/icon.png"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="images/logo/icon.png"/>
+    <link rel="icon" type="image/png" sizes="192x192" href="images/logo/icon.png"/>
+    <link rel="icon" type="image/png" href="images/logo/icon.png"/>
+    <link rel="shortcut icon" href="images/logo/icon.png" type="image/x-icon"/>
+    <link rel="icon" href="images/logo/icon.png" type="image/x-icon"/>
+    <link rel="canonical" href="<%= html.canonical %>" />
+    <% for(var i=0; i<assets.css.length; i++) { %>
+    <link rel="stylesheet" href="<%= assets.css[i] %>">
+    <% } %>
+    <style>
+        /* This helps the ng-show/ng-hide animations start at the right place. */
+        /* Since Angular has this but needs to load, this gives us the class early. */
+        
+        .ng-hide {
+            display: none!important;
+        }
+    </style>
+    
+</head>
+
+<body >    
+    <div ng-include="'modules/core/core.view.html'">
+    </div>
+    <% for(var i=0; i<assets.js.length; i++) { %>
+        <script type="text/javascript" src="<%= assets.js[i] %>"></script>
+    <% } %>
+    <% if (environment == 'development') { %>
+    <script>
+        document.write('<script src="' + location.protocol + '//' + (location.host || 'localhost').split(':')[0] +':'+ (location.protocol === 'http:'?35729:35730)+'/livereload.js?snipver=1"></' + 'script>')
+    </script>
+    <%  } %>
+    <script>
+        window.name = '<%= name %>'
+    </script>
+    <script>
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+        ga('create', '<%= googleAnalytics %>', 'auto');
+        ga('send', 'pageview');
+    </script>
+</body>
+</html>
+```

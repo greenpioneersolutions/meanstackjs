@@ -1,5 +1,12 @@
 ### Changelog
 
+#### Sep 16th 18 - 1.11.0
+Updated dependencies
+Fix Winston mongo issue
+
+#### Mar 16th 18 - v1.10.0
+ #297 added accessibility features
+
 #### Mar 12th 18 - v1.9.1
 #296 Address potential security vulnerability
 
@@ -51,7 +58,7 @@
 #190 Add Debug Page
 
 
-#### Jan 2nd 17 - v1.5.0
+#### Jan 3rd 17 - v1.5.0
 # Release 1.5.0
 
 [b8243d3125072726b184e96cd2d01e0088466d8f](https://github.com/greenpioneersolutions/meanstackjs/commit/b8243d3125072726b184e96cd2d01e0088466d8f)

@@ -1,0 +1,19 @@
+{
+  "name": "meanstackjs-mongo_express",
+  "version": "1.0.0",
+  "description": "Web-based MongoDB admin interface, written with Node.js and express. http://localhost:8081",
+  "main": "index.js",
+  "active": true,
+  "author": "Green Pioneer <info@greenpioneersolutions.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "4.14.0",
+    "mongo-express": "0.46.1",
+    "mongodb-uri": "0.9.7"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/greenpioneersolutions/meanstackjs.git"
+  }
+}

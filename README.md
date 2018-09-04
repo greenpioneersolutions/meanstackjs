@@ -11,6 +11,20 @@
 [![meanstackjs Logo](http://meanstackjs.com/images/logo/header3x.png)](http://meanstackjs.com/)
 
 
+UPDATE
+-----------------
+We are currently on 6.0.0-alpha.1. Going forward we will releasing with each version of angular. We will be keeping 1.x supported as the enterprise version. We are looking at using all of these technologies below
+
+* ES6
+* [Expressjs 4/5](http://expressjs.com/en/guide/migrating-5.html)
+* [Boostrap 4](https://getbootstrap.com/)
+* [Angular](https://angular.io/) 6.x > 
+* [Typescript](https://www.typescriptlang.org/) 2.x > 
+* [MongoDB](https://www.mongodb.com/download-center#community) 3.x - 4.x
+* [Nodejs](https://github.com/nodejs/LTS#lts_schedule) 10.x - 14.x
+* [Angular Style](https://angular.io/guide/styleguide)
+* [NightwatchJS](http://nightwatchjs.org/) 1.x - 2.x
+
 
 Why Mean Stack JS
 -----------------
@@ -123,4 +137,3 @@ node index.js
 
 
 [MIT][license] © [Green Pioneer][website]
-

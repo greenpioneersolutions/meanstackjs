@@ -1,18 +1,16 @@
-exports.log = log
-exports.errorMiddleware = middleware
+module.exports = { middleware, log }
 
-var httpStatus = require('http-status-codes')
-var debug = require('debug')('meanstackjs:error')
-var logger = require('./logger.js').logger
+const { logger } = require('./logger.js')
 
 function log (error, cb) {
   if (typeof cb !== 'function') {
-    cb = function () {}
+    cb = () => {}
   }
   if (!(error instanceof Error)) {
     error = new Error(error)
   }
   logger.error(error.message, error)
+  console.error(error.message, error)
 }
 
 function jsonStringify (obj) {
@@ -20,11 +18,11 @@ function jsonStringify (obj) {
 }
 
 function middleware (self) {
-  self.app.use(function (error, req, res, next) {
-    var code = typeof error.status === 'number' ? error.status : 500
-    var message = error.message || error.msg
-    var type = 'express'
-    var ip = req.ip || req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.connection.remoteAddress
+  self.app.use((error, req, res, next) => {
+    let code = typeof error.status === 'number' ? error.status : 500
+    let message = error.message || error.msg
+    let type = 'express'
+    const ip = req.ip || req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.connection.remoteAddress
 
     if (error.name === 'ValidationError') {
       code = 400
@@ -43,19 +41,7 @@ function middleware (self) {
       type = 'mongo'
     }
 
-    var text = '\n=== EXCEPTION ===\n  \n' +
-      'Message:\n' +
-      message + '\n\n' +
-      'Code:\n' + code + '\n \n' +
-      'User:\n' + (req.user ? req.user.email : 'no user info') + '\n \n' +
-      'IP Address:\n' + (ip || 'no IP') + '\n \n' +
-      'User-Agent:\n' + jsonStringify(req.headers['user-agent']) + '\n \n' +
-      'Route:\n' + req.method + '-' + req.url + '\n \n' +
-      'Headers:\n' + '\n' + jsonStringify(req.headers) + '\n \n' +
-      'Params:\n' + '\n' + jsonStringify(req.params) + '\n \n' +
-      'Body:\n' + '\n' + jsonStringify(req.body) + '\n \n' +
-      'Session:\n' + '\n' + jsonStringify(req.session) + '\n \n' +
-      'Stack:\n' + error.stack + '\n'
+    const text = `\n=== EXCEPTION ===\n  \nMessage:\n${message}\n\nCode:\n${code}\n \nUser:\n${req.user ? req.user.email : 'no user info'}\n \nIP Address:\n${ip || 'no IP'}\n \nUser-Agent:\n${jsonStringify(req.headers['user-agent'])}\n \nRoute:\n${req.method}-${req.url}\n \nHeaders:\n\n${jsonStringify(req.headers)}\n \nParams:\n\n${jsonStringify(req.params)}\n \nBody:\n\n${jsonStringify(req.body)}\n \nSession:\n\n${jsonStringify(req.session)}\n \nStack:\n${error.stack}\n`
 
     res.status(code)
 
@@ -65,16 +51,15 @@ function middleware (self) {
       log(error)
     }
 
-    var renderData = {
+    const renderData = {
       text: '',
-      message: message,
-      code: code,
-      title: code + ' ' + httpStatus.getStatusText(code)
+      message,
+      code,
+      title: `${code}`
     }
-    if (self.environment !== 'production') {
+    if (self.settings.environment !== 'production') {
       renderData.text = text
     }
-    debug('error message & code:' + message + ' - ' + code)
     return res.send(renderData)
   })
 }
