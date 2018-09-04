@@ -37,7 +37,7 @@ function getUsers (req, res, next) {
 }
 
 function deleteUsers (req, res, next) {
-  req.adminUser.remove(function () {
+  req.adminUser.deleteOne(function () {
     res.status(204).send()
   })
 }
@@ -86,7 +86,7 @@ function paramUsers (req, res, next, id) {
   auto({
     adminUser: function (cb) {
       Users
-        .findOne({_id: id})
+        .findOne({ _id: id })
         .populate('user')
         .select('-password')
         .exec(cb)
@@ -120,7 +120,7 @@ function getErrors (req, res, next) {
 }
 
 function deleteErrors (req, res, next) {
-  req.error.remove(function () {
+  req.error.deleteOne(function () {
     res.status(204).send()
   })
 }
@@ -169,7 +169,7 @@ function paramErrors (req, res, next, id) {
   auto({
     error: function (cb) {
       Errors
-        .findOne({_id: id})
+        .findOne({ _id: id })
         .populate('user')
         .select('-password')
         .exec(cb)

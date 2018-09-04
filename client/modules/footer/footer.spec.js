@@ -4,7 +4,7 @@ describe('FOOTER Testing', function () {
     beforeEach(module('app.footer'))
     beforeEach(inject(function ($controller, $rootScope) {
       var $scope = $rootScope.$new()
-      FooterController = $controller('FooterController', {$scope: $scope})
+      FooterController = $controller('FooterController', { $scope: $scope })
     }))
 
     it('should exist', function () {

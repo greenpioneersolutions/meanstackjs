@@ -45,7 +45,7 @@
     vm.upload = function (file) {
       Upload.upload({
         url: '/api/photos/upload',
-        data: {file: file, 'user': UserFactory}
+        data: { file: file, 'user': UserFactory }
       }).then(function (resp) {
         console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data)
       }, function (resp) {

@@ -48,7 +48,7 @@ module.exports = {
       data.blog = {
         tags: process.env.SEO_TAGS || ['Add', 'Tags', 'To Blog', 'Mean Stack JS']
       }
-      self.models.blog.findOne({_id: data.params.id}).populate('user').lean().then(function (blog) {
+      self.models.blog.findOne({ _id: data.params.id }).populate('user').lean().then(function (blog) {
         data.blog = Object.assign({}, data.blog, blog)
         cb(null, data)
       }).catch(function (error) {

@@ -13,14 +13,14 @@ function shouldRenderFromPhantom (req) {
   if (!userAgent || userAgent === MEAN_STACK_UA) return false
   if (req.method !== 'GET' && req.method !== 'HEAD') return false
 
-// does it contain _escaped_fragment_, show prerendered page
+  // does it contain _escaped_fragment_, show prerendered page
   var parsedQuery = req.query
   if (parsedQuery._escaped_fragment_ !== undefined) prerenderedPage = true
 
-// is it a bot then show prerendered page
+  // is it a bot then show prerendered page
   if (isBot(userAgent)) prerenderedPage = true
 
-// is it a bufferbot then show prerendered page
+  // is it a bufferbot then show prerendered page
   if (bufferAgent) prerenderedPage = true
 
   return prerenderedPage

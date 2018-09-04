@@ -23,6 +23,7 @@ module.exports = {
     port: process.env.PORT || 3000
   },
   https: {
+    useNewUrlParser: true,
     active: process.env.HTTPS_ACTIVE || false,
     redirect: true,
     port: process.env.HTTPSPORT || 3043,

@@ -14,16 +14,16 @@ function createKey (user, apikey) {
 }
 
 function checkKey (token, cb) {
-  var decoded = jwt.decode(token, {complete: true})
-  if (!decoded) return cb({message: 'Nothing to decode'})
-  if (!decoded.payload) return cb({message: 'No payload to decode'})
-  if (!decoded.payload._id) return cb({message: 'No user id was found in decode'})
+  var decoded = jwt.decode(token, { complete: true })
+  if (!decoded) return cb({ message: 'Nothing to decode' })
+  if (!decoded.payload) return cb({ message: 'No payload to decode' })
+  if (!decoded.payload._id) return cb({ message: 'No user id was found in decode' })
   User.findOne({
     _id: decoded.payload._id
   }, function (error, user) {
     if (error) cb(error)
     if (!user) {
-      cb({message: 'Authentication failed. User not found.'})
+      cb({ message: 'Authentication failed. User not found.' })
     } else {
       debug('middleware verify user: ', user.email)
       jwt.verify(token, user.apikey, function (error, decoded) {
@@ -31,10 +31,10 @@ function checkKey (token, cb) {
           debug('middleware verify error: ', error)
           switch (error.name) {
             case 'TokenExpiredError':
-              cb({message: 'It appears your token has expired'}) // Date(error.expiredAt)
+              cb({ message: 'It appears your token has expired' }) // Date(error.expiredAt)
               break
             case 'JsonWebTokenError':
-              cb({message: 'It appears you have invalid signature Token Recieved:' + token})
+              cb({ message: 'It appears you have invalid signature Token Recieved:' + token })
               break
           }
         } else {

@@ -26,7 +26,7 @@ describe('HEADER Testing', function () {
       // Authenticate in UserFactory class constructor
       $httpBackend.flush()
       var $scope = $rootScope.$new()
-      HeaderController = $controller('HeaderController', {$scope: $scope})
+      HeaderController = $controller('HeaderController', { $scope: $scope })
     }))
 
     it('should exist', function () {
