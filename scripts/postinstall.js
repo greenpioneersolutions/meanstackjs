@@ -9,7 +9,7 @@ fs.readdir(toolsDir, function (err, files) {
   files.forEach(function (file, key) {
     if (file === '.DS_Store') return
     shell.cd(toolsDir + '/' + file)
-    shell.exec('npm install', {silent: false}, function () {
+    shell.exec('npm install', { silent: false }, function () {
       console.log('Finished Installing ' + file)
     })
   })

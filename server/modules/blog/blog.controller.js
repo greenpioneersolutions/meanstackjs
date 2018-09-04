@@ -99,7 +99,7 @@ function paramBlog (req, res, next, id) {
   auto({
     blog: function (cb) {
       blogs
-        .findOne({_id: id})
+        .findOne({ _id: id })
         .populate('user')
         .exec(cb)
     }

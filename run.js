@@ -82,26 +82,26 @@ process.on('uncaughtException', function (err) {
       console.log('(Operation timed out): A connect or send request failed because the connected party did not properly respond after a period of time. Usually encountered by http or net -- often a sign that a socket.end() was not properly called.')
       break
   }
-    // Our Custom Error Handler
+  // Our Custom Error Handler
   error.log(err, function (logErr) {
     if (logErr)console.log('Error in log function in errors.js')
-      // How do you want to handle your errors ? email admin , exit process or nothing at all ?
+    // How do you want to handle your errors ? email admin , exit process or nothing at all ?
     process.exit(1)
-      // var settings = require('./configs/settings.js').get()
-      // var environment = require('./configs/environment.js').get()
-      // if (environment === 'production') {
-      //   var message = {}
-      //   message.to = settings.email.error
-      //   message.subject = '[UNCAUGHT EXCEPTION] ' + err.message
-      //   message.text = err.stack.toString()
-      //   console.log(message)
-      //   console.log('Sending Email in production is commented out ./run.js:99')
-      //   var mail = require('./server/mail.js')
-      //   mail.send(message, function (err) {
-      //     if (err) throw err
-      //     process.exit(1)
-      //   })
-      // }
+    // var settings = require('./configs/settings.js').get()
+    // var environment = require('./configs/environment.js').get()
+    // if (environment === 'production') {
+    //   var message = {}
+    //   message.to = settings.email.error
+    //   message.subject = '[UNCAUGHT EXCEPTION] ' + err.message
+    //   message.text = err.stack.toString()
+    //   console.log(message)
+    //   console.log('Sending Email in production is commented out ./run.js:99')
+    //   var mail = require('./server/mail.js')
+    //   mail.send(message, function (err) {
+    //     if (err) throw err
+    //     process.exit(1)
+    //   })
+    // }
   })
 })
 

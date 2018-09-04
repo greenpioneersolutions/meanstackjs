@@ -26,7 +26,7 @@ self = {
   dir: __dirname
 }
 var routeInfo = {
-    // Add any custom
+  // Add any custom
   'get': {
     '/api/user/authenticate': {
       description: 'Check Authentication',

@@ -86,7 +86,7 @@ function paramUsers (req, res, next, id) {
   auto({
     adminUser: function (cb) {
       Users
-        .findOne({_id: id})
+        .findOne({ _id: id })
         .populate('user')
         .select('-password')
         .exec(cb)
@@ -169,7 +169,7 @@ function paramErrors (req, res, next, id) {
   auto({
     error: function (cb) {
       Errors
-        .findOne({_id: id})
+        .findOne({ _id: id })
         .populate('user')
         .select('-password')
         .exec(cb)

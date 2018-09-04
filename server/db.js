@@ -7,8 +7,6 @@ var glob = require('glob')
 var _ = require('lodash')
 var path = require('path')
 
-
-
 function mongoDB (self) {
   // Connect to MongoDb
   mongoose.Promise = global.Promise

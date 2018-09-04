@@ -53,12 +53,12 @@
       BlogFactory.update({
         id: $stateParams.id
       }, vm.blog,
-        function (success) {
-          $location.url('/blog/view/' + $stateParams.id)
-        },
-        function (error) {
-          logger.error(error.data.message, error, 'Blog')
-        })
+      function (success) {
+        $location.url('/blog/view/' + $stateParams.id)
+      },
+      function (error) {
+        logger.error(error.data.message, error, 'Blog')
+      })
     }
     vm.delete = function (blogId) {
       // Disable confirm for testing purposes
@@ -68,16 +68,16 @@
         BlogFactory.remove({
           id: blogId
         },
-          function (success) {
-            for (var i in vm.blogs) {
-              if (vm.blogs[i]._id === blogId) {
-                vm.blogs.splice(i, 1)
-              }
+        function (success) {
+          for (var i in vm.blogs) {
+            if (vm.blogs[i]._id === blogId) {
+              vm.blogs.splice(i, 1)
             }
-          },
-          function (error) {
-            logger.error(error.data.message, error, 'Blog')
-          })
+          }
+        },
+        function (error) {
+          logger.error(error.data.message, error, 'Blog')
+        })
       }
     }
     function activate () {

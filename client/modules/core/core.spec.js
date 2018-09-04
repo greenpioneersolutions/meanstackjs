@@ -84,7 +84,7 @@ describe('CORE Testing', function () {
     it('should exist', function () {
       inject(function ($rootScope, $controller) {
         var $scope = $rootScope.$new()
-        var CoreController = $controller('CoreController', {$scope: $scope})
+        var CoreController = $controller('CoreController', { $scope: $scope })
         expect(CoreController).to.exist
       })
     })

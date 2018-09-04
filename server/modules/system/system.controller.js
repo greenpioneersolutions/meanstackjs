@@ -17,7 +17,7 @@ function testing (mail, settings) {
 
 function pug (settings) {
   return function (req, res, next) {
-    res.send(require('pug').renderFile(path.join(__dirname, 'setting.view.pug'), {settings: settings}))
+    res.send(require('pug').renderFile(path.join(__dirname, 'setting.view.pug'), { settings: settings }))
   }
 }
 
