@@ -148,7 +148,7 @@
     "mongoose": "5.2.12",
     "mongoose-timestamp": "0.6.0",
     "mongoose-validator": "2.0.2",
-    "morgan": "1.6.1",
+    "morgan": "1.9.1",
     "multer": "1.3.0",
     "ng-file-upload": "12.2.13",
     "node-horseman": "3.2.0",
