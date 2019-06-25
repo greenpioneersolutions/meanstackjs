@@ -126,7 +126,7 @@
     "express-session": "1.12.1",
     "express-sitemap": "1.6.3",
     "express-status-monitor": "1.0.1",
-    "express-validator": "5.0.3",
+    "express-validator": "6.0.0",
     "font-awesome": "4.7.0",
     "foundation-sites": "6.4.3",
     "fs-extra": "5.0.0",
