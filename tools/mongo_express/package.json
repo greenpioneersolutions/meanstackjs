@@ -8,7 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "express": "4.14.0",
-    "mongo-express": "0.32.0",
+    "mongo-express": "0.54.0",
     "mongodb-uri": "0.9.7"
   },
   "devDependencies": {},
