@@ -136,7 +136,7 @@
     "http-status-codes": "1.0.6",
     "is-there": "4.3.3",
     "isbot": "2.0.1",
-    "jquery": "3.3.1",
+    "jquery": "3.5.0",
     "jsonwebtoken": "8.1.0",
     "less": "3.0.1",
     "lodash": "4.17.5",
