@@ -60,7 +60,9 @@
     "documentation:api": "node scripts/generate-api-doc.js",
     "documentation:changelog": "node scripts/generate-changelog.js",
     "documentation:development": "node scripts/generate-development-doc.js",
-    "documentation:ops": "node scripts/generate-ops-doc.js"
+    "documentation:ops": "node scripts/generate-ops-doc.js",
+    "snyk-protect": "snyk protect",
+    "prepare": "yarn run snyk-protect"
   },
   "repository": "git+https://github.com/greenpioneersolutions/meanstackjs.git",
   "homepage": "https://github.com/greenpioneersolutions/meanstackjs#readme",
@@ -136,7 +138,7 @@
     "http-status-codes": "1.0.6",
     "is-there": "4.3.3",
     "isbot": "2.0.1",
-    "jquery": "3.3.1",
+    "jquery": "3.5.0",
     "jsonwebtoken": "8.1.0",
     "less": "3.0.1",
     "lodash": "4.17.5",
@@ -183,7 +185,8 @@
     "validator": "10.7.1",
     "winston": "2.4.4",
     "winston-daily-rotate-file": "3.3.2",
-    "winston-mongodb": "4.0.3"
+    "winston-mongodb": "4.0.3",
+    "snyk": "^1.317.0"
   },
   "devDependencies": {
     "a11y": "0.5.0",
@@ -207,5 +210,6 @@
     "shelljs": "0.8.1",
     "standard": "8.6.0",
     "supertest": "3.0.0"
-  }
+  },
+  "snyk": true
 }
