@@ -156,7 +156,7 @@
     "node-sass": "4.8.1",
     "node-uuid": "1.4.8",
     "node-xlsx": "0.12.0",
-    "nodemailer": "4.6.2",
+    "nodemailer": "6.4.16",
     "passport": "0.4.0",
     "passport-azure-ad": "4.0.0",
     "passport-facebook": "2.1.1",
