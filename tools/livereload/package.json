@@ -11,7 +11,7 @@
     "chokidar": "1.6.1",
     "less": "2.7.1",
     "livereload": "0.6.0",
-    "lodash": "4.17.2",
+    "lodash": "4.17.21",
     "node-sass": "^4.5.0"
   },
   "devDependencies": {},
