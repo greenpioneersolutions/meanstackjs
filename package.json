@@ -180,7 +180,7 @@
     "toastr": "2.1.4",
     "uglify-js": "3.3.14",
     "uglifycss": "0.0.29",
-    "validator": "10.7.1",
+    "validator": "13.7.0",
     "winston": "2.4.4",
     "winston-daily-rotate-file": "3.3.2",
     "winston-mongodb": "4.0.3"
