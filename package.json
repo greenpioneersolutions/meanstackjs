@@ -158,7 +158,7 @@
     "node-xlsx": "0.12.0",
     "nodemailer": "4.6.2",
     "passport": "0.4.0",
-    "passport-azure-ad": "4.0.0",
+    "passport-azure-ad": "4.3.2",
     "passport-facebook": "2.1.1",
     "passport-github": "1.1.0",
     "passport-google-oauth": "1.0.0",
