@@ -7,7 +7,7 @@
   "author": "Green Pioneer <info@greenpioneersolutions.com>",
   "license": "MIT",
   "dependencies": {
-    "express": "4.14.0",
+    "express": "4.17.3",
     "mongo-express": "0.32.0",
     "mongodb-uri": "0.9.7"
   },
