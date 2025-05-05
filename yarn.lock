@@ -16,6 +16,11 @@
   dependencies:
     "@types/babel-types" "*"
 
+"@uirouter/core@5.0.3":
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@uirouter/core/-/core-5.0.3.tgz#e2b5b1e45190e20c67ba4e15c013de5d4e0ccab3"
+  integrity sha512-p3cCPTFmdy5yjPCmbgVU8AnyVsmq1rLT4p8rFL82OmAlIt2og1bWeE1Uu747/WTzz5syBc6AHEUajw+0XaJ0tA==
+
 JSONStream@^1.0.3:
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/JSONStream/-/JSONStream-1.3.4.tgz#615bb2adb0cd34c8f4c447b5f6512fa1d8f16a2e"
@@ -210,13 +215,14 @@ angular-ui-bootstrap@2.5.6:
   version "2.5.6"
   resolved "https://registry.yarnpkg.com/angular-ui-bootstrap/-/angular-ui-bootstrap-2.5.6.tgz#23937322ec641a6fbee16498cc32452aa199e7c5"
 
-angular-ui-router@0.4.3:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/angular-ui-router/-/angular-ui-router-0.4.3.tgz#6c29546fe50b8d2f74614dcb8660d6fc40d6e167"
+angular-ui-router@1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/angular-ui-router/-/angular-ui-router-1.0.4.tgz#d786837877d5f39c8ec0b780802229a17830ccc0"
+  integrity sha512-XoHZVXJ8kMgS5lNraYRUQm/AfcwcGIgNr+e/U+Qb4fM5Ca/NJVuXK6kV6qRXgbeni7rUbNd+3DL8zF8VfscL3w==
   dependencies:
-    angular "^1.0.8"
+    "@uirouter/core" "5.0.3"
 
-angular@1.7.3, angular@^1.0.8:
+angular@1.7.3:
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/angular/-/angular-1.7.3.tgz#0f25a661d079fc84d5ccc877a2ef9d7178575ddb"
 
