@@ -149,7 +149,7 @@
     "mongoose-timestamp": "0.6.0",
     "mongoose-validator": "2.0.2",
     "morgan": "1.6.1",
-    "multer": "1.3.0",
+    "multer": "2.0.0",
     "ng-file-upload": "12.2.13",
     "node-horseman": "3.2.0",
     "node-outlook": "1.1.6",
